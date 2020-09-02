@@ -1,0 +1,79 @@
+{
+  "sha": "a17dd3248a666d01be75f6b16be37e80e20b0954",
+  "node_id": "MDY6Q29tbWl0NTEwMTE0MTphMTdkZDMyNDhhNjY2ZDAxYmU3NWY2YjE2YmUzN2U4MGUyMGIwOTU0",
+  "commit": {
+    "author": {
+      "name": "Maximilian Roos",
+      "email": "5635139+max-sixty@users.noreply.github.com",
+      "date": "2020-03-29T21:40:42Z"
+    },
+    "committer": {
+      "name": "William Langford",
+      "email": "wlangfor@gmail.com",
+      "date": "2020-06-08T16:35:13Z"
+    },
+    "message": "Add some missing code quoting to the manual",
+    "tree": {
+      "sha": "53eb4bc72594be6cd3847450cd3d3e06246199cd",
+      "url": "https://api.github.com/repos/stedolan/jq/git/trees/53eb4bc72594be6cd3847450cd3d3e06246199cd"
+    },
+    "url": "https://api.github.com/repos/stedolan/jq/git/commits/a17dd3248a666d01be75f6b16be37e80e20b0954",
+    "comment_count": 0,
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null
+    }
+  },
+  "url": "https://api.github.com/repos/stedolan/jq/commits/a17dd3248a666d01be75f6b16be37e80e20b0954",
+  "html_url": "https://github.com/stedolan/jq/commit/a17dd3248a666d01be75f6b16be37e80e20b0954",
+  "comments_url": "https://api.github.com/repos/stedolan/jq/commits/a17dd3248a666d01be75f6b16be37e80e20b0954/comments",
+  "author": {
+    "login": "max-sixty",
+    "id": 5635139,
+    "node_id": "MDQ6VXNlcjU2MzUxMzk=",
+    "avatar_url": "https://avatars0.githubusercontent.com/u/5635139?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/max-sixty",
+    "html_url": "https://github.com/max-sixty",
+    "followers_url": "https://api.github.com/users/max-sixty/followers",
+    "following_url": "https://api.github.com/users/max-sixty/following{/other_user}",
+    "gists_url": "https://api.github.com/users/max-sixty/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/max-sixty/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/max-sixty/subscriptions",
+    "organizations_url": "https://api.github.com/users/max-sixty/orgs",
+    "repos_url": "https://api.github.com/users/max-sixty/repos",
+    "events_url": "https://api.github.com/users/max-sixty/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/max-sixty/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "wtlangford",
+    "id": 3422295,
+    "node_id": "MDQ6VXNlcjM0MjIyOTU=",
+    "avatar_url": "https://avatars2.githubusercontent.com/u/3422295?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/wtlangford",
+    "html_url": "https://github.com/wtlangford",
+    "followers_url": "https://api.github.com/users/wtlangford/followers",
+    "following_url": "https://api.github.com/users/wtlangford/following{/other_user}",
+    "gists_url": "https://api.github.com/users/wtlangford/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/wtlangford/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/wtlangford/subscriptions",
+    "organizations_url": "https://api.github.com/users/wtlangford/orgs",
+    "repos_url": "https://api.github.com/users/wtlangford/repos",
+    "events_url": "https://api.github.com/users/wtlangford/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/wtlangford/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "6306ac89667cf35f47ddc40aa0630546c57e387f",
+      "url": "https://api.github.com/repos/stedolan/jq/commits/6306ac89667cf35f47ddc40aa0630546c57e387f",
+      "html_url": "https://github.com/stedolan/jq/commit/6306ac89667cf35f47ddc40aa0630546c57e387f"
+    }
+  ]
+}
