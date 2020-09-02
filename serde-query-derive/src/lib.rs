@@ -154,6 +154,7 @@ impl Node {
                 });
             }
             Internal { children } => {
+                let mut names = vec![];
                 let mut child_ids = vec![];
                 let mut child_tys = vec![];
                 let mut arms: Vec<_> = children
@@ -171,6 +172,7 @@ impl Node {
 
                         match query {
                             Query::Field(name) => {
+                                names.push(name.clone());
                                 quote! {
                                     #name => {
                                         if #child_id.is_some() {
@@ -191,6 +193,20 @@ impl Node {
                         map.next_value::<serde::de::IgnoredAny>()?;
                     }
                 });
+
+                let expecting = {
+                    let mut s = format!("a field ");
+                    for (idx, name) in names.iter().enumerate() {
+                        if idx == 0 {
+                            s.push_str(&format!("'{}'", name));
+                        } else if idx + 1 == names.len() {
+                            s.push_str(&format!(", or '{}'", name));
+                        } else {
+                            s.push_str(&format!(", '{}'", name));
+                        }
+                    }
+                    s
+                };
 
                 current_stream.extend(quote! {
                     #[allow(non_camel_case_types)]
@@ -213,8 +229,8 @@ impl Node {
                     impl<'de> serde::de::Visitor<'de> for #visitor_name {
                         type Value = #deserialize_name;
 
-                        fn expecting(&self, _: &mut core::fmt::Formatter) -> core::fmt::Result {
-                            Ok(())
+                        fn expecting(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+                            core::fmt::Formatter::write_str(f, #expecting)
                         }
 
                         fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
