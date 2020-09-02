@@ -173,6 +173,11 @@ impl Node {
                             Query::Field(name) => {
                                 quote! {
                                     #name => {
+                                        if #child_id.is_some() {
+                                            return core::result::Result::Err(
+                                                <<A as serde::de::MapAccess<'de>>::Error as serde::de::Error>::duplicate_field(#name)
+                                            );
+                                        }
                                         let child: #child_ty = map.next_value()?;
                                         #child_id = Some(child);
                                     },
@@ -224,8 +229,15 @@ impl Node {
                                 }
                             }
 
+                            #(let #child_ids = match #child_ids {
+                                Some(v) => v,
+                                None => return core::result::Result::Err(
+                                    <<A as serde::de::MapAccess<'de>>::Error as serde::de::Error>::missing_field(#names)
+                                ),
+                            };)*
+
                             core::result::Result::Ok(#deserialize_name {
-                                #(#child_ids: #child_ids.unwrap(),)*
+                                #(#child_ids,)*
                             })
                         }
                     }
