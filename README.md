@@ -13,28 +13,27 @@
 use serde_query::{DeserializeQuery, Query};
 
 #[derive(DeserializeQuery)]
-struct Summary {
-    #[query(".commit.message")]
-    commit_message: String,
-    #[query(".commit.url")]
-    commit_url: String,
-    #[query(".author.login")]
-    author_login: String,
+struct Data {
+    #[query(".commit.author")]
+    commit_author: String,
+    #[query(".hash")]
+    hash_value: u64,
 }
 
-#[test]
-fn test() {
-    const INPUT: &str = include_str!("input.json");
-    let summary: Summary = serde_json::from_str::<Query<Summary>>(INPUT)
-        .unwrap()
-        .into();
-    assert_eq!(
-        summary.commit_message,
-        "Add some missing code quoting to the manual"
-    );
-    assert_eq!(summary.commit_url, "https://api.github.com/repos/stedolan/jq/git/commits/a17dd3248a666d01be75f6b16be37e80e20b0954");
-    assert_eq!(summary.author_login, "max-sixty");
-}
+let document = serde_json::to_string(&serde_json::json!({
+    "commit": {
+        "author": "pandaman64",
+        "date": "2020/09/03",
+    },
+    "hash": 0xabcd,
+}))?;
+
+// You can use `Query<T>` as a `Deserialize` type for any `Deserializer`
+// and convert the result to the desired type using `From`/`Into`.
+let data: Data = serde_json::from_str::<Query<Data>>(&document)?.into();
+
+assert_eq!(data.commit_author, "pandaman64");
+assert_eq!(data.hash_value, 0xabcd);
 ```
 
 ## Note

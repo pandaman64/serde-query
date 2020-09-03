@@ -3,12 +3,25 @@ name = "serde-query"
 version = "0.1.0"
 authors = ["pandaman64 <kointosudesuyo@infoseek.jp>"]
 edition = "2018"
+description = "Serde-compatible streaming data-query language with a jq-like syntax"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/pandaman64/serde-query/"
+keywords = ["serde"]
+categories = ["encoding"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+default = ["derive"]
+
+derive = ["serde-query-derive"]
+
 [dependencies]
 serde = "1.0.115"
-serde-query-derive = { path = "../serde-query-derive" }
+
+[dependencies.serde-query-derive]
+path = "../serde-query-derive"
+optional = true
 
 [dev-dependencies]
 serde_json = "1.0.57"
