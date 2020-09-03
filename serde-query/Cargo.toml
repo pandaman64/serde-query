@@ -20,6 +20,7 @@ derive = ["serde-query-derive"]
 serde = "1.0.115"
 
 [dependencies.serde-query-derive]
+version = "0.1.0"
 path = "../serde-query-derive"
 optional = true
 
