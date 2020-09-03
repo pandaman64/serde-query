@@ -32,16 +32,12 @@ fn ident(input: &str) -> Result<(&str, &str), Box<dyn Error + 'static>> {
     // alpha alphanumeric*
     for (idx, c) in input.char_indices() {
         if idx == 0 {
-            if !c.is_alphabetic() {
-                if idx == 0 {
-                    return Err(format!("expecting alphabets, got {}", c).into());
-                }
+            if !c.is_alphabetic() && idx == 0 {
+                return Err(format!("expecting alphabets, got {}", c).into());
             }
-        } else {
-            if !c.is_alphanumeric() {
-                let (ident, input) = input.split_at(idx);
-                return Ok((input, ident));
-            }
+        } else if !c.is_alphanumeric() {
+            let (ident, input) = input.split_at(idx);
+            return Ok((input, ident));
         }
     }
 
@@ -195,7 +191,7 @@ impl Node {
                 });
 
                 let expecting = {
-                    let mut s = format!("a field ");
+                    let mut s = String::from("a field ");
                     for (idx, name) in names.iter().enumerate() {
                         if idx == 0 {
                             s.push_str(&format!("'{}'", name));
