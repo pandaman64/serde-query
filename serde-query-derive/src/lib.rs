@@ -71,13 +71,46 @@ fn index(input: &str) -> Result<(&str, usize), Box<dyn Error + 'static>> {
     Ok((&input[input.len()..], input.parse()?))
 }
 
+fn string_literal(input: &str) -> Result<(&str, String), Box<dyn Error + 'static>> {
+    let mut ret = String::new();
+    let mut escape = false;
+
+    let input = ws(eat("\"")(input)?);
+
+    for (idx, c) in input.char_indices() {
+        if c == '\\' {
+            escape = true;
+        } else {
+            if c == '\"' && !escape {
+                let input = eat("\"")(&input[idx..])?;
+                return Ok((input, ret));
+            }
+            escape = false;
+            ret.push(c);
+        }
+    }
+
+    Err("expecting \", got EOF".into())
+}
+
 fn bracket(input: &str) -> Result<(&str, Query), Box<dyn Error + 'static>> {
     // bracket ::= '[' number ']'
+    // bracket ::= '[' '"' ('\"' | any character)+ '"' ']'
     let input = ws(eat("[")(input)?);
-    let (input, index) = index(input)?;
+    let (input, inner) = match peek(input)? {
+        '\"' => {
+            let (input, lit) = string_literal(input)?;
+            (input, Query::Field(lit))
+        }
+        c if c.is_ascii_digit() => {
+            let (input, index) = index(input)?;
+            (input, Query::Index(index))
+        }
+        c => return Err(format!("expecting \" or an ascii digit, got {}", c).into()),
+    };
     let input = eat("]")(ws(input))?;
 
-    Ok((input, Query::Index(index)))
+    Ok((input, inner))
 }
 
 fn parse_query(mut input: &str) -> Result<(&str, Vec<Query>), Box<dyn Error + 'static>> {

@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Allow index queries.
+* Allow field queries with special characters.
 
 ## 0.1.0 - 2020-09-03
 
