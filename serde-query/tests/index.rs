@@ -1,5 +1,5 @@
 #[test]
-fn test() {
+fn test_index() {
     use serde_query::{DeserializeQuery, Query};
 
     #[derive(DeserializeQuery)]
