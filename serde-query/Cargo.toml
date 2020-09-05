@@ -27,3 +27,4 @@ optional = true
 
 [dev-dependencies]
 serde_json = "1.0.57"
+ureq = "1.4.0"

@@ -2,7 +2,13 @@
 
 ## Unreleased
 
+### Fixed
+
+* Correctly handles non-`&str` keys.
+
 ## [0.1.1] - 2020-09-05
+
+### Added
 
 * Allow index queries.
 * Allow field queries with special characters.

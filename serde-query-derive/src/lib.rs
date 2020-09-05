@@ -387,7 +387,8 @@ impl Node {
                         {
                             #(let mut #child_ids = None;)*
 
-                            while let Some(key) = map.next_key()? {
+                            while let Some(key) = map.next_key::<std::borrow::Cow<str>>()? {
+                                let key: &str = &key;
                                 match key {
                                     #(#arms)*
                                 }
