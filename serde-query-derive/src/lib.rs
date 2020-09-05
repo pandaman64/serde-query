@@ -10,6 +10,7 @@ use syn::{parse_macro_input, DeriveInput, Ident, LitStr, Type};
 #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
 enum Query {
     Field(String),
+    Index(usize),
 }
 
 fn ws(input: &str) -> &str {
@@ -31,8 +32,15 @@ fn eat(pat: &str) -> impl for<'i> Fn(&'i str) -> Result<&'i str, Box<dyn Error +
     }
 }
 
-fn ident(input: &str) -> Result<(&str, &str), Box<dyn Error + 'static>> {
-    // alpha alphanumeric*
+fn peek(input: &str) -> Result<char, Box<dyn Error + 'static>> {
+    match input.chars().next() {
+        Some(c) => Ok(c),
+        None => Err("expecting a character, got EOF".into()),
+    }
+}
+
+fn simple_ident(input: &str) -> Result<(&str, Query), Box<dyn Error + 'static>> {
+    // simple_ident ::= alpha alphanumeric*
     for (idx, c) in input.char_indices() {
         if idx == 0 {
             if !c.is_alphabetic() && idx == 0 {
@@ -40,11 +48,36 @@ fn ident(input: &str) -> Result<(&str, &str), Box<dyn Error + 'static>> {
             }
         } else if !c.is_alphanumeric() {
             let (ident, input) = input.split_at(idx);
-            return Ok((input, ident));
+            return Ok((input, Query::Field(ident.into())));
         }
     }
 
-    Ok((&input[input.len()..], input))
+    Ok((&input[input.len()..], Query::Field(input.into())))
+}
+
+fn index(input: &str) -> Result<(&str, usize), Box<dyn Error + 'static>> {
+    // numbers ::= [0-9]+
+    for (idx, c) in input.char_indices() {
+        if !c.is_ascii_digit() {
+            if idx == 0 {
+                return Err(format!("expecting ascii digits, got {}", c).into());
+            } else {
+                let (digits, input) = input.split_at(idx);
+                return Ok((input, digits.parse()?));
+            }
+        }
+    }
+
+    Ok((&input[input.len()..], input.parse()?))
+}
+
+fn bracket(input: &str) -> Result<(&str, Query), Box<dyn Error + 'static>> {
+    // bracket ::= '[' number ']'
+    let input = ws(eat("[")(input)?);
+    let (input, index) = index(input)?;
+    let input = eat("]")(ws(input))?;
+
+    Ok((input, Query::Index(index)))
 }
 
 fn parse_query(mut input: &str) -> Result<(&str, Vec<Query>), Box<dyn Error + 'static>> {
@@ -55,9 +88,13 @@ fn parse_query(mut input: &str) -> Result<(&str, Vec<Query>), Box<dyn Error + 's
             return Ok((input, ret));
         }
         input = ws(eat(".")(input)?);
-        let (input2, ident) = ident(input)?;
+        let (input2, query) = match peek(input)? {
+            '[' => bracket(input)?,
+            c if c.is_alphabetic() => simple_ident(input)?,
+            c => return Err(format!("expecting an alphabet or '[', got {}", c).into()),
+        };
         input = input2;
-        ret.push(Query::Field(ident.into()))
+        ret.push(query);
     }
 }
 
@@ -67,9 +104,42 @@ struct Field {
     ty: Type,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Traversal {
+    Unknown,
+    Seq,
+    Map,
+}
+
+// forms a lattice
+impl PartialOrd for Traversal {
+    fn partial_cmp(&self, other: &Self) -> std::option::Option<std::cmp::Ordering> {
+        use std::cmp::Ordering;
+        use Traversal::*;
+
+        match (self, other) {
+            (Unknown, Unknown) => Some(Ordering::Equal),
+            (Seq, Seq) => Some(Ordering::Equal),
+            (Map, Map) => Some(Ordering::Equal),
+
+            (Unknown, _) => Some(Ordering::Less),
+            (_, Unknown) => Some(Ordering::Greater),
+
+            (Seq, Map) => None,
+            (Map, Seq) => None,
+        }
+    }
+}
+
 enum Node {
-    Action { ident: Ident, ty: Type },
-    Internal { children: BTreeMap<Query, Node> },
+    Action {
+        ident: Ident,
+        ty: Type,
+    },
+    Internal {
+        children: BTreeMap<Query, Node>,
+        traversal: Traversal,
+    },
 }
 
 fn construct_suffix(buf: &mut String, levels: &[usize]) {
@@ -86,9 +156,24 @@ impl Node {
         // waiting for https://github.com/rust-lang/rust/pull/76119 to remove duplicated code
         match self {
             Action { .. } => panic!("query conflict"),
-            Internal { children: this } => match other {
+            Internal {
+                children: this,
+                traversal: this_traversal,
+            } => match other {
                 Action { .. } => panic!("query conflict"),
-                Internal { children: other } => {
+                Internal {
+                    children: other,
+                    traversal: other_traversal,
+                } => {
+                    if *this_traversal <= other_traversal {
+                        *this_traversal = other_traversal;
+                    } else {
+                        panic!(
+                            "seq-map conflict: {:?} vs {:?}",
+                            this_traversal, other_traversal
+                        );
+                    }
+
                     for (query, child) in other.into_iter() {
                         use std::collections::btree_map::Entry;
                         match this.entry(query) {
@@ -152,7 +237,10 @@ impl Node {
                     }
                 });
             }
-            Internal { children } => {
+            Internal {
+                children,
+                traversal,
+            } => {
                 let mut names = vec![];
                 let mut child_ids = vec![];
                 let mut child_tys = vec![];
@@ -171,7 +259,7 @@ impl Node {
 
                         match query {
                             Query::Field(name) => {
-                                names.push(name.clone());
+                                names.push(format!("'{}'", name));
                                 quote! {
                                     #name => {
                                         if #child_id.is_some() {
@@ -184,54 +272,82 @@ impl Node {
                                     },
                                 }
                             }
+                            Query::Index(index) => {
+                                names.push(format!("[{}]", index));
+                                quote! {
+                                    #index => {
+                                        let child: #child_ty = match seq.next_element()? {
+                                            core::option::Option::Some(val) => val,
+                                            core::option::Option::None => return core::result::Result::Err(
+                                                <<A as serde::de::SeqAccess<'de>>::Error as serde::de::Error>::invalid_length(#index, &self)
+                                            ),
+                                        };
+                                        #child_id = Some(child);
+                                    },
+                                }
+                            }
                         }
                     })
                     .collect();
-                arms.push(quote! {
-                    _ => {
-                        map.next_value::<serde::de::IgnoredAny>()?;
-                    }
-                });
+                let rest = match traversal {
+                    Traversal::Unknown => unreachable!(),
+                    Traversal::Map => quote! {
+                        _ => {
+                            map.next_value::<serde::de::IgnoredAny>()?;
+                        }
+                    },
+                    Traversal::Seq => quote! {
+                        _ => {
+                            match seq.next_element::<serde::de::IgnoredAny>()? {
+                                Some(_) => {},
+                                None => break,
+                            };
+                        }
+                    },
+                };
+                arms.push(rest);
 
                 let expecting = {
                     let mut s = String::from("a field ");
                     for (idx, name) in names.iter().enumerate() {
                         if idx == 0 {
-                            s.push_str(&format!("'{}'", name));
+                            s.push_str(name);
                         } else if idx + 1 == names.len() {
-                            s.push_str(&format!(", or '{}'", name));
+                            s.push_str(&format!(", or {}", name));
                         } else {
-                            s.push_str(&format!(", '{}'", name));
+                            s.push_str(&format!(", {}", name));
                         }
                     }
                     s
                 };
 
-                current_stream.extend(quote! {
-                    #[allow(non_camel_case_types)]
-                    struct #deserialize_name {
-                        #(#child_ids: #child_tys,)*
-                    }
-
-                    impl<'de> serde::de::Deserialize<'de> for #deserialize_name {
-                        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-                        where
-                            D: serde::de::Deserializer<'de>
-                        {
-                            deserializer.deserialize_map(#visitor_name)
+                let deserialize_impl = match traversal {
+                    Traversal::Unknown => unreachable!(),
+                    Traversal::Map => quote! {
+                        impl<'de> serde::de::Deserialize<'de> for #deserialize_name {
+                            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                            where
+                                D: serde::de::Deserializer<'de>
+                            {
+                                deserializer.deserialize_map(#visitor_name)
+                            }
                         }
-                    }
-
-                    #[allow(non_camel_case_types)]
-                    struct #visitor_name;
-
-                    impl<'de> serde::de::Visitor<'de> for #visitor_name {
-                        type Value = #deserialize_name;
-
-                        fn expecting(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-                            core::fmt::Formatter::write_str(f, #expecting)
+                    },
+                    Traversal::Seq => quote! {
+                        impl<'de> serde::de::Deserialize<'de> for #deserialize_name {
+                            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                            where
+                                D: serde::de::Deserializer<'de>
+                            {
+                                deserializer.deserialize_seq(#visitor_name)
+                            }
                         }
+                    },
+                };
 
+                let visit_fn = match traversal {
+                    Traversal::Unknown => unreachable!(),
+                    Traversal::Map => quote! {
                         fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
                         where
                             A: serde::de::MapAccess<'de>,
@@ -255,6 +371,56 @@ impl Node {
                                 #(#child_ids,)*
                             })
                         }
+                    },
+                    Traversal::Seq => quote! {
+                        fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+                        where
+                            A: serde::de::SeqAccess<'de>,
+                        {
+                            #(let mut #child_ids = None;)*
+                            let mut count: usize = 0;
+
+                            loop {
+                                match count {
+                                    #(#arms)*
+                                }
+
+                                count += 1;
+                            }
+
+                            #(let #child_ids = match #child_ids {
+                                Some(v) => v,
+                                None => return core::result::Result::Err(
+                                    <<A as serde::de::SeqAccess<'de>>::Error as serde::de::Error>::invalid_length(count, &self)
+                                ),
+                            };)*
+
+                            core::result::Result::Ok(#deserialize_name {
+                                #(#child_ids,)*
+                            })
+                        }
+                    },
+                };
+
+                current_stream.extend(quote! {
+                    #[allow(non_camel_case_types)]
+                    struct #deserialize_name {
+                        #(#child_ids: #child_tys,)*
+                    }
+
+                    #deserialize_impl
+
+                    #[allow(non_camel_case_types)]
+                    struct #visitor_name;
+
+                    impl<'de> serde::de::Visitor<'de> for #visitor_name {
+                        type Value = #deserialize_name;
+
+                        fn expecting(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+                            core::fmt::Formatter::write_str(f, #expecting)
+                        }
+
+                        #visit_fn
                     }
                 })
             }
@@ -272,6 +438,7 @@ fn generate(
 ) -> (Ident, TokenStream2) {
     let mut root = Node::Internal {
         children: BTreeMap::default(),
+        traversal: Traversal::Unknown,
     };
 
     for field in fields.iter() {
@@ -283,9 +450,16 @@ fn generate(
                     ty: field.ty.clone(),
                 },
                 [head, tail @ ..] => {
+                    let traversal = match head {
+                        Query::Field(_) => Traversal::Map,
+                        Query::Index(_) => Traversal::Seq,
+                    };
                     let mut children = BTreeMap::default();
                     children.insert(head.clone(), construct_node(field, tail));
-                    Node::Internal { children }
+                    Node::Internal {
+                        children,
+                        traversal,
+                    }
                 }
             }
         }
