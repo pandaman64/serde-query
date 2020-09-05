@@ -1,4 +1,4 @@
-# An efficient query language for Serde
+# Serde Query: An efficient query language for Serde
 
 `sere-query` provides a query language for [Serde](https://serde.rs/) [data model](https://serde.rs/data-model.html).
 
@@ -14,16 +14,16 @@ use serde_query::{DeserializeQuery, Query};
 
 #[derive(DeserializeQuery)]
 struct Data {
-    #[query(".commit.author")]
-    commit_author: String,
+    #[query(".commit.authors.[0]")]
+    first_author: String,
     #[query(".hash")]
     hash_value: u64,
 }
 
 let document = serde_json::to_string(&serde_json::json!({
     "commit": {
-        "author": "pandaman64",
-        "date": "2020/09/03",
+        "authors": ["Kou", "Kasumi", "Masaru"],
+        "date": "2020-09-10",
     },
     "hash": 0xabcd,
 }))?;
@@ -32,7 +32,7 @@ let document = serde_json::to_string(&serde_json::json!({
 // and convert the result to the desired type using `From`/`Into`.
 let data: Data = serde_json::from_str::<Query<Data>>(&document)?.into();
 
-assert_eq!(data.commit_author, "pandaman64");
+assert_eq!(data.first_author, "Kou");
 assert_eq!(data.hash_value, 0xabcd);
 ```
 

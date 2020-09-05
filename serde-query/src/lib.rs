@@ -42,12 +42,13 @@
 //! which part of the document should be retrieved, starting from the root.
 //!
 //! # `#[query(...)]` syntax
-//! `serde-query` currently supports the following syntax for accessing a part of the input.
+//! `serde-query` currently supports the following syntax for stepping one level inside the document.
+//! You can combine them to go further.
 //!
 //! * `.field` for accessing a field with a name `field` of an object.
 //!   The field name must be an alphabet followed by zero or more alphanumeric characters.
 //! * `.["field"]` if the field name contains special characters.
-//!   We recommend using a raw string literal for the query parameter (`#[query(r#"..."#)`).
+//!   We recommend using a raw string literal for the query parameter (`#[query(r#"..."#)]`).
 //! * `.[index]` for accessing an array element at position `index`.
 //!
 //! Note that mixing field access and index access at the same position of a document
