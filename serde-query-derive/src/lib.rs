@@ -22,7 +22,10 @@ fn ws(input: &str) -> &str {
 fn eat(pat: &str) -> impl for<'i> Fn(&'i str) -> Result<&'i str, Box<dyn Error + 'static>> + '_ {
     move |input| {
         if !input.starts_with(pat) {
-            return Err(format!("expecting {}", pat).into());
+            match input.chars().next() {
+                Some(c) => return Err(format!("expecting {}, got {}", pat, c).into()),
+                None => return Err(format!("expecting {}, got EOF", pat).into()),
+            }
         }
         Ok(&input[pat.len()..])
     }
