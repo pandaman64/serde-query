@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+* Generated `Query` type is now a `#[repr(transparent)]` wrapper around the target type.
+  It implements `Deref`/`DerefMut` now.
+
 ## [0.1.2] - 2020-09-05
 
 ### Fixed

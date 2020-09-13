@@ -558,6 +558,12 @@ pub fn derive_deserialize_query(input: TokenStream) -> TokenStream {
     let (root_ty, mut stream) = generate(&fields, &mut field_to_positions);
 
     // generate From and DeserializeQuery
+    let wrapper_ty = Ident::new("__QueryWrapper", Span::call_site());
+
+    // add lifetime argument for `impl DeserializeQuery`
+    let mut dq_generics = generics.clone();
+    dq_generics.params.push(syn::parse_quote! { 'de_SQ });
+
     let constructors: Vec<_> = fields
         .iter()
         .map(|field| {
@@ -574,21 +580,53 @@ pub fn derive_deserialize_query(input: TokenStream) -> TokenStream {
         })
         .collect();
     stream.extend(quote! {
-        impl #generics core::convert::From<#root_ty> for #name #generics {
-            fn from(val: #root_ty) -> Self {
-                Self {
-                    #(#constructors,)*
-                }
+        #[repr(transparent)]
+        struct #wrapper_ty #generics (#name #generics);
+
+        impl #generics #wrapper_ty #generics {
+            fn __serde_query_from_root(val: #root_ty) -> Self {
+                Self (
+                    #name #generics {
+                        #(#constructors,)*
+                    }
+                )
+            }
+        }
+
+        impl #dq_generics serde::de::Deserialize<'de_SQ> for #wrapper_ty #generics {
+            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+            where
+                D: serde::de::Deserializer<'de_SQ>
+            {
+                let root = <#root_ty as serde::de::Deserialize<'de_SQ>>::deserialize(deserializer)?;
+                Ok(Self::__serde_query_from_root(root))
+            }
+        }
+
+        impl #generics core::convert::From<#wrapper_ty #generics> for #name #generics {
+            fn from(val: #wrapper_ty #generics) -> Self {
+                val.0
+            }
+        }
+
+        impl #generics core::ops::Deref for #wrapper_ty #generics {
+            type Target = #name #generics;
+
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+
+        impl #generics core::ops::DerefMut for #wrapper_ty #generics {
+            fn deref_mut(&mut self) -> &mut Self::Target {
+                &mut self.0
             }
         }
     });
 
-    // add lifetime argument for `impl DeserializeQuery`
-    let mut dq_generics = generics.clone();
-    dq_generics.params.push(syn::parse_quote! { 'de_SQ });
     stream.extend(quote! {
         impl #dq_generics serde_query::DeserializeQuery<'de_SQ> for #name #generics {
-            type Query = #root_ty;
+            type Query = #wrapper_ty #generics;
         }
     });
 

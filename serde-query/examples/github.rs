@@ -14,7 +14,6 @@ fn main() {
     let messages: Vec<Query<Message>> = serde_json::from_reader(reader).unwrap();
 
     for message in messages.into_iter() {
-        let message = Message::from(message);
         println!("{}", message.message);
     }
 }
