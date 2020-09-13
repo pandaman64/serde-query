@@ -1,4 +1,6 @@
-#[derive(serde_query::Deserialize)]
+use serde_query::{DeserializeQuery, Query};
+
+#[derive(DeserializeQuery)]
 struct Message {
     #[query(".commit.message")]
     message: String,
@@ -9,7 +11,7 @@ fn main() {
         .call()
         .into_reader();
 
-    let messages: Vec<Message> = serde_json::from_reader(reader).unwrap();
+    let messages: Vec<Query<Message>> = serde_json::from_reader(reader).unwrap();
 
     for message in messages.into_iter() {
         println!("{}", message.message);

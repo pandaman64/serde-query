@@ -505,8 +505,12 @@ fn generate(
     (root_ty, stream)
 }
 
-#[proc_macro_derive(DeserializeQuery, attributes(query))]
-pub fn derive_deserialize_query(input: TokenStream) -> TokenStream {
+enum DeriveTarget {
+    Deserialize,
+    DeserializeQuery,
+}
+
+fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     let mut input = parse_macro_input!(input as DeriveInput);
 
     let name = input.ident;
@@ -579,56 +583,77 @@ pub fn derive_deserialize_query(input: TokenStream) -> TokenStream {
             }
         })
         .collect();
-    stream.extend(quote! {
-        #[repr(transparent)]
-        struct #wrapper_ty #generics (#name #generics);
 
-        impl #generics #wrapper_ty #generics {
-            fn __serde_query_from_root(val: #root_ty) -> Self {
-                Self (
-                    #name #generics {
-                        #(#constructors,)*
+    match target {
+        DeriveTarget::DeserializeQuery => {
+            stream.extend(quote! {
+                #[repr(transparent)]
+                struct #wrapper_ty #generics (#name #generics);
+
+                impl #generics #wrapper_ty #generics {
+                    fn __serde_query_from_root(val: #root_ty) -> Self {
+                        Self (
+                            #name #generics {
+                                #(#constructors,)*
+                            }
+                        )
                     }
-                )
-            }
-        }
+                }
 
-        impl #dq_generics serde::de::Deserialize<'de_SQ> for #wrapper_ty #generics {
-            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-            where
-                D: serde::de::Deserializer<'de_SQ>
-            {
-                let root = <#root_ty as serde::de::Deserialize<'de_SQ>>::deserialize(deserializer)?;
-                Ok(Self::__serde_query_from_root(root))
-            }
-        }
+                impl #dq_generics serde::de::Deserialize<'de_SQ> for #wrapper_ty #generics {
+                    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                    where
+                        D: serde::de::Deserializer<'de_SQ>
+                    {
+                        let root = <#root_ty as serde::de::Deserialize<'de_SQ>>::deserialize(deserializer)?;
+                        Ok(Self::__serde_query_from_root(root))
+                    }
+                }
 
-        impl #generics core::convert::From<#wrapper_ty #generics> for #name #generics {
-            fn from(val: #wrapper_ty #generics) -> Self {
-                val.0
-            }
-        }
+                impl #generics core::convert::From<#wrapper_ty #generics> for #name #generics {
+                    fn from(val: #wrapper_ty #generics) -> Self {
+                        val.0
+                    }
+                }
 
-        impl #generics core::ops::Deref for #wrapper_ty #generics {
-            type Target = #name #generics;
+                impl #generics core::ops::Deref for #wrapper_ty #generics {
+                    type Target = #name #generics;
 
-            fn deref(&self) -> &Self::Target {
-                &self.0
-            }
-        }
+                    fn deref(&self) -> &Self::Target {
+                        &self.0
+                    }
+                }
 
-        impl #generics core::ops::DerefMut for #wrapper_ty #generics {
-            fn deref_mut(&mut self) -> &mut Self::Target {
-                &mut self.0
-            }
-        }
-    });
+                impl #generics core::ops::DerefMut for #wrapper_ty #generics {
+                    fn deref_mut(&mut self) -> &mut Self::Target {
+                        &mut self.0
+                    }
+                }
+            });
 
-    stream.extend(quote! {
-        impl #dq_generics serde_query::DeserializeQuery<'de_SQ> for #name #generics {
-            type Query = #wrapper_ty #generics;
+            stream.extend(quote! {
+                impl #dq_generics serde_query::DeserializeQuery<'de_SQ> for #name #generics {
+                    type Query = #wrapper_ty #generics;
+                }
+            });
         }
-    });
+        DeriveTarget::Deserialize => {
+            stream.extend(quote!{
+                impl #dq_generics serde::de::Deserialize<'de_SQ> for #name #generics {
+                    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                    where
+                        D: serde::de::Deserializer<'de_SQ>
+                    {
+                        let val = <#root_ty as serde::de::Deserialize<'de_SQ>>::deserialize(deserializer)?;
+                        let this = #name #generics {
+                            #(#constructors,)*
+                        };
+                        Ok(this)
+                    }
+                }
+            });
+        }
+    }
 
     // Cargo-culting serde. Possibly for scoping?
     TokenStream::from(quote! {
@@ -638,4 +663,14 @@ pub fn derive_deserialize_query(input: TokenStream) -> TokenStream {
             ()
         };
     })
+}
+
+#[proc_macro_derive(DeserializeQuery, attributes(query))]
+pub fn derive_deserialize_query(input: TokenStream) -> TokenStream {
+    generate_derive(input, DeriveTarget::DeserializeQuery)
+}
+
+#[proc_macro_derive(Deserialize, attributes(query))]
+pub fn derive_deserialize(input: TokenStream) -> TokenStream {
+    generate_derive(input, DeriveTarget::Deserialize)
 }

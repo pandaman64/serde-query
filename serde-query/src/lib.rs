@@ -63,7 +63,7 @@
 ///
 /// [`DeserializeQuery`]: trait.DeserializeQuery.html
 /// [module-level document]: index.html
-pub use serde_query_derive::DeserializeQuery;
+pub use serde_query_derive::{Deserialize, DeserializeQuery};
 
 use core::ops::{Deref, DerefMut};
 use serde::de::Deserialize;

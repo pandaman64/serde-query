@@ -4,6 +4,7 @@
 
 ### Added
 
+* Added `serde_query::Deserialize` derive macro that directly generates `serde::Deserialize`.
 * Generated `Query` type is now a `#[repr(transparent)]` wrapper around the target type.
   It implements `Deref`/`DerefMut` now.
 
