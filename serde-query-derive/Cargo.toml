@@ -1,6 +1,6 @@
 [package]
 name = "serde-query-derive"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["pandaman64 <kointosudesuyo@infoseek.jp>"]
 edition = "2018"
 description = "Serde-compatible streaming data-query language with a jq-like syntax"
