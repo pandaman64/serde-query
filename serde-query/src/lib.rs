@@ -1,15 +1,14 @@
 //! A query language for Serde data model.
 //!
-//! This crate provides [`DeserializeQuery`] trait and [its derive macro] for defining a query.
+//! This crate provides [`serde_query::Deserialize`] derive macro that generates
+//! [`serde::Deserialize`] implementation with queries.
 //!
 //! # Example
 //!
 //! ```rust
 //! # use std::error::Error;
 //! # fn main() -> Result<(), Box<dyn Error + 'static>> {
-//! use serde_query::{DeserializeQuery, Query};
-//!
-//! #[derive(DeserializeQuery)]
+//! #[derive(serde_query::Deserialize)]
 //! struct Data {
 //!     #[query(".commit.authors.[0]")]
 //!     first_author: String,
@@ -25,9 +24,8 @@
 //!     "hash": 0xabcd,
 //! }))?;
 //!
-//! // You can use `Query<T>` as a `Deserialize` type for any `Deserializer`
-//! // and convert the result to the desired type using `From`/`Into`.
-//! let data: Data = serde_json::from_str::<Query<Data>>(&document)?.into();
+//! // The query is compatible with arbitrary data formats with serde support.
+//! let data: Data = serde_json::from_str(&document)?;
 //!
 //! assert_eq!(data.first_author, "Kou");
 //! assert_eq!(data.hash_value, 0xabcd);
@@ -35,9 +33,16 @@
 //! # }
 //! ```
 //!
-//! # Deriving `DeserializeQuery`
+//! # Derive macros
 //!
-//! To declare a query, put `#[derive(DeserializeQuery)]` on your type.
+//! This crate provides the following two derive macros for declaring a query:
+//! * [`serde_query::Deserialize`] generates an implementation of [`serde::Deserialize`] for the struct.
+//!   We recommend using a full-path form (`serde_query::Deserialize`) when deriving to disambiguate
+//!   between serde and this crate.
+//! * [`serde_query::DeserializeQuery`] generates [`serde::Deserialize`] for [`Query<T>`] wrapper.
+//!   This derive macro is useful if you want two `Deserialize` implementation.
+//!   For example, you may want `DeserializeQuery` for querying an API and `Deserialize` for loading from file.
+//!
 //! Each field must have a `#[query(...)]` attribute for specifying
 //! which part of the document should be retrieved, starting from the root.
 //!
@@ -54,24 +59,67 @@
 //! Note that mixing field access and index access at the same position of a document
 //! is a compile error.
 //!
-//! [`DeserializeQuery`]: trait.DeserializeQuery.html
+//! [`serde::Deserialize`]: https://docs.serde.rs/serde/trait.Deserialize.html
+//! [`serde_query::Deserialize`]: trait.Deserialize.html
+//! [`serde_query::DeserializeQuery`]: trait.DeserializeQuery.html
+//! [`Query<T>`]: trait.DeserializeQuery.html#associatedtype.Query
 //! [its derive macro]: derive.DeserializeQuery.html
 
-/// Derive macro for [`DeserializeQuery`] trait.
+/// Derive macro that generates [`serde::Deserialize`] directly.
 ///
 /// Please refer to the [module-level document] for the usage.
 ///
+/// [`serde::Deserialize`]: https://docs.serde.rs/serde/trait.Deserialize.html
+/// [module-level document]: index.html
+pub use serde_query_derive::Deserialize;
+
+/// Derive macro for [`DeserializeQuery`] trait.
+///
+/// # Example
+///
+/// ```rust
+/// # use std::error::Error;
+/// # fn main() -> Result<(), Box<dyn Error + 'static>> {
+/// use serde_query::{DeserializeQuery, Query};
+///
+/// #[derive(DeserializeQuery)]
+/// struct Data {
+///     #[query(".commit.authors.[0]")]
+///     first_author: String,
+///     #[query(".hash")]
+///     hash_value: u64,
+/// }
+///
+/// let document = serde_json::to_string(&serde_json::json!({
+///     "commit": {
+///         "authors": ["Kou", "Kasumi", "Masaru"],
+///         "date": "2020-09-10",
+///     },
+///     "hash": 0xabcd,
+/// }))?;
+///
+/// // You can use `Query<T>` as a `Deserialize` type for any `Deserializer`
+/// // and convert the result to the desired type using `From`/`Into`.
+/// let data: Data = serde_json::from_str::<Query<Data>>(&document)?.into();
+///
+/// assert_eq!(data.first_author, "Kou");
+/// assert_eq!(data.hash_value, 0xabcd);
+/// # Ok(())
+/// # }
+/// ```
+///
 /// [`DeserializeQuery`]: trait.DeserializeQuery.html
 /// [module-level document]: index.html
-pub use serde_query_derive::{Deserialize, DeserializeQuery};
+pub use serde_query_derive::DeserializeQuery;
 
 use core::ops::{Deref, DerefMut};
 use serde::de::Deserialize;
 
 /// Convenient type alias for the query type.
 ///
-/// Please refer to the [module-level document] for details.
+/// Please refer to [`DeserializeQuery`] trait for details.
 ///
+/// [`DeserializeQuery`]: trait.DeserializeQuery.html
 /// [module-level document]: index.html
 pub type Query<'de, T> = <T as DeserializeQuery<'de>>::Query;
 
