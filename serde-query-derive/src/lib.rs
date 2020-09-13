@@ -258,13 +258,13 @@ impl Node {
                         child__0: #ty,
                     }
 
-                    impl<'de> serde::Deserialize<'de> for #deserialize_name {
+                    impl<'de> serde::de::Deserialize<'de> for #deserialize_name {
                         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
                         where
                             D: serde::de::Deserializer<'de>,
                         {
                             core::result::Result::Ok(#deserialize_name {
-                                child__0: <#ty as serde::Deserialize<'de>>::deserialize(deserializer)?,
+                                child__0: <#ty as serde::de::Deserialize<'de>>::deserialize(deserializer)?,
                             })
                         }
                     }
@@ -557,10 +557,10 @@ pub fn derive_deserialize_query(input: TokenStream) -> TokenStream {
     let mut field_to_positions = BTreeMap::default();
     let (root_ty, mut stream) = generate(&fields, &mut field_to_positions);
 
-    // generate From and DeserializeQuery
+    // generate DeserializeQuery and conversion traits
     let wrapper_ty = Ident::new("__QueryWrapper", Span::call_site());
 
-    // add lifetime argument for `impl DeserializeQuery`
+    // add lifetime argument for deserializers
     let mut dq_generics = generics.clone();
     dq_generics.params.push(syn::parse_quote! { 'de_SQ });
 
