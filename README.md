@@ -1,6 +1,6 @@
 # Serde Query: An efficient query language for Serde
 
-`sere-query` provides a query language for [Serde](https://serde.rs/) [data model](https://serde.rs/data-model.html).
+`serde-query` provides a query language for [Serde](https://serde.rs/) [data model](https://serde.rs/data-model.html).
 
 `serde-query` is:
 
