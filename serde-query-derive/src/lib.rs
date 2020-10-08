@@ -239,6 +239,16 @@ impl Node {
             construct_suffix(&mut name, &positions);
             Ident::new(&name, Span::call_site())
         };
+        let field_enum_name = {
+            let mut name = String::from("SQ_Field");
+            construct_suffix(&mut name, &positions);
+            Ident::new(&name, Span::call_site())
+        };
+        let field_visitor_name = {
+            let mut name = String::from("SQ_FieldVis");
+            construct_suffix(&mut name, &positions);
+            Ident::new(&name, Span::call_site())
+        };
 
         let mut children_stream = TokenStream2::new();
         let mut current_stream = TokenStream2::new();
@@ -274,7 +284,8 @@ impl Node {
                 children,
                 traversal,
             } => {
-                let mut names = vec![];
+                let mut bare_names = vec![];
+                let mut print_names = vec![];
                 let mut child_ids = vec![];
                 let mut child_tys = vec![];
                 let mut arms: Vec<_> = children
@@ -292,21 +303,22 @@ impl Node {
 
                         match query {
                             Query::Field(name) => {
-                                names.push(format!("'{}'", name));
+                                bare_names.push(name);
+                                print_names.push(format!("'{}'", name));
                                 quote! {
-                                    #name => {
+                                    #field_enum_name :: #child_id => {
                                         if #child_id.is_some() {
                                             return core::result::Result::Err(
                                                 <<A as serde::de::MapAccess<'de>>::Error as serde::de::Error>::duplicate_field(#name)
                                             );
                                         }
                                         let child: #child_ty = map.next_value()?;
-                                        #child_id = Some(child);
+                                        #child_id = core::option::Option::Some(child);
                                     },
                                 }
                             }
                             Query::Index(index) => {
-                                names.push(format!("[{}]", index));
+                                print_names.push(format!("[{}]", index));
                                 quote! {
                                     #index => {
                                         let child: #child_ty = match seq.next_element()? {
@@ -315,7 +327,7 @@ impl Node {
                                                 <<A as serde::de::SeqAccess<'de>>::Error as serde::de::Error>::invalid_length(#index, &self)
                                             ),
                                         };
-                                        #child_id = Some(child);
+                                        #child_id = core::option::Option::Some(child);
                                     },
                                 }
                             }
@@ -332,20 +344,24 @@ impl Node {
                     Traversal::Seq => quote! {
                         _ => {
                             match seq.next_element::<serde::de::IgnoredAny>()? {
-                                Some(_) => {},
-                                None => break,
+                                core::option::Option::Some(_) => {},
+                                core::option::Option::None => break,
                             };
                         }
                     },
                 };
                 arms.push(rest);
+                let byte_identifiers = bare_names
+                    .iter()
+                    .map(|ident| proc_macro2::Literal::byte_string(ident.as_bytes()))
+                    .collect::<Vec<_>>();
 
                 let expecting = {
                     let mut s = String::from("a field ");
-                    for (idx, name) in names.iter().enumerate() {
+                    for (idx, name) in print_names.iter().enumerate() {
                         if idx == 0 {
                             s.push_str(name);
-                        } else if idx + 1 == names.len() {
+                        } else if idx + 1 == print_names.len() {
                             s.push_str(&format!(", or {}", name));
                         } else {
                             s.push_str(&format!(", {}", name));
@@ -387,17 +403,16 @@ impl Node {
                         {
                             #(let mut #child_ids = None;)*
 
-                            while let Some(key) = map.next_key::<std::borrow::Cow<str>>()? {
-                                let key: &str = &key;
+                            while let core::option::Option::Some(key) = map.next_key::<#field_enum_name>()? {
                                 match key {
                                     #(#arms)*
                                 }
                             }
 
                             #(let #child_ids = match #child_ids {
-                                Some(v) => v,
-                                None => return core::result::Result::Err(
-                                    <<A as serde::de::MapAccess<'de>>::Error as serde::de::Error>::missing_field(#names)
+                                core::option::Option::Some(v) => v,
+                                core::option::Option::None => return core::result::Result::Err(
+                                    <<A as serde::de::MapAccess<'de>>::Error as serde::de::Error>::missing_field(#print_names)
                                 ),
                             };)*
 
@@ -411,7 +426,7 @@ impl Node {
                         where
                             A: serde::de::SeqAccess<'de>,
                         {
-                            #(let mut #child_ids = None;)*
+                            #(let mut #child_ids = core::option::Option::None;)*
                             let mut count: usize = 0;
 
                             loop {
@@ -423,8 +438,8 @@ impl Node {
                             }
 
                             #(let #child_ids = match #child_ids {
-                                Some(v) => v,
-                                None => return core::result::Result::Err(
+                                core::option::Option::Some(v) => v,
+                                core::option::Option::None => return core::result::Result::Err(
                                     <<A as serde::de::SeqAccess<'de>>::Error as serde::de::Error>::invalid_length(count, &self)
                                 ),
                             };)*
@@ -437,14 +452,56 @@ impl Node {
                 };
 
                 current_stream.extend(quote! {
-                    #[allow(non_camel_case_types)]
+                    struct #field_visitor_name;
+
+                    impl<'de> serde::de::Visitor<'de> for #field_visitor_name {
+                        type Value = #field_enum_name;
+
+                        fn expecting(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+                            core::fmt::Formatter::write_str(f, #expecting)
+                        }
+
+                        fn visit_str<E>(self, value: &str) -> core::result::Result<Self::Value, E>
+                        where
+                            E: serde::de::Error,
+                        {
+                            match value {
+                                #(#bare_names => core::result::Result::Ok(#field_enum_name :: #child_ids),)*
+                                _ => core::result::Result::Ok(#field_enum_name :: ignore),
+                            }
+                        }
+
+                        fn visit_bytes<E>(self, value: &[u8]) -> core::result::Result<Self::Value, E>
+                        where
+                            E: serde::de::Error,
+                        {
+                            match value {
+                                #(#byte_identifiers => core::result::Result::Ok(#field_enum_name :: #child_ids),)*
+                                _ => core::result::Result::Ok(#field_enum_name :: ignore),
+                            }
+                        }
+                    }
+
+                    enum #field_enum_name {
+                        #(#child_ids,)*
+                        ignore,
+                    }
+
+                    impl<'de> serde::de::Deserialize<'de> for #field_enum_name {
+                        fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
+                        where
+                            D: serde::de::Deserializer<'de>
+                        {
+                            deserializer.deserialize_identifier(#field_visitor_name)
+                        }
+                    }
+
                     struct #deserialize_name {
                         #(#child_ids: #child_tys,)*
                     }
 
                     #deserialize_impl
 
-                    #[allow(non_camel_case_types)]
                     struct #visitor_name;
 
                     impl<'de> serde::de::Visitor<'de> for #visitor_name {
