@@ -5,134 +5,10 @@ use proc_macro2::{Span, TokenStream as TokenStream2};
 use proc_macro_error::proc_macro_error;
 use quote::quote;
 use std::collections::BTreeMap;
-use std::error::Error;
 use syn::{parse_macro_input, DeriveInput, Ident, LitStr, Type};
 
 mod parse_query;
-
-#[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
-enum Query {
-    Field(String),
-    Index(usize),
-}
-
-fn ws(input: &str) -> &str {
-    match input.find(|c: char| !c.is_whitespace()) {
-        Some(n) => &input[n..],
-        None => input,
-    }
-}
-
-fn eat(pat: &str) -> impl for<'i> Fn(&'i str) -> Result<&'i str, Box<dyn Error + 'static>> + '_ {
-    move |input| {
-        if !input.starts_with(pat) {
-            match input.chars().next() {
-                Some(c) => return Err(format!("expecting {}, got {}", pat, c).into()),
-                None => return Err(format!("expecting {}, got EOF", pat).into()),
-            }
-        }
-        Ok(&input[pat.len()..])
-    }
-}
-
-fn peek(input: &str) -> Result<char, Box<dyn Error + 'static>> {
-    match input.chars().next() {
-        Some(c) => Ok(c),
-        None => Err("expecting a character, got EOF".into()),
-    }
-}
-
-fn simple_ident(input: &str) -> Result<(&str, Query), Box<dyn Error + 'static>> {
-    // simple_ident ::= alpha alphanumeric*
-    for (idx, c) in input.char_indices() {
-        if idx == 0 {
-            if !c.is_alphabetic() && idx == 0 {
-                return Err(format!("expecting alphabets, got {}", c).into());
-            }
-        } else if !c.is_alphanumeric() {
-            let (ident, input) = input.split_at(idx);
-            return Ok((input, Query::Field(ident.into())));
-        }
-    }
-
-    Ok((&input[input.len()..], Query::Field(input.into())))
-}
-
-fn index(input: &str) -> Result<(&str, usize), Box<dyn Error + 'static>> {
-    // numbers ::= [0-9]+
-    for (idx, c) in input.char_indices() {
-        if !c.is_ascii_digit() {
-            if idx == 0 {
-                return Err(format!("expecting ascii digits, got {}", c).into());
-            } else {
-                let (digits, input) = input.split_at(idx);
-                return Ok((input, digits.parse()?));
-            }
-        }
-    }
-
-    Ok((&input[input.len()..], input.parse()?))
-}
-
-fn string_literal(input: &str) -> Result<(&str, String), Box<dyn Error + 'static>> {
-    let mut ret = String::new();
-    let mut escape = false;
-
-    let input = ws(eat("\"")(input)?);
-
-    for (idx, c) in input.char_indices() {
-        if c == '\\' {
-            escape = true;
-        } else {
-            if c == '\"' && !escape {
-                let input = eat("\"")(&input[idx..])?;
-                return Ok((input, ret));
-            }
-            escape = false;
-            ret.push(c);
-        }
-    }
-
-    Err("expecting \", got EOF".into())
-}
-
-fn bracket(input: &str) -> Result<(&str, Query), Box<dyn Error + 'static>> {
-    // bracket ::= '[' number ']'
-    // bracket ::= '[' '"' ('\"' | any character)+ '"' ']'
-    let input = ws(eat("[")(input)?);
-    let (input, inner) = match peek(input)? {
-        '\"' => {
-            let (input, lit) = string_literal(input)?;
-            (input, Query::Field(lit))
-        }
-        c if c.is_ascii_digit() => {
-            let (input, index) = index(input)?;
-            (input, Query::Index(index))
-        }
-        c => return Err(format!("expecting \" or an ascii digit, got {}", c).into()),
-    };
-    let input = eat("]")(ws(input))?;
-
-    Ok((input, inner))
-}
-
-fn parse_query(mut input: &str) -> Result<(&str, Vec<Query>), Box<dyn Error + 'static>> {
-    let mut ret = vec![];
-    loop {
-        input = ws(input);
-        if input.is_empty() {
-            return Ok((input, ret));
-        }
-        input = ws(eat(".")(input)?);
-        let (input2, query) = match peek(input)? {
-            '[' => bracket(input)?,
-            c if c.is_alphabetic() => simple_ident(input)?,
-            c => return Err(format!("expecting an alphabet or '[', got {}", c).into()),
-        };
-        input = input2;
-        ret.push(query);
-    }
-}
+use parse_query::Query;
 
 struct Field {
     query: Vec<Query>,
@@ -607,11 +483,11 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
                     .expect("#[query(...)] field must be named");
                 let ty = field.ty.clone();
 
-                Field {
-                    query: parse_query(&argument).unwrap().1,
-                    ident,
-                    ty,
+                let (query, errors) = parse_query::parse(&argument);
+                for error in errors {
+                    proc_macro_error::emit_error!(attr, error.message);
                 }
+                Field { query, ident, ty }
             })
             .collect(),
         _ => panic!("serde-query supports only structs"),
