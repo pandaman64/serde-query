@@ -28,8 +28,3 @@ optional = true
 [dev-dependencies]
 serde_json = "1.0.57"
 ureq = "1.4.0"
-
-# for observing memory usage
-[target.'cfg(not(target_env = "msvc"))'.dev-dependencies]
-jemallocator = { version = "0.3.2", features = ["stats"] }
-jemalloc-ctl = "0.3.3"
