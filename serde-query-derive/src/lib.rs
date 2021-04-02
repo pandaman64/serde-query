@@ -2,11 +2,13 @@ extern crate proc_macro;
 
 use proc_macro::TokenStream;
 use proc_macro2::{Span, TokenStream as TokenStream2};
-use quote::quote;
 use proc_macro_error::proc_macro_error;
+use quote::quote;
 use std::collections::BTreeMap;
 use std::error::Error;
 use syn::{parse_macro_input, DeriveInput, Ident, LitStr, Type};
+
+mod parse_query;
 
 #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
 enum Query {
