@@ -3,6 +3,7 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 use proc_macro2::{Span, TokenStream as TokenStream2};
 use quote::quote;
+use proc_macro_error::proc_macro_error;
 use std::collections::BTreeMap;
 use std::error::Error;
 use syn::{parse_macro_input, DeriveInput, Ident, LitStr, Type};
@@ -722,11 +723,13 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     })
 }
 
+#[proc_macro_error]
 #[proc_macro_derive(DeserializeQuery, attributes(query))]
 pub fn derive_deserialize_query(input: TokenStream) -> TokenStream {
     generate_derive(input, DeriveTarget::DeserializeQuery)
 }
 
+#[proc_macro_error]
 #[proc_macro_derive(Deserialize, attributes(query))]
 pub fn derive_deserialize(input: TokenStream) -> TokenStream {
     generate_derive(input, DeriveTarget::Deserialize)

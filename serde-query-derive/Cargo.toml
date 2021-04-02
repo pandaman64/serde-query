@@ -18,3 +18,7 @@ proc-macro = true
 syn = "1.0.39"
 quote = "1.0.7"
 proc-macro2 = "1.0.19"
+proc-macro-error = "1.0.4"
+
+[dev-dependencies]
+trybuild = "1.0.41"
