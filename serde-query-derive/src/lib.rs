@@ -447,6 +447,7 @@ enum DeriveTarget {
 }
 
 fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
+    let mut interrupt = false;
     let mut input = parse_macro_input!(input as DeriveInput);
 
     let name = input.ident;
@@ -486,12 +487,17 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
                 let (query, errors) = parse_query::parse(&argument);
                 for error in errors {
                     proc_macro_error::emit_error!(attr, error.message);
+                    interrupt = true;
                 }
                 Field { query, ident, ty }
             })
             .collect(),
         _ => panic!("serde-query supports only structs"),
     };
+
+    if interrupt {
+        return TokenStream::new();
+    }
 
     // generate Deserialize
     let mut field_to_positions = BTreeMap::default();
