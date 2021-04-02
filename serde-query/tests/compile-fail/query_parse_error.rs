@@ -8,4 +8,9 @@ struct A {
     unsupported_char: String,
 }
 
-fn main() {}
+fn assert_deserialize<'de, D: serde::Deserialize<'de>>() {}
+
+fn main() {
+    // ensure that fallback implemenation works
+    assert_deserialize::<A>();
+}

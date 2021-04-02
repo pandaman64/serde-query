@@ -2,7 +2,7 @@ extern crate proc_macro;
 
 use proc_macro::TokenStream;
 use proc_macro2::{Span, TokenStream as TokenStream2};
-use proc_macro_error::proc_macro_error;
+use proc_macro_error::{emit_error, proc_macro_error};
 use quote::quote;
 use std::collections::BTreeMap;
 use syn::{parse_macro_input, DeriveInput, Ident, LitStr, Type};
@@ -441,6 +441,7 @@ fn generate(
     (root_ty, stream)
 }
 
+#[derive(Debug, PartialEq, Eq)]
 enum DeriveTarget {
     Deserialize,
     DeserializeQuery,
@@ -450,49 +451,88 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     let mut interrupt = false;
     let mut input = parse_macro_input!(input as DeriveInput);
 
-    let name = input.ident;
-    let generics = input.generics;
+    let name = &input.ident;
+    let generics = &input.generics;
+
+    if target == DeriveTarget::Deserialize {
+        // generate Deserialize implementation on error
+        proc_macro_error::set_dummy(quote! {
+            const _: () = {
+                impl<'de> serde::de::Deserialize<'de> for #name #generics {
+                    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                    where
+                        D: serde::de::Deserializer<'de>
+                    {
+                        unimplemented!()
+                    }
+                }
+            };
+        });
+    }
 
     // TODO: we need to propagate generic parameters
     if !generics.params.is_empty() {
-        unimplemented!("DeserializeQuery with a generic argument is not supported yet");
+        emit_error!(generics, "generic arguments are not supported yet");
+        interrupt = true;
     }
 
     let fields: Vec<_> = match &mut input.data {
         syn::Data::Struct(data) => data
             .fields
             .iter_mut()
-            .map(|field| {
+            .flat_map(|field| {
                 let mut attr_pos = None;
                 for (pos, attr) in field.attrs.iter().enumerate() {
                     if attr.path.is_ident("query") {
                         if attr_pos.is_some() {
-                            panic!("duplicated #[query(...)]");
+                            emit_error!(attr, "duplicated #[query(...)]");
+                            interrupt = true;
                         }
                         attr_pos = Some(pos);
                     }
                 }
 
-                let attr = field.attrs.remove(attr_pos.expect("no #[query(...)]"));
-                let argument = attr
-                    .parse_args::<LitStr>()
-                    .expect("#[query(...)] takes a string literal")
-                    .value();
-                let ident = field
-                    .ident
-                    .clone()
-                    .expect("#[query(...)] field must be named");
-                let ty = field.ty.clone();
+                match attr_pos {
+                    None => {
+                        emit_error!(field, "no #[query(...)]");
+                        interrupt = true;
+                        None
+                    }
+                    Some(pos) => {
+                        let attr = field.attrs.remove(pos);
+                        let argument = match attr.parse_args::<LitStr>() {
+                            Err(_) => {
+                                emit_error!(field, "#[query(...)] takes a string literal");
+                                interrupt = true;
+                                return None;
+                            }
+                            Ok(lit) => lit.value(),
+                        };
+                        let ident = match &field.ident {
+                            None => {
+                                emit_error!(field.ident, "#[query(...)] field must be named");
+                                interrupt = true;
+                                return None;
+                            }
+                            Some(ident) => ident.clone(),
+                        };
+                        let ty = field.ty.clone();
 
-                let (query, errors) = parse_query::parse(&argument);
-                for error in errors {
-                    proc_macro_error::emit_error!(attr, error.message);
-                    interrupt = true;
+                        let (query, errors) = parse_query::parse(&argument);
+                        for error in errors {
+                            emit_error!(attr, error.message);
+                            interrupt = true;
+                        }
+                        Some(Field { query, ident, ty })
+                    }
                 }
-                Field { query, ident, ty }
             })
             .collect(),
-        _ => panic!("serde-query supports only structs"),
+        _ => {
+            emit_error!(input, "serde-query supports only structs");
+            interrupt = true;
+            vec![]
+        }
     };
 
     if interrupt {

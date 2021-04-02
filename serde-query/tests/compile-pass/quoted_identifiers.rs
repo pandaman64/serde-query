@@ -6,4 +6,8 @@ struct Cluster {
     cluster_name: String,
 }
 
-fn main() {}
+fn assert_deserialize<'de, D: serde::Deserialize<'de>>() {}
+
+fn main() {
+    assert_deserialize::<Cluster>();
+}
