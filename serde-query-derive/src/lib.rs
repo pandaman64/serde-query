@@ -148,7 +148,7 @@ impl Node {
                     }
 
                     impl<'de> serde::de::Deserialize<'de> for #deserialize_name {
-                        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                        fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
                         where
                             D: serde::de::Deserializer<'de>,
                         {
@@ -253,7 +253,7 @@ impl Node {
                     Traversal::Unknown => unreachable!(),
                     Traversal::Map => quote! {
                         impl<'de> serde::de::Deserialize<'de> for #deserialize_name {
-                            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                            fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
                             where
                                 D: serde::de::Deserializer<'de>
                             {
@@ -263,7 +263,7 @@ impl Node {
                     },
                     Traversal::Seq => quote! {
                         impl<'de> serde::de::Deserialize<'de> for #deserialize_name {
-                            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                            fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
                             where
                                 D: serde::de::Deserializer<'de>
                             {
@@ -276,7 +276,7 @@ impl Node {
                 let visit_fn = match traversal {
                     Traversal::Unknown => unreachable!(),
                     Traversal::Map => quote! {
-                        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+                        fn visit_map<A>(self, mut map: A) -> core::result::Result<Self::Value, A::Error>
                         where
                             A: serde::de::MapAccess<'de>,
                         {
@@ -301,7 +301,7 @@ impl Node {
                         }
                     },
                     Traversal::Seq => quote! {
-                        fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+                        fn visit_seq<A>(self, mut seq: A) -> core::result::Result<Self::Value, A::Error>
                         where
                             A: serde::de::SeqAccess<'de>,
                         {
@@ -459,7 +459,7 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
         proc_macro_error::set_dummy(quote! {
             const _: () = {
                 impl<'de> serde::de::Deserialize<'de> for #name #generics {
-                    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
                     where
                         D: serde::de::Deserializer<'de>
                     {
@@ -583,7 +583,7 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
                 }
 
                 impl #dq_generics serde::de::Deserialize<'de_SQ> for #wrapper_ty #generics {
-                    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
                     where
                         D: serde::de::Deserializer<'de_SQ>
                     {
@@ -622,7 +622,7 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
         DeriveTarget::Deserialize => {
             stream.extend(quote!{
                 impl #dq_generics serde::de::Deserialize<'de_SQ> for #name #generics {
-                    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
                     where
                         D: serde::de::Deserializer<'de_SQ>
                     {
