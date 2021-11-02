@@ -110,22 +110,22 @@ impl Node {
         use Node::*;
         let visitor_name = {
             let mut name = String::from("SQ_Vis");
-            construct_suffix(&mut name, &positions);
+            construct_suffix(&mut name, positions);
             Ident::new(&name, Span::call_site())
         };
         let deserialize_name = {
             let mut name = String::from("SQ_Des");
-            construct_suffix(&mut name, &positions);
+            construct_suffix(&mut name, positions);
             Ident::new(&name, Span::call_site())
         };
         let field_enum_name = {
             let mut name = String::from("SQ_Field");
-            construct_suffix(&mut name, &positions);
+            construct_suffix(&mut name, positions);
             Ident::new(&name, Span::call_site())
         };
         let field_visitor_name = {
             let mut name = String::from("SQ_FieldVis");
-            construct_suffix(&mut name, &positions);
+            construct_suffix(&mut name, positions);
             Ident::new(&name, Span::call_site())
         };
 
@@ -434,7 +434,7 @@ fn generate(
             }
         }
 
-        root.merge(construct_node(&field, &field.query));
+        root.merge(construct_node(field, &field.query));
     }
 
     let (root_ty, stream) = root.generate(field_to_positions, &mut vec![]);
@@ -641,8 +641,6 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     TokenStream::from(quote! {
         const _: () = {
             #stream
-
-            ()
         };
     })
 }
