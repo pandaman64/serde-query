@@ -546,6 +546,10 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     // generate DeserializeQuery and conversion traits
     let wrapper_ty = Ident::new("__QueryWrapper", Span::call_site());
 
+    // Inherit visibility of the wrapped struct to avoid error E0446
+    // See: https://github.com/pandaman64/serde-query/issues/7
+    let vis = input.vis;
+
     // add lifetime argument for deserializers
     let mut dq_generics = generics.clone();
     dq_generics.params.push(syn::parse_quote! { 'de_SQ });
@@ -570,7 +574,7 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
         DeriveTarget::DeserializeQuery => {
             stream.extend(quote! {
                 #[repr(transparent)]
-                struct #wrapper_ty #generics (#name #generics);
+                #vis struct #wrapper_ty #generics (#name #generics);
 
                 impl #generics #wrapper_ty #generics {
                     fn __serde_query_from_root(val: #root_ty) -> Self {
