@@ -1,5 +1,6 @@
 [workspace]
 members = [
-    "serde-query-derive",
     "serde-query",
+    "serde-query-core",
+    "serde-query-derive",
 ]
