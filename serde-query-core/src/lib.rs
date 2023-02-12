@@ -256,12 +256,12 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self.query_names();
-                let query_types: Vec<_> = self.query_types();
+                let query_names = self.query_names();
+                let query_types = self.query_types();
 
                 let match_arms = fields.iter().map(|(field, node)| {
                     let deserialize_seed_ty = node.deserialize_seed_ty();
-                    let query_names: Vec<_> = node.query_names();
+                    let query_names = node.query_names();
 
                     quote::quote! {
                         #field => {
@@ -342,12 +342,12 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self.query_names();
-                let query_types: Vec<_> = self.query_types();
+                let query_names = self.query_names();
+                let query_types = self.query_types();
 
                 let match_arms = indices.iter().map(|(index, node)| {
                     let deserialize_seed_ty = node.deserialize_seed_ty();
-                    let query_names: Vec<_> = node.query_names();
+                    let query_names = node.query_names();
 
                     quote::quote! {
                         #index => {
@@ -434,8 +434,8 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self.query_names();
-                let query_types: Vec<_> = self.query_types();
+                let query_names = self.query_names();
+                let query_types = self.query_types();
 
                 let child_code = child.generate();
                 let child_deserialize_seed_ty = child.deserialize_seed_ty();
