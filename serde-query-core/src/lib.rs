@@ -421,6 +421,7 @@ impl Node {
                                         }
                                     }
                                 }
+                                current_index += 1;
                             }
                             Ok(())
                         }
