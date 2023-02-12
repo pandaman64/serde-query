@@ -10,6 +10,11 @@ pub enum QueryFragment {
         name: String,
         rest: Box<QueryFragment>,
     },
+    /// '.' '[' <n> ']' [.<rest>]
+    IndexArray {
+        index: usize,
+        rest: Box<QueryFragment>,
+    },
     /// '.[]' [.<rest>]
     CollectArray {
         rest: Box<QueryFragment>,
@@ -24,6 +29,13 @@ impl QueryFragment {
     pub fn field(name: String, rest: Self) -> Self {
         Self::Field {
             name,
+            rest: rest.into(),
+        }
+    }
+
+    pub fn index_array(index: usize, rest: Self) -> Self {
+        Self::IndexArray {
+            index,
             rest: rest.into(),
         }
     }
@@ -76,33 +88,46 @@ impl Env {
 enum NodeKind {
     None,
     Accept,
-    Struct { fields: BTreeMap<String, Node> },
-    Array { child: Box<Node> },
+    Field { fields: BTreeMap<String, Node> },
+    IndexArray { indices: BTreeMap<usize, Node> },
+    CollectArray { child: Box<Node> },
 }
 
 impl NodeKind {
+    fn merge_trees<K: Ord>(
+        mut tree: BTreeMap<K, Node>,
+        other: BTreeMap<K, Node>,
+    ) -> BTreeMap<K, Node> {
+        for (key, node) in other.into_iter() {
+            use std::collections::btree_map::Entry;
+            match tree.entry(key) {
+                Entry::Vacant(v) => {
+                    v.insert(node);
+                }
+                Entry::Occupied(mut o) => {
+                    o.get_mut().merge(node);
+                }
+            }
+        }
+        tree
+    }
+
     fn merge(&mut self, other: Self) {
         let this = std::mem::replace(self, Self::None);
         *self = match (this, other) {
             (NodeKind::None, other) => other,
             (NodeKind::Accept, NodeKind::Accept) => NodeKind::Accept,
-            (NodeKind::Struct { mut fields }, NodeKind::Struct { fields: other }) => {
-                for (field, node) in other.into_iter() {
-                    use std::collections::btree_map::Entry;
-                    match fields.entry(field) {
-                        Entry::Vacant(v) => {
-                            v.insert(node);
-                        }
-                        Entry::Occupied(mut o) => {
-                            o.get_mut().merge(node);
-                        }
-                    }
+            (NodeKind::Field { fields }, NodeKind::Field { fields: other }) => NodeKind::Field {
+                fields: Self::merge_trees(fields, other),
+            },
+            (NodeKind::IndexArray { indices }, NodeKind::IndexArray { indices: other }) => {
+                NodeKind::IndexArray {
+                    indices: Self::merge_trees(indices, other),
                 }
-                NodeKind::Struct { fields }
             }
-            (NodeKind::Array { mut child }, NodeKind::Array { child: other }) => {
+            (NodeKind::CollectArray { mut child }, NodeKind::CollectArray { child: other }) => {
                 child.merge(*other);
-                NodeKind::Array { child }
+                NodeKind::CollectArray { child }
             }
             // TODO: better handling
             _ => panic!("user error"),
@@ -136,7 +161,7 @@ impl Node {
                 name: field_name,
                 rest,
             } => {
-                let kind = NodeKind::Struct {
+                let kind = NodeKind::Field {
                     fields: BTreeMap::from_iter([(
                         field_name,
                         Self::from_query(env, id.clone(), *rest, ty.clone()),
@@ -148,9 +173,22 @@ impl Node {
                     kind,
                 }
             }
+            QueryFragment::IndexArray { index, rest } => {
+                let kind = NodeKind::IndexArray {
+                    indices: BTreeMap::from_iter([(
+                        index,
+                        Self::from_query(env, id.clone(), *rest, ty.clone()),
+                    )]),
+                };
+                Self {
+                    name,
+                    queries: BTreeMap::from_iter([(id, ty)]),
+                    kind,
+                }
+            }
             QueryFragment::CollectArray { rest } => {
                 let unvec_ty = quote::quote!(<#ty as UnVec>::Element);
-                let kind = NodeKind::Array {
+                let kind = NodeKind::CollectArray {
                     child: Box::new(Self::from_query(env, id.clone(), *rest, unvec_ty)),
                 };
                 Self {
@@ -203,7 +241,7 @@ impl Node {
                     }
                 }
             }
-            NodeKind::Struct { fields } => {
+            NodeKind::Field { fields } => {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
@@ -292,7 +330,102 @@ impl Node {
                     #(#child_code)*
                 }
             }
-            NodeKind::Array { child } => {
+            NodeKind::IndexArray { indices } => {
+                let deserialize_seed_ty = self.deserialize_seed_ty();
+                let visitor_ty = self.visitor_ty();
+
+                let query_names: Vec<_> = self
+                    .queries
+                    .keys()
+                    .map(|id| quote::format_ident!("{}", id.0))
+                    .collect();
+                let query_types: Vec<_> = self.queries.values().collect();
+
+                let match_arms = indices.iter().map(|(index, node)| {
+                    let deserialize_seed_ty = node.deserialize_seed_ty();
+                    let query_names: Vec<_> = node
+                        .queries
+                        .keys()
+                        .map(|id| quote::format_ident!("{}", id.0))
+                        .collect();
+
+                    quote::quote! {
+                        #index => {
+                            match seq.next_element_seed(#deserialize_seed_ty {
+                                #(
+                                    #query_names: self.#query_names,
+                                )*
+                            })? {
+                                core::option::Option::Some(_) => {},
+                                core::option::Option::None => break,
+                            };
+                        }
+                    }
+                });
+
+                let child_code = indices.values().map(|node| node.generate());
+
+                quote::quote! {
+                    struct #deserialize_seed_ty<'query> {
+                        #(
+                            #query_names: &'query mut core::option::Option<#query_types>,
+                        )*
+                    }
+
+                    impl<'query, 'de> serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
+                        type Value = ();
+
+                        fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+                        where
+                            D: serde::Deserializer<'de>,
+                        {
+                            let visitor = #visitor_ty {
+                                #(
+                                    #query_names: self.#query_names,
+                                )*
+                            };
+                            deserializer.deserialize_seq(visitor)
+                        }
+                    }
+
+                    struct #visitor_ty<'query> {
+                        #(
+                            #query_names: &'query mut core::option::Option<#query_types>,
+                        )*
+                    }
+
+                    impl<'query, 'de> serde::de::Visitor<'de> for #visitor_ty<'query> {
+                        type Value = ();
+
+                        fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
+                            // TODO: implement
+                            Ok(())
+                        }
+
+                        fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+                        where
+                            A: serde::de::SeqAccess<'de>,
+                        {
+                            let mut current_index = 0usize;
+                            loop {
+                                match current_index {
+                                    #(#match_arms)*
+                                    _ => {
+                                        match seq.next_element::<serde::de::IgnoredAny>()? {
+                                            core::option::Option::Some(_) => {},
+                                            core::option::Option::None => break,
+                                        }
+                                    }
+                                }
+                            }
+                            Ok(())
+                        }
+                    }
+
+                    #(#child_code)*
+                }
+            }
+            NodeKind::CollectArray { child } => {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
