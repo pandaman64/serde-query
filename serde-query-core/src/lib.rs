@@ -46,11 +46,15 @@ impl QueryFragment {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct QueryId(String);
+pub struct QueryId(syn::Ident);
 
 impl QueryId {
-    pub fn new(identifier: String) -> Self {
+    pub fn new(identifier: syn::Ident) -> Self {
         Self(identifier)
+    }
+
+    fn ident(&self) -> &syn::Ident {
+        &self.0
     }
 }
 
@@ -217,9 +221,8 @@ impl Node {
         match &self.kind {
             NodeKind::Accept => {
                 // TODO: what if we have multiple queries?
-                let first_query = self.queries.first_key_value().unwrap();
-                let query_name = quote::format_ident!("{}", first_query.0 .0);
-                let query_type = first_query.1;
+                let (query_id, query_type) = self.queries.first_key_value().unwrap();
+                let query_name = query_id.ident();
 
                 let deserialize_seed_ty = self.deserialize_seed_ty();
 
@@ -245,20 +248,12 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self
-                    .queries
-                    .keys()
-                    .map(|id| quote::format_ident!("{}", id.0))
-                    .collect();
+                let query_names: Vec<_> = self.queries.keys().map(QueryId::ident).collect();
                 let query_types: Vec<_> = self.queries.values().collect();
 
                 let match_arms = fields.iter().map(|(field, node)| {
                     let deserialize_seed_ty = node.deserialize_seed_ty();
-                    let query_names: Vec<_> = node
-                        .queries
-                        .keys()
-                        .map(|id| quote::format_ident!("{}", id.0))
-                        .collect();
+                    let query_names: Vec<_> = node.queries.keys().map(QueryId::ident).collect();
 
                     quote::quote! {
                         #field => {
@@ -334,20 +329,12 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self
-                    .queries
-                    .keys()
-                    .map(|id| quote::format_ident!("{}", id.0))
-                    .collect();
+                let query_names: Vec<_> = self.queries.keys().map(QueryId::ident).collect();
                 let query_types: Vec<_> = self.queries.values().collect();
 
                 let match_arms = indices.iter().map(|(index, node)| {
                     let deserialize_seed_ty = node.deserialize_seed_ty();
-                    let query_names: Vec<_> = node
-                        .queries
-                        .keys()
-                        .map(|id| quote::format_ident!("{}", id.0))
-                        .collect();
+                    let query_names: Vec<_> = node.queries.keys().map(QueryId::ident).collect();
 
                     quote::quote! {
                         #index => {
@@ -429,11 +416,7 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self
-                    .queries
-                    .keys()
-                    .map(|id| quote::format_ident!("{}", id.0))
-                    .collect();
+                let query_names: Vec<_> = self.queries.keys().map(QueryId::ident).collect();
                 let query_types: Vec<_> = self.queries.values().collect();
 
                 let child_code = child.generate();

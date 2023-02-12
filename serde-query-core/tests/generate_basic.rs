@@ -19,7 +19,7 @@ fn generate_preamble() -> TokenStream {
 fn test_basic() {
     let queries = vec![
         Query::new(
-            QueryId::new("x".into()),
+            QueryId::new(quote::format_ident!("x")),
             QueryFragment::field(
                 "locs".into(),
                 QueryFragment::collect_array(QueryFragment::field(
@@ -30,7 +30,7 @@ fn test_basic() {
             quote::quote!(Vec<f32>),
         ),
         Query::new(
-            QueryId::new("y".into()),
+            QueryId::new(quote::format_ident!("y")),
             QueryFragment::field(
                 "locs".into(),
                 QueryFragment::collect_array(QueryFragment::field(
