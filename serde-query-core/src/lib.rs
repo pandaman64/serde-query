@@ -274,6 +274,12 @@ impl Node {
                     }
                 });
 
+                let expecting = {
+                    let field_names: Vec<_> =
+                        fields.keys().map(|name| format!("'{name}'")).collect();
+                    format!("one of the following fields: {}", field_names.join(", or "))
+                };
+
                 let child_code = fields.values().map(|node| node.generate());
 
                 quote::quote! {
@@ -310,8 +316,7 @@ impl Node {
                         type Value = ();
 
                         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
-                            // TODO: implement
-                            Ok(())
+                            core::fmt::Formatter::write_str(formatter, #expecting)
                         }
 
                         fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
@@ -358,6 +363,11 @@ impl Node {
                     }
                 });
 
+                let (max_index, _) = indices
+                    .last_key_value()
+                    .expect("IndexArray node must have at least one element");
+                let expecting = format!("a sequence with at least {} elements", max_index + 1);
+
                 let child_code = indices.values().map(|node| node.generate());
 
                 quote::quote! {
@@ -393,8 +403,7 @@ impl Node {
                         type Value = ();
 
                         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
-                            // TODO: implement
-                            Ok(())
+                            core::fmt::Formatter::write_str(formatter, #expecting)
                         }
 
                         fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
@@ -471,8 +480,7 @@ impl Node {
                         type Value = ();
 
                         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
-                            // TODO: implement
-                            Ok(())
+                            core::fmt::Formatter::write_str(formatter, "a sequence")
                         }
 
                         fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>

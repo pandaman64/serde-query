@@ -1,7 +1,7 @@
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
-use proc_macro2::Span;
+use proc_macro2::{Span, TokenStream as TokenStream2};
 use proc_macro_error::{emit_error, proc_macro_error};
 use quote::{quote, ToTokens};
 use serde_query_core::{compile, Env, Query, QueryId};
@@ -446,6 +446,52 @@ enum DeriveTarget {
     DeserializeQuery,
 }
 
+fn generate_root_deserialize(
+    struct_ty: &Ident,
+    implementor_ty: &Ident,
+    query_names: &[&Ident],
+    deserialize_seed_ty: &Ident,
+    target: DeriveTarget,
+) -> TokenStream2 {
+    let error_messages: Vec<_> = query_names
+        .iter()
+        .map(|name| format!("Query for '{}' failed to run", name))
+        .collect();
+    let construction = match target {
+        DeriveTarget::Deserialize => quote!(value),
+        DeriveTarget::DeserializeQuery => quote!(#implementor_ty(value)),
+    };
+    quote! {
+        impl<'de> serde::de::Deserialize<'de> for #implementor_ty {
+            fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
+            where
+                D: serde::de::Deserializer<'de>
+            {
+                #(
+                    let mut #query_names = None;
+                )*
+                let root = #deserialize_seed_ty {
+                    #(
+                        #query_names: &mut #query_names,
+                    )*
+                };
+                <#deserialize_seed_ty as serde::de::DeserializeSeed<'de>>::deserialize(root, deserializer)?;
+                let value = #struct_ty {
+                    #(
+                        #query_names: match #query_names {
+                            core::option::Option::Some(v) => v,
+                            core::option::Option::None => {
+                                return core::result::Result::Err(<D::Error as serde::de::Error>::custom(#error_messages))
+                            }
+                        },
+                    )*
+                };
+                Ok(#construction)
+            }
+        }
+    }
+}
+
 fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     let mut interrupt = false;
     let mut input = parse_macro_input!(input as DeriveInput);
@@ -559,33 +605,14 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
             // See: https://github.com/pandaman64/serde-query/issues/7
             let vis = input.vis;
 
+            let deserialize_impl =
+                generate_root_deserialize(name, &wrapper_ty, &query_names, &root_ty, target);
+
             stream.extend(quote! {
                 #[repr(transparent)]
                 #vis struct #wrapper_ty (#name);
 
-                impl<'de> serde::de::Deserialize<'de> for #wrapper_ty {
-                    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-                    where
-                        D: serde::de::Deserializer<'de>
-                    {
-                        #(
-                            let mut #query_names = None;
-                        )*
-                        let root = #root_ty {
-                            #(
-                                #query_names: &mut #query_names,
-                            )*
-                        };
-                        <#root_ty as serde::de::DeserializeSeed<'de>>::deserialize(root, deserializer)?;
-                        let value = #name {
-                            // TODO: handle missing values
-                            #(
-                                #query_names: #query_names.unwrap(),
-                            )*
-                        };
-                        Ok(#wrapper_ty(value))
-                    }
-                }
+                #deserialize_impl
 
                 impl core::convert::From<#wrapper_ty> for #name {
                     fn from(val: #wrapper_ty) -> Self {
@@ -615,31 +642,9 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
             });
         }
         DeriveTarget::Deserialize => {
-            stream.extend(quote!{
-                impl<'de> serde::de::Deserialize<'de> for #name {
-                    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-                    where
-                        D: serde::de::Deserializer<'de>
-                    {
-                        #(
-                            let mut #query_names = None;
-                        )*
-                        let root = #root_ty {
-                            #(
-                                #query_names: &mut #query_names,
-                            )*
-                        };
-                        <#root_ty as serde::de::DeserializeSeed<'de>>::deserialize(root, deserializer)?;
-                        let value = #name {
-                            // TODO: handle missing values
-                            #(
-                                #query_names: #query_names.unwrap(),
-                            )*
-                        };
-                        Ok(value)
-                    }
-                }
-            });
+            let deserialize_impl =
+                generate_root_deserialize(name, name, &query_names, &root_ty, target);
+            stream.extend(deserialize_impl);
         }
     }
 
