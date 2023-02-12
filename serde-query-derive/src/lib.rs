@@ -1,7 +1,7 @@
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
-use proc_macro2::{Span, TokenStream as TokenStream2};
+use proc_macro2::Span;
 use proc_macro_error::{emit_error, proc_macro_error};
 use quote::{quote, ToTokens};
 use serde_query_core::{compile, Env, Query, QueryId};
@@ -446,52 +446,6 @@ enum DeriveTarget {
     DeserializeQuery,
 }
 
-fn generate_root_deserialize(
-    struct_ty: &Ident,
-    implementor_ty: &Ident,
-    query_names: &[&Ident],
-    deserialize_seed_ty: &Ident,
-    target: DeriveTarget,
-) -> TokenStream2 {
-    let error_messages: Vec<_> = query_names
-        .iter()
-        .map(|name| format!("Query for '{}' failed to run", name))
-        .collect();
-    let construction = match target {
-        DeriveTarget::Deserialize => quote!(value),
-        DeriveTarget::DeserializeQuery => quote!(#implementor_ty(value)),
-    };
-    quote! {
-        impl<'de> serde::de::Deserialize<'de> for #implementor_ty {
-            fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-            where
-                D: serde::de::Deserializer<'de>
-            {
-                #(
-                    let mut #query_names = None;
-                )*
-                let root = #deserialize_seed_ty {
-                    #(
-                        #query_names: &mut #query_names,
-                    )*
-                };
-                <#deserialize_seed_ty as serde::de::DeserializeSeed<'de>>::deserialize(root, deserializer)?;
-                let value = #struct_ty {
-                    #(
-                        #query_names: match #query_names {
-                            core::option::Option::Some(v) => v,
-                            core::option::Option::None => {
-                                return core::result::Result::Err(<D::Error as serde::de::Error>::custom(#error_messages))
-                            }
-                        },
-                    )*
-                };
-                Ok(#construction)
-            }
-        }
-    }
-}
-
 fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     let mut interrupt = false;
     let mut input = parse_macro_input!(input as DeriveInput);
@@ -587,8 +541,7 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
         return TokenStream::new();
     }
 
-    let (root_ty, node) = compile(&mut Env::new(), fields.into_iter());
-    let query_names = node.query_names();
+    let node = compile(&mut Env::new(), fields.into_iter());
 
     let mut stream = quote! {
         // TODO: generate preamble
@@ -606,7 +559,7 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
             let vis = input.vis;
 
             let deserialize_impl =
-                generate_root_deserialize(name, &wrapper_ty, &query_names, &root_ty, target);
+                node.generate_deserialize(name, &wrapper_ty, |value| quote!(#wrapper_ty(#value)));
 
             stream.extend(quote! {
                 #[repr(transparent)]
@@ -642,8 +595,7 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
             });
         }
         DeriveTarget::Deserialize => {
-            let deserialize_impl =
-                generate_root_deserialize(name, name, &query_names, &root_ty, target);
+            let deserialize_impl = node.generate_deserialize(name, name, |value| value);
             stream.extend(deserialize_impl);
         }
     }

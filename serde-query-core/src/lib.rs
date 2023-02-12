@@ -217,7 +217,7 @@ impl Node {
         quote::format_ident!("Visitor{}", self.name)
     }
 
-    pub fn query_names(&self) -> Vec<&syn::Ident> {
+    fn query_names(&self) -> Vec<&syn::Ident> {
         self.queries.keys().map(QueryId::ident).collect()
     }
 
@@ -520,9 +520,53 @@ impl Node {
             NodeKind::None => unreachable!(),
         }
     }
+
+    pub fn generate_deserialize<F: FnOnce(TokenStream) -> TokenStream>(
+        &self,
+        struct_ty: &syn::Ident,
+        implementor_ty: &syn::Ident,
+        construction: F,
+    ) -> TokenStream {
+        let deserialize_seed_ty = self.deserialize_seed_ty();
+        let query_names = self.query_names();
+        let error_messages: Vec<_> = query_names
+            .iter()
+            .map(|name| format!("Query for '{}' failed to run", name))
+            .collect();
+        let construction = construction(quote::quote!(value));
+        quote::quote! {
+            impl<'de> serde::de::Deserialize<'de> for #implementor_ty {
+                fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
+                where
+                    D: serde::de::Deserializer<'de>
+                {
+                    #(
+                        let mut #query_names = None;
+                    )*
+                    let root = #deserialize_seed_ty {
+                        #(
+                            #query_names: &mut #query_names,
+                        )*
+                    };
+                    <#deserialize_seed_ty as serde::de::DeserializeSeed<'de>>::deserialize(root, deserializer)?;
+                    let value = #struct_ty {
+                        #(
+                            #query_names: match #query_names {
+                                core::option::Option::Some(v) => v,
+                                core::option::Option::None => {
+                                    return core::result::Result::Err(<D::Error as serde::de::Error>::custom(#error_messages))
+                                }
+                            },
+                        )*
+                    };
+                    Ok(#construction)
+                }
+            }
+        }
+    }
 }
 
-pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> (syn::Ident, Node) {
+pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
     let mut node = Node {
         name: env.new_node_name(),
         queries: BTreeMap::new(),
@@ -531,5 +575,5 @@ pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> (syn::Id
     for query in queries {
         node.merge(Node::from_query(env, query.id, query.fragment, query.ty));
     }
-    (node.deserialize_seed_ty(), node)
+    node
 }

@@ -41,7 +41,7 @@ fn test_basic() {
             quote::quote!(Vec<f32>),
         ),
     ];
-    let (_, node) = compile(&mut Env::new(), queries.into_iter());
+    let node = compile(&mut Env::new(), queries.into_iter());
 
     let code = {
         let mut code = TokenStream::new();
