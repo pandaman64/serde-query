@@ -5,35 +5,66 @@ use proc_macro2::TokenStream;
 #[derive(Debug)]
 pub enum QueryFragment {
     Accept,
-    /// .<name> [.<rest>]
+    /// '.' <name> [.<rest>]
     Field {
         name: String,
         rest: Box<QueryFragment>,
     },
-    // TODO: name
-    /// .[] [.<rest>]
+    /// '.[]' [.<rest>]
     CollectArray {
         rest: Box<QueryFragment>,
     },
 }
 
+impl QueryFragment {
+    pub fn accept() -> Self {
+        Self::Accept
+    }
+
+    pub fn field(name: String, rest: Self) -> Self {
+        Self::Field {
+            name,
+            rest: rest.into(),
+        }
+    }
+
+    pub fn collect_array(rest: Self) -> Self {
+        Self::CollectArray { rest: rest.into() }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-struct QueryId(String);
+pub struct QueryId(String);
+
+impl QueryId {
+    pub fn new(identifier: String) -> Self {
+        Self(identifier)
+    }
+}
 
 #[derive(Debug)]
 pub struct Query {
     id: QueryId,
     fragment: QueryFragment,
-    // ident: String,
     ty: TokenStream,
 }
 
+impl Query {
+    pub fn new(id: QueryId, fragment: QueryFragment, ty: TokenStream) -> Self {
+        Self { id, fragment, ty }
+    }
+}
+
 #[derive(Debug, Default)]
-struct Env {
+pub struct Env {
     node_count: usize,
 }
 
 impl Env {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     fn new_node_name(&mut self) -> String {
         let node_id = self.node_count;
         self.node_count += 1;
@@ -80,7 +111,7 @@ impl NodeKind {
 }
 
 #[derive(Debug)]
-struct Node {
+pub struct Node {
     name: String,
     // map of (id, ty)
     queries: BTreeMap<QueryId, TokenStream>,
@@ -88,7 +119,12 @@ struct Node {
 }
 
 impl Node {
-    fn from_query(env: &mut Env, id: QueryId, fragment: QueryFragment, ty: TokenStream) -> Self {
+    pub fn from_query(
+        env: &mut Env,
+        id: QueryId,
+        fragment: QueryFragment,
+        ty: TokenStream,
+    ) -> Self {
         let name = env.new_node_name();
         match fragment {
             QueryFragment::Accept => Self {
@@ -139,7 +175,7 @@ impl Node {
         quote::format_ident!("Visitor{}", self.name)
     }
 
-    fn generate_internal(&self) -> TokenStream {
+    pub fn generate(&self) -> TokenStream {
         match &self.kind {
             NodeKind::Accept => {
                 // TODO: what if we have multiple queries?
@@ -197,7 +233,7 @@ impl Node {
                     }
                 });
 
-                let child_code = fields.values().map(|node| node.generate_internal());
+                let child_code = fields.values().map(|node| node.generate());
 
                 quote::quote! {
                     struct #deserialize_seed_ty<'query> {
@@ -267,7 +303,7 @@ impl Node {
                     .collect();
                 let query_types: Vec<_> = self.queries.values().collect();
 
-                let child_code = child.generate_internal();
+                let child_code = child.generate();
                 let child_deserialize_seed_ty = child.deserialize_seed_ty();
                 // child_query_names should be equal to those of self
 
@@ -353,7 +389,7 @@ impl Node {
     }
 }
 
-fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
+pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
     let mut node = Node {
         name: env.new_node_name(),
         queries: BTreeMap::new(),
@@ -363,64 +399,4 @@ fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
         node.merge(Node::from_query(env, query.id, query.fragment, query.ty));
     }
     node
-}
-
-fn generate_preamble() -> TokenStream {
-    quote::quote! {
-        extern crate alloc;
-
-        trait UnVec {
-            type Element;
-        }
-
-        impl<T> UnVec for alloc::vec::Vec<T> {
-            type Element = T;
-        }
-    }
-}
-
-// TODO: remove syn features
-fn main() {
-    let queries = vec![
-        Query {
-            id: QueryId("x".into()),
-            fragment: QueryFragment::Field {
-                name: "locs".into(),
-                rest: QueryFragment::CollectArray {
-                    rest: QueryFragment::Field {
-                        name: "x".into(),
-                        rest: QueryFragment::Accept.into(),
-                    }
-                    .into(),
-                }
-                .into(),
-            },
-            ty: quote::quote!(Vec<f32>),
-        },
-        Query {
-            id: QueryId("y".into()),
-            fragment: QueryFragment::Field {
-                name: "locs".into(),
-                rest: QueryFragment::CollectArray {
-                    rest: QueryFragment::Field {
-                        name: "y".into(),
-                        rest: QueryFragment::Accept.into(),
-                    }
-                    .into(),
-                }
-                .into(),
-            },
-            ty: quote::quote!(Vec<f32>),
-        },
-    ];
-    let node = compile(&mut Env::default(), queries.into_iter());
-
-    let code = {
-        let mut code = TokenStream::new();
-        code.extend(generate_preamble());
-        code.extend(node.generate_internal());
-        code
-    };
-
-    println!("{code}");
 }
