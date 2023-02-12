@@ -5,6 +5,7 @@ use serde_query_core::QueryFragment;
 pub enum Query {
     Field(String),
     Index(usize),
+    CollectArray,
 }
 
 #[derive(Logos, Debug, Clone, Copy, PartialEq, Eq)]
@@ -110,12 +111,7 @@ pub fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
                         assert_eq!(&slice[len - 1..], "\"");
                         queries.push(Query::Field(from_quoted(&slice[1..len - 1])))
                     }
-                    [] => {
-                        errors.push(ParseError {
-                            message: format!("{}..{}: indexing must not be empty", start, end,),
-                        });
-                        continue;
-                    }
+                    [] => queries.push(Query::CollectArray),
                     [(token, _), ..] => {
                         errors.push(ParseError {
                             message: format!(
@@ -161,6 +157,7 @@ pub fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
             .fold(QueryFragment::Accept, |rest, query| match query {
                 Query::Field(name) => QueryFragment::field(name, rest),
                 Query::Index(index) => QueryFragment::index_array(index, rest),
+                Query::CollectArray => QueryFragment::collect_array(rest),
             });
     (fragment, errors)
 }
