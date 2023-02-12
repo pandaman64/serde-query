@@ -191,9 +191,9 @@ impl Node {
                 }
             }
             QueryFragment::CollectArray { rest } => {
-                let unvec_ty = quote::quote!(<#ty as UnVec>::Element);
+                let element_ty = quote::quote!(<#ty as serde_query::__priv::Container>::Element);
                 let kind = NodeKind::CollectArray {
-                    child: Box::new(Self::from_query(env, id.clone(), *rest, unvec_ty)),
+                    child: Box::new(Self::from_query(env, id.clone(), *rest, element_ty)),
                 };
                 Self {
                     name,
@@ -508,6 +508,10 @@ impl Node {
 
                 let query_names = self.query_names();
                 let query_types = self.query_types();
+                let error_messages: Vec<_> = query_names
+                    .iter()
+                    .map(|name| format!("Query for '{}' failed to run", name))
+                    .collect();
 
                 let child_code = child.generate();
                 let child_deserialize_seed_ty = child.deserialize_seed_ty();
@@ -516,7 +520,7 @@ impl Node {
                 quote::quote! {
                     struct #deserialize_seed_ty<'query> {
                         #(
-                            #query_names: &'query mut core::option::Option<alloc::vec::Vec<<#query_types as UnVec>::Element>>,
+                            #query_names: &'query mut core::option::Option<#query_types>,
                         )*
                     }
 
@@ -528,7 +532,7 @@ impl Node {
                             D: serde::Deserializer<'de>,
                         {
                             #(
-                                let mut #query_names = alloc::vec::Vec::new();
+                                let mut #query_names = <#query_types as serde_query::__priv::Container>::empty();
                             )*
                             let visitor = #visitor_ty {
                                 #(
@@ -545,7 +549,7 @@ impl Node {
 
                     struct #visitor_ty<'query> {
                         #(
-                            #query_names: &'query mut alloc::vec::Vec<<#query_types as UnVec>::Element>,
+                            #query_names: &'query mut #query_types,
                         )*
                     }
 
@@ -556,7 +560,7 @@ impl Node {
                             core::fmt::Formatter::write_str(formatter, "a sequence")
                         }
 
-                        fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+                        fn visit_seq<A>(mut self, mut seq: A) -> Result<Self::Value, A::Error>
                         where
                             A: serde::de::SeqAccess<'de>,
                         {
@@ -572,8 +576,16 @@ impl Node {
                                 })? {
                                     Some(()) => {
                                         #(
-                                            self.#query_names.push(
-                                                #query_names.unwrap()
+                                            <#query_types as serde_query::__priv::Container>::extend_one(
+                                                &mut self.#query_names,
+                                                match #query_names {
+                                                    core::option::Option::Some(v) => v,
+                                                    core::option::Option::None => {
+                                                        return core::result::Result::Err(
+                                                            <<A as serde::de::SeqAccess<'de>>::Error as serde::de::Error>::custom(#error_messages)
+                                                        )
+                                                    }
+                                                },
                                             );
                                         )*
                                     }

@@ -1,19 +1,4 @@
-use proc_macro2::TokenStream;
 use serde_query_core::{compile, Env, Query, QueryFragment, QueryId};
-
-fn generate_preamble() -> TokenStream {
-    quote::quote! {
-        extern crate alloc;
-
-        trait UnVec {
-            type Element;
-        }
-
-        impl<T> UnVec for alloc::vec::Vec<T> {
-            type Element = T;
-        }
-    }
-}
 
 #[test]
 fn test_basic() {
@@ -43,12 +28,6 @@ fn test_basic() {
     ];
     let node = compile(&mut Env::new(), queries.into_iter());
 
-    let code = {
-        let mut code = TokenStream::new();
-        code.extend(generate_preamble());
-        code.extend(node.generate());
-        code
-    };
-
+    let code = node.generate();
     println!("{code}");
 }

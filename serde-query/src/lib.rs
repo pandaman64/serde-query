@@ -140,3 +140,65 @@ where
     /// The query type.
     type Query;
 }
+
+// This module can only be used inside the generated code.
+#[doc(hidden)]
+pub mod __priv {
+    pub trait Container {
+        type Element;
+
+        fn empty() -> Self;
+
+        fn extend_one(&mut self, element: Self::Element);
+    }
+
+    extern crate alloc;
+
+    impl<T> Container for alloc::vec::Vec<T> {
+        type Element = T;
+
+        fn empty() -> Self {
+            Self::new()
+        }
+
+        fn extend_one(&mut self, element: Self::Element) {
+            self.push(element);
+        }
+    }
+
+    impl<T> Container for alloc::collections::VecDeque<T> {
+        type Element = T;
+
+        fn empty() -> Self {
+            Self::new()
+        }
+
+        fn extend_one(&mut self, element: Self::Element) {
+            self.push_back(element);
+        }
+    }
+
+    impl<T: core::cmp::Ord> Container for alloc::collections::BTreeSet<T> {
+        type Element = T;
+
+        fn empty() -> Self {
+            Self::new()
+        }
+
+        fn extend_one(&mut self, element: Self::Element) {
+            self.insert(element);
+        }
+    }
+
+    impl<T: core::cmp::Eq + core::hash::Hash> Container for std::collections::HashSet<T> {
+        type Element = T;
+
+        fn empty() -> Self {
+            Self::new()
+        }
+
+        fn extend_one(&mut self, element: Self::Element) {
+            self.insert(element);
+        }
+    }
+}
