@@ -38,9 +38,8 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
         });
     }
 
-    // TODO: we need to propagate generic parameters
     if !input.generics.params.is_empty() {
-        emit_error!(input.generics, "generic arguments are not supported yet");
+        emit_error!(input.generics, "generic arguments are not supported");
         interrupt = true;
     }
 
@@ -111,11 +110,7 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     }
 
     let node = compile(&mut Env::new(), fields.into_iter());
-
-    let mut stream = quote! {
-        // TODO: generate preamble
-    };
-    stream.extend(node.generate());
+    let mut stream = node.generate();
 
     // generate the root code
     match target {

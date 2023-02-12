@@ -134,7 +134,7 @@ impl NodeKind {
                 NodeKind::CollectArray { child }
             }
             // TODO: better handling
-            _ => panic!("user error"),
+            _ => panic!("Conflicting queries"),
         }
     }
 }
