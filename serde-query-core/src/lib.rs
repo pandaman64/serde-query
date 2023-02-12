@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use proc_macro2::TokenStream;
+use proc_macro2::{Literal, TokenStream};
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum QueryFragment {
@@ -217,6 +217,14 @@ impl Node {
         quote::format_ident!("Visitor{}", self.name)
     }
 
+    fn field_deserialize_enum_ty(&self) -> syn::Ident {
+        quote::format_ident!("Field{}", self.name)
+    }
+
+    fn field_visitor_ty(&self) -> syn::Ident {
+        quote::format_ident!("FieldVisitor{}", self.name)
+    }
+
     fn query_names(&self) -> Vec<&syn::Ident> {
         self.queries.keys().map(QueryId::ident).collect()
     }
@@ -255,24 +263,39 @@ impl Node {
             NodeKind::Field { fields } => {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
+                let field_deserialize_enum_ty = self.field_deserialize_enum_ty();
+                let field_visitor_ty = self.field_visitor_ty();
 
                 let query_names = self.query_names();
                 let query_types = self.query_types();
 
-                let match_arms = fields.iter().map(|(field, node)| {
-                    let deserialize_seed_ty = node.deserialize_seed_ty();
-                    let query_names = node.query_names();
+                let field_ids: Vec<_> = (0..fields.len())
+                    .map(|idx| quote::format_ident!("Field{}", idx))
+                    .collect();
+                let field_names: Vec<_> = fields.keys().collect();
+                let byte_field_names: Vec<_> = fields
+                    .keys()
+                    .map(|name| Literal::byte_string(name.as_bytes()))
+                    .collect();
 
-                    quote::quote! {
-                        #field => {
-                            map.next_value_seed(#deserialize_seed_ty {
-                                #(
-                                    #query_names: self.#query_names,
-                                )*
-                            })?;
-                        }
-                    }
-                });
+                let match_arms =
+                    fields
+                        .iter()
+                        .zip(field_ids.iter())
+                        .map(|((_, node), field_id)| {
+                            let deserialize_seed_ty = node.deserialize_seed_ty();
+                            let query_names = node.query_names();
+
+                            quote::quote! {
+                                #field_deserialize_enum_ty :: #field_id => {
+                                    map.next_value_seed(#deserialize_seed_ty {
+                                        #(
+                                            #query_names: self.#query_names,
+                                        )*
+                                    })?;
+                                }
+                            }
+                        });
 
                 let expecting = {
                     let field_names: Vec<_> =
@@ -311,7 +334,6 @@ impl Node {
                         )*
                     }
 
-                    // TODO: efficient parsing for keys
                     impl<'query, 'de> serde::de::Visitor<'de> for #visitor_ty<'query> {
                         type Value = ();
 
@@ -323,15 +345,65 @@ impl Node {
                         where
                             A: serde::de::MapAccess<'de>,
                         {
-                            while let Some(key) = map.next_key::<String>()? {
-                                match key.as_str() {
+                            while let Some(key) = map.next_key::<#field_deserialize_enum_ty>()? {
+                                match key {
                                     #(#match_arms)*
-                                    _ => {
+                                    #field_deserialize_enum_ty :: Ignore => {
                                         map.next_value::<serde::de::IgnoredAny>()?;
                                     }
                                 }
                             }
                             Ok(())
+                        }
+                    }
+
+                    enum #field_deserialize_enum_ty {
+                        #(
+                            #field_ids,
+                        )*
+                        Ignore,
+                    }
+
+                    impl<'de> serde::de::Deserialize<'de> for #field_deserialize_enum_ty {
+                        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                        where
+                            D: serde::Deserializer<'de>,
+                        {
+                            deserializer.deserialize_identifier(#field_visitor_ty)
+                        }
+                    }
+
+                    struct #field_visitor_ty;
+
+                    impl<'de> serde::de::Visitor<'de> for #field_visitor_ty {
+                        type Value = #field_deserialize_enum_ty;
+
+                        fn expecting(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+                            core::fmt::Formatter::write_str(f, #expecting)
+                        }
+
+                        fn visit_str<E>(self, value: &str) -> core::result::Result<Self::Value, E>
+                        where
+                            E: serde::de::Error,
+                        {
+                            match value {
+                                #(
+                                    #field_names => core::result::Result::Ok(#field_deserialize_enum_ty :: #field_ids),
+                                )*
+                                _ => core::result::Result::Ok(#field_deserialize_enum_ty :: Ignore),
+                            }
+                        }
+
+                        fn visit_bytes<E>(self, value: &[u8]) -> core::result::Result<Self::Value, E>
+                        where
+                            E: serde::de::Error,
+                        {
+                            match value {
+                                #(
+                                    #byte_field_names => core::result::Result::Ok(#field_deserialize_enum_ty :: #field_ids),
+                                )*
+                                _ => core::result::Result::Ok(#field_deserialize_enum_ty :: Ignore),
+                            }
                         }
                     }
 
