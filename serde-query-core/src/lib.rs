@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use proc_macro2::TokenStream;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum QueryFragment {
     Accept,
     /// '.' <name> [.<rest>]
@@ -217,6 +217,14 @@ impl Node {
         quote::format_ident!("Visitor{}", self.name)
     }
 
+    pub fn query_names(&self) -> Vec<&syn::Ident> {
+        self.queries.keys().map(QueryId::ident).collect()
+    }
+
+    fn query_types(&self) -> Vec<&TokenStream> {
+        self.queries.values().collect()
+    }
+
     pub fn generate(&self) -> TokenStream {
         match &self.kind {
             NodeKind::Accept => {
@@ -248,12 +256,12 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self.queries.keys().map(QueryId::ident).collect();
-                let query_types: Vec<_> = self.queries.values().collect();
+                let query_names: Vec<_> = self.query_names();
+                let query_types: Vec<_> = self.query_types();
 
                 let match_arms = fields.iter().map(|(field, node)| {
                     let deserialize_seed_ty = node.deserialize_seed_ty();
-                    let query_names: Vec<_> = node.queries.keys().map(QueryId::ident).collect();
+                    let query_names: Vec<_> = node.query_names();
 
                     quote::quote! {
                         #field => {
@@ -329,12 +337,12 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self.queries.keys().map(QueryId::ident).collect();
-                let query_types: Vec<_> = self.queries.values().collect();
+                let query_names: Vec<_> = self.query_names();
+                let query_types: Vec<_> = self.query_types();
 
                 let match_arms = indices.iter().map(|(index, node)| {
                     let deserialize_seed_ty = node.deserialize_seed_ty();
-                    let query_names: Vec<_> = node.queries.keys().map(QueryId::ident).collect();
+                    let query_names: Vec<_> = node.query_names();
 
                     quote::quote! {
                         #index => {
@@ -416,8 +424,8 @@ impl Node {
                 let deserialize_seed_ty = self.deserialize_seed_ty();
                 let visitor_ty = self.visitor_ty();
 
-                let query_names: Vec<_> = self.queries.keys().map(QueryId::ident).collect();
-                let query_types: Vec<_> = self.queries.values().collect();
+                let query_names: Vec<_> = self.query_names();
+                let query_types: Vec<_> = self.query_types();
 
                 let child_code = child.generate();
                 let child_deserialize_seed_ty = child.deserialize_seed_ty();
@@ -505,7 +513,7 @@ impl Node {
     }
 }
 
-pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
+pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> (syn::Ident, Node) {
     let mut node = Node {
         name: env.new_node_name(),
         queries: BTreeMap::new(),
@@ -514,5 +522,5 @@ pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
     for query in queries {
         node.merge(Node::from_query(env, query.id, query.fragment, query.ty));
     }
-    node
+    (node.deserialize_seed_ty(), node)
 }

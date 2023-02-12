@@ -1,4 +1,5 @@
 use logos::Logos;
+use serde_query_core::QueryFragment;
 
 #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
 pub enum Query {
@@ -50,7 +51,7 @@ fn from_quoted(quoted: &str) -> String {
     ret
 }
 
-pub fn parse(input: &str) -> (Vec<Query>, Vec<ParseError>) {
+pub fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
     let mut tokens = Token::lexer(input);
     let mut queries = vec![];
     let mut errors = vec![];
@@ -153,7 +154,15 @@ pub fn parse(input: &str) -> (Vec<Query>, Vec<ParseError>) {
         }
     }
 
-    (queries, errors)
+    let fragment =
+        queries
+            .into_iter()
+            .rev()
+            .fold(QueryFragment::Accept, |rest, query| match query {
+                Query::Field(name) => QueryFragment::field(name, rest),
+                Query::Index(index) => QueryFragment::index_array(index, rest),
+            });
+    (fragment, errors)
 }
 
 #[cfg(test)]
@@ -186,11 +195,17 @@ mod test {
     #[test]
     fn parser() {
         let (query, errors) = parse(r#".["field name with spaces"]"#);
-        assert_eq!(query, &[Query::Field("field name with spaces".into())]);
+        assert_eq!(
+            query,
+            QueryFragment::field("field name with spaces".into(), QueryFragment::accept())
+        );
         assert!(errors.is_empty());
 
         let (query, errors) = parse(r#".[1]"#);
-        assert_eq!(query, &[Query::Index(1)]);
+        assert_eq!(
+            query,
+            QueryFragment::index_array(1, QueryFragment::accept())
+        );
         assert!(errors.is_empty());
     }
 }
