@@ -50,20 +50,6 @@ enum NodeKind {
 }
 
 impl NodeKind {
-    /// Collect queries in all children.
-    fn child_queries(&self) -> BTreeMap<QueryId, TokenStream> {
-        match self {
-            NodeKind::None => BTreeMap::new(),
-            NodeKind::Accept => BTreeMap::new(),
-            NodeKind::Struct { fields } => fields
-                .values()
-                .flat_map(|child| child.queries.iter())
-                .map(|(id, ty)| (id.clone(), ty.clone()))
-                .collect(),
-            NodeKind::Array { child } => child.queries.clone(),
-        }
-    }
-
     fn merge(&mut self, other: Self) {
         let this = std::mem::replace(self, Self::None);
         *self = match (this, other) {
@@ -117,22 +103,23 @@ impl Node {
                 let kind = NodeKind::Struct {
                     fields: BTreeMap::from_iter([(
                         field_name,
-                        Self::from_query(env, id, *rest, ty),
+                        Self::from_query(env, id.clone(), *rest, ty.clone()),
                     )]),
                 };
                 Self {
                     name,
-                    queries: kind.child_queries(),
+                    queries: BTreeMap::from_iter([(id, ty)]),
                     kind,
                 }
             }
             QueryFragment::CollectArray { rest } => {
+                let unvec_ty = quote::quote!(<#ty as UnVec>::Element);
                 let kind = NodeKind::Array {
-                    child: Box::new(Self::from_query(env, id, *rest, ty)),
+                    child: Box::new(Self::from_query(env, id.clone(), *rest, unvec_ty)),
                 };
                 Self {
                     name,
-                    queries: kind.child_queries(),
+                    queries: BTreeMap::from_iter([(id, ty)]),
                     kind,
                 }
             }
@@ -141,7 +128,7 @@ impl Node {
 
     fn merge(&mut self, other: Self) {
         self.kind.merge(other.kind);
-        self.queries = self.kind.child_queries();
+        self.queries.extend(other.queries.into_iter());
     }
 
     fn deserialize_seed_ty(&self) -> syn::Ident {
@@ -399,74 +386,34 @@ fn main() {
             id: QueryId("x".into()),
             fragment: QueryFragment::Field {
                 name: "locs".into(),
-                rest: QueryFragment::Field {
-                    name: "x".into(),
-                    rest: QueryFragment::Accept.into(),
+                rest: QueryFragment::CollectArray {
+                    rest: QueryFragment::Field {
+                        name: "x".into(),
+                        rest: QueryFragment::Accept.into(),
+                    }
+                    .into(),
                 }
                 .into(),
             },
-            ty: quote::quote!(String),
+            ty: quote::quote!(Vec<f32>),
         },
         Query {
             id: QueryId("y".into()),
             fragment: QueryFragment::Field {
                 name: "locs".into(),
-                rest: QueryFragment::Field {
-                    name: "y".into(),
-                    rest: QueryFragment::Accept.into(),
+                rest: QueryFragment::CollectArray {
+                    rest: QueryFragment::Field {
+                        name: "y".into(),
+                        rest: QueryFragment::Accept.into(),
+                    }
+                    .into(),
                 }
                 .into(),
             },
-            ty: quote::quote!(String),
+            ty: quote::quote!(Vec<f32>),
         },
     ];
     let node = compile(&mut Env::default(), queries.into_iter());
-
-    // let x_node = Node {
-    //     name: "XNode".into(),
-    //     queries: BTreeMap::from_iter([(QueryId("q0".into()), quote::quote!(f32))]),
-    //     kind: NodeKind::Accept,
-    // };
-    // let y_node = Node {
-    //     name: "YNode".into(),
-    //     queries: BTreeMap::from_iter([(QueryId("q1".into()), quote::quote!(f32))]),
-    //     kind: NodeKind::Accept,
-    // };
-    // let xy_node = Node {
-    //     name: "XYNode".into(),
-    //     queries: BTreeMap::from_iter([
-    //         (QueryId("q0".into()), quote::quote!(f32)),
-    //         (QueryId("q1".into()), quote::quote!(f32)),
-    //     ]),
-    //     kind: NodeKind::Struct {
-    //         fields: BTreeMap::from_iter([("x".into(), x_node), ("y".into(), y_node)]),
-    //     },
-    // };
-    // let array_node = Node {
-    //     name: "XYArrayNode".into(),
-    //     queries: BTreeMap::from_iter([
-    //         (QueryId("q0".into()), quote::quote!(Vec<f32>)),
-    //         (QueryId("q1".into()), quote::quote!(Vec<f32>)),
-    //     ]),
-    //     kind: NodeKind::Array {
-    //         child: Box::new(xy_node),
-    //     },
-    // };
-    // let node = Node {
-    //     name: "Root".into(),
-    //     queries: BTreeMap::from_iter([
-    //         (QueryId("q0".into()), quote::quote!(Vec<f32>)),
-    //         (QueryId("q1".into()), quote::quote!(Vec<f32>)),
-    //     ]),
-    //     kind: NodeKind::Struct {
-    //         fields: {
-    //             let mut fields = BTreeMap::new();
-    //             fields.insert("locs".into(), array_node);
-    //             fields
-    //         },
-    //     },
-    // };
-    // println!("{node:#?}");
 
     let code = {
         let mut code = TokenStream::new();
