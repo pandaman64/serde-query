@@ -564,7 +564,14 @@ impl Node {
                         where
                             A: serde::de::SeqAccess<'de>,
                         {
-                            // TODO: extend
+                            if let Some(additional) = seq.size_hint() {
+                                #(
+                                    <#query_types as serde_query::__priv::Container>::reserve(
+                                        &mut self.#query_names,
+                                        additional,
+                                    );
+                                )*
+                            }
                             loop {
                                 #(
                                     let mut #query_names = None;

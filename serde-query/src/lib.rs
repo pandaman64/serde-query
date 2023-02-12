@@ -149,6 +149,8 @@ pub mod __priv {
 
         fn empty() -> Self;
 
+        fn reserve(&mut self, additional: usize);
+
         fn extend_one(&mut self, element: Self::Element);
     }
 
@@ -159,6 +161,10 @@ pub mod __priv {
 
         fn empty() -> Self {
             Self::new()
+        }
+
+        fn reserve(&mut self, additional: usize) {
+            self.reserve(additional);
         }
 
         fn extend_one(&mut self, element: Self::Element) {
@@ -173,6 +179,10 @@ pub mod __priv {
             Self::new()
         }
 
+        fn reserve(&mut self, additional: usize) {
+            self.reserve(additional);
+        }
+
         fn extend_one(&mut self, element: Self::Element) {
             self.push_back(element);
         }
@@ -185,6 +195,10 @@ pub mod __priv {
             Self::new()
         }
 
+        fn reserve(&mut self, _additional: usize) {
+            // do nothing
+        }
+
         fn extend_one(&mut self, element: Self::Element) {
             self.insert(element);
         }
@@ -195,6 +209,10 @@ pub mod __priv {
 
         fn empty() -> Self {
             Self::new()
+        }
+
+        fn reserve(&mut self, additional: usize) {
+            self.reserve(additional);
         }
 
         fn extend_one(&mut self, element: Self::Element) {
