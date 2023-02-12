@@ -1,0 +1,2377 @@
+[
+  {
+    "sha": "8f0399319b05f9f2137f02cacec24050f319d4ca",
+    "node_id": "C_kwDOEWtaBtoAKDhmMDM5OTMxOWIwNWY5ZjIxMzdmMDJjYWNlYzI0MDUwZjMxOWQ0Y2E",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T10:35:13Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T10:35:13Z"
+      },
+      "message": "Parse array collection",
+      "tree": {
+        "sha": "c016dac8abd3cf94e57ac5f6c8a7ce45edc00fc5",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/c016dac8abd3cf94e57ac5f6c8a7ce45edc00fc5"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/8f0399319b05f9f2137f02cacec24050f319d4ca",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/8f0399319b05f9f2137f02cacec24050f319d4ca",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/8f0399319b05f9f2137f02cacec24050f319d4ca",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/8f0399319b05f9f2137f02cacec24050f319d4ca/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "a55714f5abe3155a54989f7aa1c80c748ceaebd3",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/a55714f5abe3155a54989f7aa1c80c748ceaebd3",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/a55714f5abe3155a54989f7aa1c80c748ceaebd3"
+      }
+    ]
+  },
+  {
+    "sha": "a55714f5abe3155a54989f7aa1c80c748ceaebd3",
+    "node_id": "C_kwDOEWtaBtoAKGE1NTcxNGY1YWJlMzE1NWE1NDk4OWY3YWExYzgwYzc0OGNlYWViZDM",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T10:02:04Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T10:02:04Z"
+      },
+      "message": "Efficient parsing for field names",
+      "tree": {
+        "sha": "baf63cf9ec206cbe432ea8577ebc6971900f5c6e",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/baf63cf9ec206cbe432ea8577ebc6971900f5c6e"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/a55714f5abe3155a54989f7aa1c80c748ceaebd3",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/a55714f5abe3155a54989f7aa1c80c748ceaebd3",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/a55714f5abe3155a54989f7aa1c80c748ceaebd3",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/a55714f5abe3155a54989f7aa1c80c748ceaebd3/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "b46b6f4dce1df8c546a3a20261f1d6c93aa0c690",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/b46b6f4dce1df8c546a3a20261f1d6c93aa0c690",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/b46b6f4dce1df8c546a3a20261f1d6c93aa0c690"
+      }
+    ]
+  },
+  {
+    "sha": "b46b6f4dce1df8c546a3a20261f1d6c93aa0c690",
+    "node_id": "C_kwDOEWtaBtoAKGI0NmI2ZjRkY2UxZGY4YzU0NmEzYTIwMjYxZjFkNmM5M2FhMGM2OTA",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T09:31:22Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T09:31:22Z"
+      },
+      "message": "Remove unnecessary type annotations",
+      "tree": {
+        "sha": "be89dbf3d77fdc0db1c84ff1bcb29f49da80d41d",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/be89dbf3d77fdc0db1c84ff1bcb29f49da80d41d"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/b46b6f4dce1df8c546a3a20261f1d6c93aa0c690",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/b46b6f4dce1df8c546a3a20261f1d6c93aa0c690",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/b46b6f4dce1df8c546a3a20261f1d6c93aa0c690",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/b46b6f4dce1df8c546a3a20261f1d6c93aa0c690/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "924086bd79fc43f6b6318284c854d82ef5ccee17",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/924086bd79fc43f6b6318284c854d82ef5ccee17",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/924086bd79fc43f6b6318284c854d82ef5ccee17"
+      }
+    ]
+  },
+  {
+    "sha": "924086bd79fc43f6b6318284c854d82ef5ccee17",
+    "node_id": "C_kwDOEWtaBtoAKDkyNDA4NmJkNzlmYzQzZjZiNjMxODI4NGM4NTRkODJlZjVjY2VlMTc",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T09:01:34Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T09:01:34Z"
+      },
+      "message": "Refactor code generation",
+      "tree": {
+        "sha": "ff3f1d0e6c3ae6fb05a921844db27c5d85ebbea1",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/ff3f1d0e6c3ae6fb05a921844db27c5d85ebbea1"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/924086bd79fc43f6b6318284c854d82ef5ccee17",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/924086bd79fc43f6b6318284c854d82ef5ccee17",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/924086bd79fc43f6b6318284c854d82ef5ccee17",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/924086bd79fc43f6b6318284c854d82ef5ccee17/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "6586f90e3541c7d02d7561f63b0087ea7f280faf",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/6586f90e3541c7d02d7561f63b0087ea7f280faf",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/6586f90e3541c7d02d7561f63b0087ea7f280faf"
+      }
+    ]
+  },
+  {
+    "sha": "6586f90e3541c7d02d7561f63b0087ea7f280faf",
+    "node_id": "C_kwDOEWtaBtoAKDY1ODZmOTBlMzU0MWM3ZDAyZDc1NjFmNjNiMDA4N2VhN2YyODBmYWY",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T08:48:18Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T08:48:18Z"
+      },
+      "message": "Fix index handling",
+      "tree": {
+        "sha": "ccc7dac9ca5d1912ff819d66321d2a0b8c2cb2de",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/ccc7dac9ca5d1912ff819d66321d2a0b8c2cb2de"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/6586f90e3541c7d02d7561f63b0087ea7f280faf",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/6586f90e3541c7d02d7561f63b0087ea7f280faf",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/6586f90e3541c7d02d7561f63b0087ea7f280faf",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/6586f90e3541c7d02d7561f63b0087ea7f280faf/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "64e2085128b7eec640d205924704aa0b577bd5ae",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/64e2085128b7eec640d205924704aa0b577bd5ae",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/64e2085128b7eec640d205924704aa0b577bd5ae"
+      }
+    ]
+  },
+  {
+    "sha": "64e2085128b7eec640d205924704aa0b577bd5ae",
+    "node_id": "C_kwDOEWtaBtoAKDY0ZTIwODUxMjhiN2VlYzY0MGQyMDU5MjQ3MDRhYTBiNTc3YmQ1YWU",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T08:46:28Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T08:46:28Z"
+      },
+      "message": "Minimal error reporting",
+      "tree": {
+        "sha": "6b30c37e22de6e455da419b82178b2f29bd5ebaf",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/6b30c37e22de6e455da419b82178b2f29bd5ebaf"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/64e2085128b7eec640d205924704aa0b577bd5ae",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/64e2085128b7eec640d205924704aa0b577bd5ae",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/64e2085128b7eec640d205924704aa0b577bd5ae",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/64e2085128b7eec640d205924704aa0b577bd5ae/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "d94d57078fde57b5950811c3bb515ffdef7c9a71",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/d94d57078fde57b5950811c3bb515ffdef7c9a71",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/d94d57078fde57b5950811c3bb515ffdef7c9a71"
+      }
+    ]
+  },
+  {
+    "sha": "d94d57078fde57b5950811c3bb515ffdef7c9a71",
+    "node_id": "C_kwDOEWtaBtoAKGQ5NGQ1NzA3OGZkZTU3YjU5NTA4MTFjM2JiNTE1ZmZkZWY3YzlhNzE",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T07:09:58Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T07:09:58Z"
+      },
+      "message": "Make code compilable",
+      "tree": {
+        "sha": "f7faeaf803aff2b8565203291f4cb1d8e5385b68",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/f7faeaf803aff2b8565203291f4cb1d8e5385b68"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/d94d57078fde57b5950811c3bb515ffdef7c9a71",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/d94d57078fde57b5950811c3bb515ffdef7c9a71",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/d94d57078fde57b5950811c3bb515ffdef7c9a71",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/d94d57078fde57b5950811c3bb515ffdef7c9a71/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "2df04207333be1a8735a971a9479544c5af09347",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/2df04207333be1a8735a971a9479544c5af09347",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/2df04207333be1a8735a971a9479544c5af09347"
+      }
+    ]
+  },
+  {
+    "sha": "2df04207333be1a8735a971a9479544c5af09347",
+    "node_id": "C_kwDOEWtaBtoAKDJkZjA0MjA3MzMzYmUxYTg3MzVhOTcxYTk0Nzk1NDRjNWFmMDkzNDc",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T05:49:37Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T05:49:37Z"
+      },
+      "message": "Use syn::Ident for query identifier",
+      "tree": {
+        "sha": "5d78fd9ccb974cea94e91e9689561a6fe50c586f",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/5d78fd9ccb974cea94e91e9689561a6fe50c586f"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/2df04207333be1a8735a971a9479544c5af09347",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/2df04207333be1a8735a971a9479544c5af09347",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/2df04207333be1a8735a971a9479544c5af09347",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/2df04207333be1a8735a971a9479544c5af09347/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "975c3802d5776cb09ce44dc9bf990753c9d8bd21",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/975c3802d5776cb09ce44dc9bf990753c9d8bd21",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/975c3802d5776cb09ce44dc9bf990753c9d8bd21"
+      }
+    ]
+  },
+  {
+    "sha": "975c3802d5776cb09ce44dc9bf990753c9d8bd21",
+    "node_id": "C_kwDOEWtaBtoAKDk3NWMzODAyZDU3NzZjYjA5Y2U0NGRjOWJmOTkwNzUzYzlkOGJkMjE",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T05:37:33Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T05:37:33Z"
+      },
+      "message": "Update version numbers",
+      "tree": {
+        "sha": "1550214c3f47317f2408a5f756f0690029918396",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/1550214c3f47317f2408a5f756f0690029918396"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/975c3802d5776cb09ce44dc9bf990753c9d8bd21",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/975c3802d5776cb09ce44dc9bf990753c9d8bd21",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/975c3802d5776cb09ce44dc9bf990753c9d8bd21",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/975c3802d5776cb09ce44dc9bf990753c9d8bd21/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "fe3e2c810ed4776fc50f16507a59af56e02b1efd",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/fe3e2c810ed4776fc50f16507a59af56e02b1efd",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/fe3e2c810ed4776fc50f16507a59af56e02b1efd"
+      }
+    ]
+  },
+  {
+    "sha": "fe3e2c810ed4776fc50f16507a59af56e02b1efd",
+    "node_id": "C_kwDOEWtaBtoAKGZlM2UyYzgxMGVkNDc3NmZjNTBmMTY1MDdhNTlhZjU2ZTAyYjFlZmQ",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T05:18:57Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T05:18:57Z"
+      },
+      "message": "Add IndexArray query",
+      "tree": {
+        "sha": "75049d551f9093b0db25e00848997af449224e1a",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/75049d551f9093b0db25e00848997af449224e1a"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/fe3e2c810ed4776fc50f16507a59af56e02b1efd",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/fe3e2c810ed4776fc50f16507a59af56e02b1efd",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/fe3e2c810ed4776fc50f16507a59af56e02b1efd",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/fe3e2c810ed4776fc50f16507a59af56e02b1efd/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "4fb1bde7c7cc6ca221a58b4259ee096720fb30ef",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/4fb1bde7c7cc6ca221a58b4259ee096720fb30ef",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/4fb1bde7c7cc6ca221a58b4259ee096720fb30ef"
+      }
+    ]
+  },
+  {
+    "sha": "4fb1bde7c7cc6ca221a58b4259ee096720fb30ef",
+    "node_id": "C_kwDOEWtaBtoAKDRmYjFiZGU3YzdjYzZjYTIyMWE1OGI0MjU5ZWUwOTY3MjBmYjMwZWY",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T04:06:26Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T04:06:26Z"
+      },
+      "message": "Librarify serde-query-core",
+      "tree": {
+        "sha": "32315600203f0790e61f4f7d79a124966702148f",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/32315600203f0790e61f4f7d79a124966702148f"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/4fb1bde7c7cc6ca221a58b4259ee096720fb30ef",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/4fb1bde7c7cc6ca221a58b4259ee096720fb30ef",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/4fb1bde7c7cc6ca221a58b4259ee096720fb30ef",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/4fb1bde7c7cc6ca221a58b4259ee096720fb30ef/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "3d0dc365bc2ee516ee67d938b18b0e5d5b1867a8",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/3d0dc365bc2ee516ee67d938b18b0e5d5b1867a8",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/3d0dc365bc2ee516ee67d938b18b0e5d5b1867a8"
+      }
+    ]
+  },
+  {
+    "sha": "3d0dc365bc2ee516ee67d938b18b0e5d5b1867a8",
+    "node_id": "C_kwDOEWtaBtoAKDNkMGRjMzY1YmMyZWU1MTZlZTY3ZDkzOGIxOGIwZTVkNWIxODY3YTg",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T02:24:46Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T02:24:46Z"
+      },
+      "message": "Commit settings.json",
+      "tree": {
+        "sha": "566a486d584bdec46de9db6f139b55a8d47b3674",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/566a486d584bdec46de9db6f139b55a8d47b3674"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/3d0dc365bc2ee516ee67d938b18b0e5d5b1867a8",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/3d0dc365bc2ee516ee67d938b18b0e5d5b1867a8",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/3d0dc365bc2ee516ee67d938b18b0e5d5b1867a8",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/3d0dc365bc2ee516ee67d938b18b0e5d5b1867a8/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "e83c94639ae8645ff0775b9ff90dc86ed678e818",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/e83c94639ae8645ff0775b9ff90dc86ed678e818",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/e83c94639ae8645ff0775b9ff90dc86ed678e818"
+      }
+    ]
+  },
+  {
+    "sha": "e83c94639ae8645ff0775b9ff90dc86ed678e818",
+    "node_id": "C_kwDOEWtaBtoAKGU4M2M5NDYzOWFlODY0NWZmMDc3NWI5ZmY5MGRjODZlZDY3OGU4MTg",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T02:24:38Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-12T02:24:38Z"
+      },
+      "message": "Fixes code generation for array collection",
+      "tree": {
+        "sha": "42199f2885864219c4d8aa673128e7569d124275",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/42199f2885864219c4d8aa673128e7569d124275"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/e83c94639ae8645ff0775b9ff90dc86ed678e818",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/e83c94639ae8645ff0775b9ff90dc86ed678e818",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/e83c94639ae8645ff0775b9ff90dc86ed678e818",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/e83c94639ae8645ff0775b9ff90dc86ed678e818/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "438eeffd8ce832a6650649d197854fa1ba0628e5",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/438eeffd8ce832a6650649d197854fa1ba0628e5",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/438eeffd8ce832a6650649d197854fa1ba0628e5"
+      }
+    ]
+  },
+  {
+    "sha": "438eeffd8ce832a6650649d197854fa1ba0628e5",
+    "node_id": "C_kwDOEWtaBtoAKDQzOGVlZmZkOGNlODMyYTY2NTA2NDlkMTk3ODU0ZmExYmEwNjI4ZTU",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-08T14:13:29Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-08T14:13:29Z"
+      },
+      "message": "Compile queries",
+      "tree": {
+        "sha": "d9f2611b7129028b02ebe47aea918fb05ae8f229",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/d9f2611b7129028b02ebe47aea918fb05ae8f229"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/438eeffd8ce832a6650649d197854fa1ba0628e5",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/438eeffd8ce832a6650649d197854fa1ba0628e5",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/438eeffd8ce832a6650649d197854fa1ba0628e5",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/438eeffd8ce832a6650649d197854fa1ba0628e5/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "6ec3454e12c3e87a5db046f23a27662d63534ae0",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/6ec3454e12c3e87a5db046f23a27662d63534ae0",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/6ec3454e12c3e87a5db046f23a27662d63534ae0"
+      }
+    ]
+  },
+  {
+    "sha": "6ec3454e12c3e87a5db046f23a27662d63534ae0",
+    "node_id": "C_kwDOEWtaBtoAKDZlYzM0NTRlMTJjM2U4N2E1ZGIwNDZmMjNhMjc2NjJkNjM1MzRhZTA",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-08T11:44:27Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-08T11:44:27Z"
+      },
+      "message": "Add MVP code generation",
+      "tree": {
+        "sha": "426a4a3c512956f0acc72081b9546fae4332e939",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/426a4a3c512956f0acc72081b9546fae4332e939"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/6ec3454e12c3e87a5db046f23a27662d63534ae0",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/6ec3454e12c3e87a5db046f23a27662d63534ae0",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/6ec3454e12c3e87a5db046f23a27662d63534ae0",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/6ec3454e12c3e87a5db046f23a27662d63534ae0/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "bdad01a8b30e5f81684c4ae361c5fa71dd9cab75",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/bdad01a8b30e5f81684c4ae361c5fa71dd9cab75",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/bdad01a8b30e5f81684c4ae361c5fa71dd9cab75"
+      }
+    ]
+  },
+  {
+    "sha": "bdad01a8b30e5f81684c4ae361c5fa71dd9cab75",
+    "node_id": "C_kwDOEWtaBtoAKGJkYWQwMWE4YjMwZTVmODE2ODRjNGFlMzYxYzVmYTcxZGQ5Y2FiNzU",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-05T07:22:53Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-05T07:22:53Z"
+      },
+      "message": "Release 0.1.5",
+      "tree": {
+        "sha": "1a29feac3eae2ae389bc6fbdd36b1a837999455e",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/1a29feac3eae2ae389bc6fbdd36b1a837999455e"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/bdad01a8b30e5f81684c4ae361c5fa71dd9cab75",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/bdad01a8b30e5f81684c4ae361c5fa71dd9cab75",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/bdad01a8b30e5f81684c4ae361c5fa71dd9cab75",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/bdad01a8b30e5f81684c4ae361c5fa71dd9cab75/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "f79fdbc9516b8c547643b95dd74155e6b4e8855d",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/f79fdbc9516b8c547643b95dd74155e6b4e8855d",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/f79fdbc9516b8c547643b95dd74155e6b4e8855d"
+      }
+    ]
+  },
+  {
+    "sha": "f79fdbc9516b8c547643b95dd74155e6b4e8855d",
+    "node_id": "C_kwDOEWtaBtoAKGY3OWZkYmM5NTE2YjhjNTQ3NjQzYjk1ZGQ3NDE1NWU2YjRlODg1NWQ",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-05T07:07:41Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2023-02-05T07:07:41Z"
+      },
+      "message": "Fix visibility",
+      "tree": {
+        "sha": "6b6b98e07c3e2ff34b5bf4576b79eca18b6236d8",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/6b6b98e07c3e2ff34b5bf4576b79eca18b6236d8"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/f79fdbc9516b8c547643b95dd74155e6b4e8855d",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/f79fdbc9516b8c547643b95dd74155e6b4e8855d",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/f79fdbc9516b8c547643b95dd74155e6b4e8855d",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/f79fdbc9516b8c547643b95dd74155e6b4e8855d/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "4964c67c1f2a9d3a21ff8fb6655e09279d6338d2",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/4964c67c1f2a9d3a21ff8fb6655e09279d6338d2",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/4964c67c1f2a9d3a21ff8fb6655e09279d6338d2"
+      }
+    ]
+  },
+  {
+    "sha": "4964c67c1f2a9d3a21ff8fb6655e09279d6338d2",
+    "node_id": "C_kwDOEWtaBtoAKDQ5NjRjNjdjMWYyYTlkM2EyMWZmOGZiNjY1NWUwOTI3OWQ2MzM4ZDI",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-11-02T10:57:07Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-11-02T10:57:07Z"
+      },
+      "message": "fix clippy lints",
+      "tree": {
+        "sha": "e8d2871fdec6e8610d8f61b66bc5a30a40a717b5",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/e8d2871fdec6e8610d8f61b66bc5a30a40a717b5"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/4964c67c1f2a9d3a21ff8fb6655e09279d6338d2",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/4964c67c1f2a9d3a21ff8fb6655e09279d6338d2",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/4964c67c1f2a9d3a21ff8fb6655e09279d6338d2",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/4964c67c1f2a9d3a21ff8fb6655e09279d6338d2/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "2d901a0a7734a17c2e4f72bf732ccb3b26558633",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/2d901a0a7734a17c2e4f72bf732ccb3b26558633",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/2d901a0a7734a17c2e4f72bf732ccb3b26558633"
+      }
+    ]
+  },
+  {
+    "sha": "2d901a0a7734a17c2e4f72bf732ccb3b26558633",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOjJkOTAxYTBhNzczNGExN2MyZTRmNzJiZjczMmNjYjNiMjY1NTg2MzM=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-04T11:56:40Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-04T11:56:40Z"
+      },
+      "message": "more robust reference to Result",
+      "tree": {
+        "sha": "4db2a80764e31b6680f688c7b413493d06ef633e",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/4db2a80764e31b6680f688c7b413493d06ef633e"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/2d901a0a7734a17c2e4f72bf732ccb3b26558633",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/2d901a0a7734a17c2e4f72bf732ccb3b26558633",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/2d901a0a7734a17c2e4f72bf732ccb3b26558633",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/2d901a0a7734a17c2e4f72bf732ccb3b26558633/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "ea31f9a2bcdab94a9d0207d7fcb7bc19234794a8",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/ea31f9a2bcdab94a9d0207d7fcb7bc19234794a8",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/ea31f9a2bcdab94a9d0207d7fcb7bc19234794a8"
+      }
+    ]
+  },
+  {
+    "sha": "ea31f9a2bcdab94a9d0207d7fcb7bc19234794a8",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOmVhMzFmOWEyYmNkYWI5NGE5ZDAyMDdkN2ZjYjdiYzE5MjM0Nzk0YTg=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T12:26:40Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T12:26:40Z"
+      },
+      "message": "confirm that underscores works",
+      "tree": {
+        "sha": "3af77090962db15c598f6e55bb0157ee8c7bc5cf",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/3af77090962db15c598f6e55bb0157ee8c7bc5cf"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/ea31f9a2bcdab94a9d0207d7fcb7bc19234794a8",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/ea31f9a2bcdab94a9d0207d7fcb7bc19234794a8",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/ea31f9a2bcdab94a9d0207d7fcb7bc19234794a8",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/ea31f9a2bcdab94a9d0207d7fcb7bc19234794a8/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "35db83f0537b74613f1f58d4baeba4612e790cfb",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/35db83f0537b74613f1f58d4baeba4612e790cfb",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/35db83f0537b74613f1f58d4baeba4612e790cfb"
+      }
+    ]
+  },
+  {
+    "sha": "35db83f0537b74613f1f58d4baeba4612e790cfb",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOjM1ZGI4M2YwNTM3Yjc0NjEzZjFmNThkNGJhZWJhNDYxMmU3OTBjZmI=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T12:24:45Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T12:24:45Z"
+      },
+      "message": "nicer frontend errors",
+      "tree": {
+        "sha": "4b2bd7f878d9c38e739bfc359b6095a2b726ccb4",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/4b2bd7f878d9c38e739bfc359b6095a2b726ccb4"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/35db83f0537b74613f1f58d4baeba4612e790cfb",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/35db83f0537b74613f1f58d4baeba4612e790cfb",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/35db83f0537b74613f1f58d4baeba4612e790cfb",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/35db83f0537b74613f1f58d4baeba4612e790cfb/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "d2195cf6805a0bf52aff15cab888bb35d71975d3",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/d2195cf6805a0bf52aff15cab888bb35d71975d3",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/d2195cf6805a0bf52aff15cab888bb35d71975d3"
+      }
+    ]
+  },
+  {
+    "sha": "d2195cf6805a0bf52aff15cab888bb35d71975d3",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOmQyMTk1Y2Y2ODA1YTBiZjUyYWZmMTVjYWI4ODhiYjM1ZDcxOTc1ZDM=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T11:59:25Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T11:59:25Z"
+      },
+      "message": "gracefully handle parse error",
+      "tree": {
+        "sha": "895651093808f35a5dab8c5d49a88400190b981a",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/895651093808f35a5dab8c5d49a88400190b981a"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/d2195cf6805a0bf52aff15cab888bb35d71975d3",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/d2195cf6805a0bf52aff15cab888bb35d71975d3",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/d2195cf6805a0bf52aff15cab888bb35d71975d3",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/d2195cf6805a0bf52aff15cab888bb35d71975d3/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "b3596dac6f8deb2cfc52449e1cdcb741285d11b9",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/b3596dac6f8deb2cfc52449e1cdcb741285d11b9",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/b3596dac6f8deb2cfc52449e1cdcb741285d11b9"
+      }
+    ]
+  },
+  {
+    "sha": "b3596dac6f8deb2cfc52449e1cdcb741285d11b9",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOmIzNTk2ZGFjNmY4ZGViMmNmYzUyNDQ5ZTFjZGNiNzQxMjg1ZDExYjk=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T11:43:53Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T11:43:53Z"
+      },
+      "message": "reform query parser",
+      "tree": {
+        "sha": "cc0bb890186cd5bd4ec5507665d05fb51793ac2a",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/cc0bb890186cd5bd4ec5507665d05fb51793ac2a"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/b3596dac6f8deb2cfc52449e1cdcb741285d11b9",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/b3596dac6f8deb2cfc52449e1cdcb741285d11b9",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/b3596dac6f8deb2cfc52449e1cdcb741285d11b9",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/b3596dac6f8deb2cfc52449e1cdcb741285d11b9/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "328f8accdbeed668258ead01f5385031ea005afb",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/328f8accdbeed668258ead01f5385031ea005afb",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/328f8accdbeed668258ead01f5385031ea005afb"
+      }
+    ]
+  },
+  {
+    "sha": "328f8accdbeed668258ead01f5385031ea005afb",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOjMyOGY4YWNjZGJlZWQ2NjgyNThlYWQwMWY1Mzg1MDMxZWEwMDVhZmI=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T10:04:37Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T10:04:37Z"
+      },
+      "message": "lexer",
+      "tree": {
+        "sha": "a33e4f31fd826ceca5dd10c2b329f290e4a835e1",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/a33e4f31fd826ceca5dd10c2b329f290e4a835e1"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/328f8accdbeed668258ead01f5385031ea005afb",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/328f8accdbeed668258ead01f5385031ea005afb",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/328f8accdbeed668258ead01f5385031ea005afb",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/328f8accdbeed668258ead01f5385031ea005afb/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "75ca1287f773589881f2d048c8aefd38def86b7a",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/75ca1287f773589881f2d048c8aefd38def86b7a",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/75ca1287f773589881f2d048c8aefd38def86b7a"
+      }
+    ]
+  },
+  {
+    "sha": "75ca1287f773589881f2d048c8aefd38def86b7a",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOjc1Y2ExMjg3Zjc3MzU4OTg4MWYyZDA0OGM4YWVmZDM4ZGVmODZiN2E=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T08:08:26Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T08:08:26Z"
+      },
+      "message": "move compile tests",
+      "tree": {
+        "sha": "2c0173ff542eb20f210740b4673b916c7f6f440c",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/2c0173ff542eb20f210740b4673b916c7f6f440c"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/75ca1287f773589881f2d048c8aefd38def86b7a",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/75ca1287f773589881f2d048c8aefd38def86b7a",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/75ca1287f773589881f2d048c8aefd38def86b7a",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/75ca1287f773589881f2d048c8aefd38def86b7a/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "4e6bbda6ff9d2bea65e2f7acfadbb47d15b7060f",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/4e6bbda6ff9d2bea65e2f7acfadbb47d15b7060f",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/4e6bbda6ff9d2bea65e2f7acfadbb47d15b7060f"
+      }
+    ]
+  },
+  {
+    "sha": "4e6bbda6ff9d2bea65e2f7acfadbb47d15b7060f",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOjRlNmJiZGE2ZmY5ZDJiZWE2NWUyZjdhY2ZhZGJiNDdkMTViNzA2MGY=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T08:07:24Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T08:07:24Z"
+      },
+      "message": "no memory test",
+      "tree": {
+        "sha": "dad54af57a3028181713d9f1e9431ef6bd45c3f9",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/dad54af57a3028181713d9f1e9431ef6bd45c3f9"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/4e6bbda6ff9d2bea65e2f7acfadbb47d15b7060f",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/4e6bbda6ff9d2bea65e2f7acfadbb47d15b7060f",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/4e6bbda6ff9d2bea65e2f7acfadbb47d15b7060f",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/4e6bbda6ff9d2bea65e2f7acfadbb47d15b7060f/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "c82fbd3baccbbe53aff528a721e29ebdb7572ac9",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/c82fbd3baccbbe53aff528a721e29ebdb7572ac9",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/c82fbd3baccbbe53aff528a721e29ebdb7572ac9"
+      }
+    ]
+  },
+  {
+    "sha": "c82fbd3baccbbe53aff528a721e29ebdb7572ac9",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOmM4MmZiZDNiYWNjYmJlNTNhZmY1MjhhNzIxZTI5ZWJkYjc1NzJhYzk=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T07:42:13Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2021-04-02T07:42:13Z"
+      },
+      "message": "test framework",
+      "tree": {
+        "sha": "3647dacb20afd958b01400e0753deba93d036ee8",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/3647dacb20afd958b01400e0753deba93d036ee8"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/c82fbd3baccbbe53aff528a721e29ebdb7572ac9",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/c82fbd3baccbbe53aff528a721e29ebdb7572ac9",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/c82fbd3baccbbe53aff528a721e29ebdb7572ac9",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/c82fbd3baccbbe53aff528a721e29ebdb7572ac9/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "d12bf10f24a9b2c965ddc4aff03434cb63cf28d3",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/d12bf10f24a9b2c965ddc4aff03434cb63cf28d3",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/d12bf10f24a9b2c965ddc4aff03434cb63cf28d3"
+      }
+    ]
+  },
+  {
+    "sha": "d12bf10f24a9b2c965ddc4aff03434cb63cf28d3",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOmQxMmJmMTBmMjRhOWIyYzk2NWRkYzRhZmYwMzQzNGNiNjNjZjI4ZDM=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2020-10-08T11:33:48Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2020-10-08T11:58:38Z"
+      },
+      "message": "optimize for memory (not working?)",
+      "tree": {
+        "sha": "6aecaeb44a5cee8b207a21a6328b963e10438636",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/6aecaeb44a5cee8b207a21a6328b963e10438636"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/d12bf10f24a9b2c965ddc4aff03434cb63cf28d3",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/d12bf10f24a9b2c965ddc4aff03434cb63cf28d3",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/d12bf10f24a9b2c965ddc4aff03434cb63cf28d3",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/d12bf10f24a9b2c965ddc4aff03434cb63cf28d3/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "a408de2ea22017b868ce3b3fcbadc080620d334c",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/a408de2ea22017b868ce3b3fcbadc080620d334c",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/a408de2ea22017b868ce3b3fcbadc080620d334c"
+      }
+    ]
+  },
+  {
+    "sha": "a408de2ea22017b868ce3b3fcbadc080620d334c",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOmE0MDhkZTJlYTIyMDE3Yjg2OGNlM2IzZmNiYWRjMDgwNjIwZDMzNGM=",
+    "commit": {
+      "author": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2020-10-08T11:30:31Z"
+      },
+      "committer": {
+        "name": "pandaman64",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2020-10-08T11:58:38Z"
+      },
+      "message": "measure memory usage",
+      "tree": {
+        "sha": "65db3d559bd5efee23334240742ed8c5e96c7043",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/65db3d559bd5efee23334240742ed8c5e96c7043"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/a408de2ea22017b868ce3b3fcbadc080620d334c",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/a408de2ea22017b868ce3b3fcbadc080620d334c",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/a408de2ea22017b868ce3b3fcbadc080620d334c",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/a408de2ea22017b868ce3b3fcbadc080620d334c/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "55dab0e7fd298a5720dfd6dc2f7dab462bab25c1",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/55dab0e7fd298a5720dfd6dc2f7dab462bab25c1",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/55dab0e7fd298a5720dfd6dc2f7dab462bab25c1"
+      }
+    ]
+  },
+  {
+    "sha": "55dab0e7fd298a5720dfd6dc2f7dab462bab25c1",
+    "node_id": "MDY6Q29tbWl0MjkyMjQ4MDcwOjU1ZGFiMGU3ZmQyOThhNTcyMGRmZDZkYzJmN2RhYjQ2MmJhYjI1YzE=",
+    "commit": {
+      "author": {
+        "name": "pandaman",
+        "email": "kointosudesuyo@infoseek.jp",
+        "date": "2020-10-04T05:12:48Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2020-10-04T05:12:48Z"
+      },
+      "message": "Merge pull request #1 from jacobmischka/master\n\nFix very small typo in readme",
+      "tree": {
+        "sha": "3a7822fe1840f1df7a4a8225b22f653049190d08",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/git/trees/3a7822fe1840f1df7a4a8225b22f653049190d08"
+      },
+      "url": "https://api.github.com/repos/pandaman64/serde-query/git/commits/55dab0e7fd298a5720dfd6dc2f7dab462bab25c1",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsBcBAABCAAQBQJfeVnQCRBK7hj4Ov3rIwAAdHIIAHyZ7rGMd4bdwq9YoZAZr0yW\nfEdLgHd6e2iXJSc6TiKsavQfhUTCv1Q1cIOAr4A1V5EZ7vnGtalyDuwQ1J5iAkSk\nESwXKnELrO3OraVQPG46zOjEQJS1RKyo53WzHuMY0u1SMrAg1Tb4h1gY90Vh0uyQ\ntD1sK6GsZv37Cn9hqd8IOT5U9f15Qads7QHB697Vkmm69GBaZCE5k/lVq4WrkIPQ\nKVL4N6J7A/fUbOlFWkl+HTSB8SuAFr01GX4Y8ao1zqkgSmQyvgzoJB+4QpreGPiw\nA66gdLqG7X1oHry5pXjztIR7eYUPJKKGACbEaviokVlcc2anXyFyijIflwAQHfc=\n=P377\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 3a7822fe1840f1df7a4a8225b22f653049190d08\nparent 79e3604229465c1786ba5c8ea5ef341c3c2de821\nparent 96402435bbabcfdc247823458d0e13983c339ecd\nauthor pandaman <kointosudesuyo@infoseek.jp> 1601788368 +0900\ncommitter GitHub <noreply@github.com> 1601788368 +0900\n\nMerge pull request #1 from jacobmischka/master\n\nFix very small typo in readme"
+      }
+    },
+    "url": "https://api.github.com/repos/pandaman64/serde-query/commits/55dab0e7fd298a5720dfd6dc2f7dab462bab25c1",
+    "html_url": "https://github.com/pandaman64/serde-query/commit/55dab0e7fd298a5720dfd6dc2f7dab462bab25c1",
+    "comments_url": "https://api.github.com/repos/pandaman64/serde-query/commits/55dab0e7fd298a5720dfd6dc2f7dab462bab25c1/comments",
+    "author": {
+      "login": "pandaman64",
+      "id": 1788628,
+      "node_id": "MDQ6VXNlcjE3ODg2Mjg=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1788628?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/pandaman64",
+      "html_url": "https://github.com/pandaman64",
+      "followers_url": "https://api.github.com/users/pandaman64/followers",
+      "following_url": "https://api.github.com/users/pandaman64/following{/other_user}",
+      "gists_url": "https://api.github.com/users/pandaman64/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/pandaman64/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/pandaman64/subscriptions",
+      "organizations_url": "https://api.github.com/users/pandaman64/orgs",
+      "repos_url": "https://api.github.com/users/pandaman64/repos",
+      "events_url": "https://api.github.com/users/pandaman64/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/pandaman64/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "79e3604229465c1786ba5c8ea5ef341c3c2de821",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/79e3604229465c1786ba5c8ea5ef341c3c2de821",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/79e3604229465c1786ba5c8ea5ef341c3c2de821"
+      },
+      {
+        "sha": "96402435bbabcfdc247823458d0e13983c339ecd",
+        "url": "https://api.github.com/repos/pandaman64/serde-query/commits/96402435bbabcfdc247823458d0e13983c339ecd",
+        "html_url": "https://github.com/pandaman64/serde-query/commit/96402435bbabcfdc247823458d0e13983c339ecd"
+      }
+    ]
+  }
+]
