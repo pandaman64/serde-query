@@ -21,11 +21,12 @@ const _: () = {
         x: &'query mut core::option::Option<Vec<f32>>,
         y: &'query mut core::option::Option<Vec<f32>>,
     }
-    impl<'query, 'de> serde::de::DeserializeSeed<'de> for DeserializeSeedNode0<'query> {
+    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
+    for DeserializeSeedNode0<'query> {
         type Value = ();
         fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: serde_query::__priv::serde::Deserializer<'de>,
         {
             let visitor = VisitorNode0 {
                 x: self.x,
@@ -38,7 +39,8 @@ const _: () = {
         x: &'query mut core::option::Option<Vec<f32>>,
         y: &'query mut core::option::Option<Vec<f32>>,
     }
-    impl<'query, 'de> serde::de::Visitor<'de> for VisitorNode0<'query> {
+    impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de>
+    for VisitorNode0<'query> {
         type Value = ();
         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
             core::fmt::Formatter::write_str(
@@ -48,7 +50,7 @@ const _: () = {
         }
         fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
         where
-            A: serde::de::MapAccess<'de>,
+            A: serde_query::__priv::serde::de::MapAccess<'de>,
         {
             while let Some(key) = map.next_key::<FieldNode0>()? {
                 match key {
@@ -59,7 +61,7 @@ const _: () = {
                         })?;
                     }
                     FieldNode0::Ignore => {
-                        map.next_value::<serde::de::IgnoredAny>()?;
+                        map.next_value::<serde_query::__priv::serde::de::IgnoredAny>()?;
                     }
                 }
             }
@@ -70,23 +72,23 @@ const _: () = {
         Field0,
         Ignore,
     }
-    impl<'de> serde::de::Deserialize<'de> for FieldNode0 {
+    impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for FieldNode0 {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: serde_query::__priv::serde::Deserializer<'de>,
         {
             deserializer.deserialize_identifier(FieldVisitorNode0)
         }
     }
     struct FieldVisitorNode0;
-    impl<'de> serde::de::Visitor<'de> for FieldVisitorNode0 {
+    impl<'de> serde_query::__priv::serde::de::Visitor<'de> for FieldVisitorNode0 {
         type Value = FieldNode0;
         fn expecting(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
             core::fmt::Formatter::write_str(f, "one of the following fields: 'locs'")
         }
         fn visit_str<E>(self, value: &str) -> core::result::Result<Self::Value, E>
         where
-            E: serde::de::Error,
+            E: serde_query::__priv::serde::de::Error,
         {
             match value {
                 "locs" => core::result::Result::Ok(FieldNode0::Field0),
@@ -95,7 +97,7 @@ const _: () = {
         }
         fn visit_bytes<E>(self, value: &[u8]) -> core::result::Result<Self::Value, E>
         where
-            E: serde::de::Error,
+            E: serde_query::__priv::serde::de::Error,
         {
             match value {
                 b"locs" => core::result::Result::Ok(FieldNode0::Field0),
@@ -107,11 +109,12 @@ const _: () = {
         x: &'query mut core::option::Option<Vec<f32>>,
         y: &'query mut core::option::Option<Vec<f32>>,
     }
-    impl<'query, 'de> serde::de::DeserializeSeed<'de> for DeserializeSeedNode2<'query> {
+    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
+    for DeserializeSeedNode2<'query> {
         type Value = ();
         fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: serde_query::__priv::serde::Deserializer<'de>,
         {
             let mut x = <Vec<f32> as serde_query::__priv::Container>::empty();
             let mut y = <Vec<f32> as serde_query::__priv::Container>::empty();
@@ -129,14 +132,15 @@ const _: () = {
         x: &'query mut Vec<f32>,
         y: &'query mut Vec<f32>,
     }
-    impl<'query, 'de> serde::de::Visitor<'de> for VisitorNode2<'query> {
+    impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de>
+    for VisitorNode2<'query> {
         type Value = ();
         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
             core::fmt::Formatter::write_str(formatter, "a sequence")
         }
         fn visit_seq<A>(mut self, mut seq: A) -> Result<Self::Value, A::Error>
         where
-            A: serde::de::SeqAccess<'de>,
+            A: serde_query::__priv::serde::de::SeqAccess<'de>,
         {
             if let Some(additional) = seq.size_hint() {
                 <Vec<
@@ -164,9 +168,9 @@ const _: () = {
                                 core::option::Option::Some(v) => v,
                                 core::option::Option::None => {
                                     return core::result::Result::Err(
-                                        <<A as serde::de::SeqAccess<
+                                        <<A as serde_query::__priv::serde::de::SeqAccess<
                                             'de,
-                                        >>::Error as serde::de::Error>::custom(
+                                        >>::Error as serde_query::__priv::serde::de::Error>::custom(
                                             "Query for 'x' failed to run",
                                         ),
                                     );
@@ -181,9 +185,9 @@ const _: () = {
                                 core::option::Option::Some(v) => v,
                                 core::option::Option::None => {
                                     return core::result::Result::Err(
-                                        <<A as serde::de::SeqAccess<
+                                        <<A as serde_query::__priv::serde::de::SeqAccess<
                                             'de,
-                                        >>::Error as serde::de::Error>::custom(
+                                        >>::Error as serde_query::__priv::serde::de::Error>::custom(
                                             "Query for 'y' failed to run",
                                         ),
                                     );
@@ -207,11 +211,12 @@ const _: () = {
             <Vec<f32> as serde_query::__priv::Container>::Element,
         >,
     }
-    impl<'query, 'de> serde::de::DeserializeSeed<'de> for DeserializeSeedNode3<'query> {
+    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
+    for DeserializeSeedNode3<'query> {
         type Value = ();
         fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: serde_query::__priv::serde::Deserializer<'de>,
         {
             let visitor = VisitorNode3 {
                 x: self.x,
@@ -228,7 +233,8 @@ const _: () = {
             <Vec<f32> as serde_query::__priv::Container>::Element,
         >,
     }
-    impl<'query, 'de> serde::de::Visitor<'de> for VisitorNode3<'query> {
+    impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de>
+    for VisitorNode3<'query> {
         type Value = ();
         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
             core::fmt::Formatter::write_str(
@@ -238,7 +244,7 @@ const _: () = {
         }
         fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
         where
-            A: serde::de::MapAccess<'de>,
+            A: serde_query::__priv::serde::de::MapAccess<'de>,
         {
             while let Some(key) = map.next_key::<FieldNode3>()? {
                 match key {
@@ -249,7 +255,7 @@ const _: () = {
                         map.next_value_seed(DeserializeSeedNode8 { y: self.y })?;
                     }
                     FieldNode3::Ignore => {
-                        map.next_value::<serde::de::IgnoredAny>()?;
+                        map.next_value::<serde_query::__priv::serde::de::IgnoredAny>()?;
                     }
                 }
             }
@@ -261,16 +267,16 @@ const _: () = {
         Field1,
         Ignore,
     }
-    impl<'de> serde::de::Deserialize<'de> for FieldNode3 {
+    impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for FieldNode3 {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: serde_query::__priv::serde::Deserializer<'de>,
         {
             deserializer.deserialize_identifier(FieldVisitorNode3)
         }
     }
     struct FieldVisitorNode3;
-    impl<'de> serde::de::Visitor<'de> for FieldVisitorNode3 {
+    impl<'de> serde_query::__priv::serde::de::Visitor<'de> for FieldVisitorNode3 {
         type Value = FieldNode3;
         fn expecting(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
             core::fmt::Formatter::write_str(
@@ -280,7 +286,7 @@ const _: () = {
         }
         fn visit_str<E>(self, value: &str) -> core::result::Result<Self::Value, E>
         where
-            E: serde::de::Error,
+            E: serde_query::__priv::serde::de::Error,
         {
             match value {
                 "x" => core::result::Result::Ok(FieldNode3::Field0),
@@ -290,7 +296,7 @@ const _: () = {
         }
         fn visit_bytes<E>(self, value: &[u8]) -> core::result::Result<Self::Value, E>
         where
-            E: serde::de::Error,
+            E: serde_query::__priv::serde::de::Error,
         {
             match value {
                 b"x" => core::result::Result::Ok(FieldNode3::Field0),
@@ -304,20 +310,21 @@ const _: () = {
             <Vec<f32> as serde_query::__priv::Container>::Element,
         >,
     }
-    impl<'query, 'de> serde::de::DeserializeSeed<'de> for DeserializeSeedNode4<'query> {
+    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
+    for DeserializeSeedNode4<'query> {
         type Value = ();
         fn deserialize<D>(
             self,
             deserializer: D,
         ) -> core::result::Result<Self::Value, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: serde_query::__priv::serde::Deserializer<'de>,
         {
             *self
                 .x = core::option::Option::Some(
                 <<Vec<
                     f32,
-                > as serde_query::__priv::Container>::Element as serde::Deserialize<
+                > as serde_query::__priv::Container>::Element as serde_query::__priv::serde::Deserialize<
                     'de,
                 >>::deserialize(deserializer)?,
             );
@@ -329,30 +336,31 @@ const _: () = {
             <Vec<f32> as serde_query::__priv::Container>::Element,
         >,
     }
-    impl<'query, 'de> serde::de::DeserializeSeed<'de> for DeserializeSeedNode8<'query> {
+    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
+    for DeserializeSeedNode8<'query> {
         type Value = ();
         fn deserialize<D>(
             self,
             deserializer: D,
         ) -> core::result::Result<Self::Value, D::Error>
         where
-            D: serde::Deserializer<'de>,
+            D: serde_query::__priv::serde::Deserializer<'de>,
         {
             *self
                 .y = core::option::Option::Some(
                 <<Vec<
                     f32,
-                > as serde_query::__priv::Container>::Element as serde::Deserialize<
+                > as serde_query::__priv::Container>::Element as serde_query::__priv::serde::Deserialize<
                     'de,
                 >>::deserialize(deserializer)?,
             );
             Ok(())
         }
     }
-    impl<'de> serde::de::Deserialize<'de> for Locations {
+    impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for Locations {
         fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
         where
-            D: serde::de::Deserializer<'de>,
+            D: serde_query::__priv::serde::de::Deserializer<'de>,
         {
             let mut x = None;
             let mut y = None;
@@ -360,7 +368,7 @@ const _: () = {
                 x: &mut x,
                 y: &mut y,
             };
-            <DeserializeSeedNode0 as serde::de::DeserializeSeed<
+            <DeserializeSeedNode0 as serde_query::__priv::serde::de::DeserializeSeed<
                 'de,
             >>::deserialize(root, deserializer)?;
             let value = Locations {
@@ -368,7 +376,7 @@ const _: () = {
                     core::option::Option::Some(v) => v,
                     core::option::Option::None => {
                         return core::result::Result::Err(
-                            <D::Error as serde::de::Error>::custom(
+                            <D::Error as serde_query::__priv::serde::de::Error>::custom(
                                 "Query for 'x' failed to run",
                             ),
                         );
@@ -378,7 +386,7 @@ const _: () = {
                     core::option::Option::Some(v) => v,
                     core::option::Option::None => {
                         return core::result::Result::Err(
-                            <D::Error as serde::de::Error>::custom(
+                            <D::Error as serde_query::__priv::serde::de::Error>::custom(
                                 "Query for 'y' failed to run",
                             ),
                         );

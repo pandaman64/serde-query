@@ -15,10 +15,10 @@ fn set_dummy(input: &DeriveInput, target: DeriveTarget) {
         DeriveTarget::Deserialize => {
             proc_macro_error::set_dummy(quote! {
                 const _: () = {
-                    impl<'de> serde::de::Deserialize<'de> for #name #generics {
+                    impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for #name #generics {
                         fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
                         where
-                            D: serde::de::Deserializer<'de>
+                            D: serde_query::__priv::serde::de::Deserializer<'de>
                         {
                             unimplemented!()
                         }

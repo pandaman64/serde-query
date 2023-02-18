@@ -193,14 +193,14 @@ impl Node {
                         #query_name: &'query mut core::option::Option<#query_type>,
                     }
 
-                    impl<'query, 'de> serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
+                    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
                         type Value = ();
 
                         fn deserialize<D>(self, deserializer: D) -> core::result::Result<Self::Value, D::Error>
                         where
-                            D: serde::Deserializer<'de>,
+                            D: serde_query::__priv::serde::Deserializer<'de>,
                         {
-                            *self.#query_name = core::option::Option::Some(<#query_type as serde::Deserialize<'de>>::deserialize(deserializer)?);
+                            *self.#query_name = core::option::Option::Some(<#query_type as serde_query::__priv::serde::Deserialize<'de>>::deserialize(deserializer)?);
                             Ok(())
                         }
                     }
@@ -258,12 +258,12 @@ impl Node {
                         )*
                     }
 
-                    impl<'query, 'de> serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
+                    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
                         type Value = ();
 
                         fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
                         where
-                            D: serde::Deserializer<'de>,
+                            D: serde_query::__priv::serde::Deserializer<'de>,
                         {
                             let visitor = #visitor_ty {
                                 #(
@@ -280,7 +280,7 @@ impl Node {
                         )*
                     }
 
-                    impl<'query, 'de> serde::de::Visitor<'de> for #visitor_ty<'query> {
+                    impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de> for #visitor_ty<'query> {
                         type Value = ();
 
                         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
@@ -289,13 +289,13 @@ impl Node {
 
                         fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
                         where
-                            A: serde::de::MapAccess<'de>,
+                            A: serde_query::__priv::serde::de::MapAccess<'de>,
                         {
                             while let Some(key) = map.next_key::<#field_deserialize_enum_ty>()? {
                                 match key {
                                     #(#match_arms)*
                                     #field_deserialize_enum_ty :: Ignore => {
-                                        map.next_value::<serde::de::IgnoredAny>()?;
+                                        map.next_value::<serde_query::__priv::serde::de::IgnoredAny>()?;
                                     }
                                 }
                             }
@@ -310,10 +310,10 @@ impl Node {
                         Ignore,
                     }
 
-                    impl<'de> serde::de::Deserialize<'de> for #field_deserialize_enum_ty {
+                    impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for #field_deserialize_enum_ty {
                         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
                         where
-                            D: serde::Deserializer<'de>,
+                            D: serde_query::__priv::serde::Deserializer<'de>,
                         {
                             deserializer.deserialize_identifier(#field_visitor_ty)
                         }
@@ -321,7 +321,7 @@ impl Node {
 
                     struct #field_visitor_ty;
 
-                    impl<'de> serde::de::Visitor<'de> for #field_visitor_ty {
+                    impl<'de> serde_query::__priv::serde::de::Visitor<'de> for #field_visitor_ty {
                         type Value = #field_deserialize_enum_ty;
 
                         fn expecting(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
@@ -330,7 +330,7 @@ impl Node {
 
                         fn visit_str<E>(self, value: &str) -> core::result::Result<Self::Value, E>
                         where
-                            E: serde::de::Error,
+                            E: serde_query::__priv::serde::de::Error,
                         {
                             match value {
                                 #(
@@ -342,7 +342,7 @@ impl Node {
 
                         fn visit_bytes<E>(self, value: &[u8]) -> core::result::Result<Self::Value, E>
                         where
-                            E: serde::de::Error,
+                            E: serde_query::__priv::serde::de::Error,
                         {
                             match value {
                                 #(
@@ -395,12 +395,12 @@ impl Node {
                         )*
                     }
 
-                    impl<'query, 'de> serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
+                    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
                         type Value = ();
 
                         fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
                         where
-                            D: serde::Deserializer<'de>,
+                            D: serde_query::__priv::serde::Deserializer<'de>,
                         {
                             let visitor = #visitor_ty {
                                 #(
@@ -417,7 +417,7 @@ impl Node {
                         )*
                     }
 
-                    impl<'query, 'de> serde::de::Visitor<'de> for #visitor_ty<'query> {
+                    impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de> for #visitor_ty<'query> {
                         type Value = ();
 
                         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
@@ -426,14 +426,14 @@ impl Node {
 
                         fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
                         where
-                            A: serde::de::SeqAccess<'de>,
+                            A: serde_query::__priv::serde::de::SeqAccess<'de>,
                         {
                             let mut current_index = 0usize;
                             loop {
                                 match current_index {
                                     #(#match_arms)*
                                     _ => {
-                                        match seq.next_element::<serde::de::IgnoredAny>()? {
+                                        match seq.next_element::<serde_query::__priv::serde::de::IgnoredAny>()? {
                                             core::option::Option::Some(_) => {},
                                             core::option::Option::None => break,
                                         }
@@ -470,12 +470,12 @@ impl Node {
                         )*
                     }
 
-                    impl<'query, 'de> serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
+                    impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
                         type Value = ();
 
                         fn deserialize<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
                         where
-                            D: serde::Deserializer<'de>,
+                            D: serde_query::__priv::serde::Deserializer<'de>,
                         {
                             #(
                                 let mut #query_names = <#query_types as serde_query::__priv::Container>::empty();
@@ -499,7 +499,7 @@ impl Node {
                         )*
                     }
 
-                    impl<'query, 'de> serde::de::Visitor<'de> for #visitor_ty<'query> {
+                    impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de> for #visitor_ty<'query> {
                         type Value = ();
 
                         fn expecting(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
@@ -508,7 +508,7 @@ impl Node {
 
                         fn visit_seq<A>(mut self, mut seq: A) -> Result<Self::Value, A::Error>
                         where
-                            A: serde::de::SeqAccess<'de>,
+                            A: serde_query::__priv::serde::de::SeqAccess<'de>,
                         {
                             if let Some(additional) = seq.size_hint() {
                                 #(
@@ -535,7 +535,7 @@ impl Node {
                                                     core::option::Option::Some(v) => v,
                                                     core::option::Option::None => {
                                                         return core::result::Result::Err(
-                                                            <<A as serde::de::SeqAccess<'de>>::Error as serde::de::Error>::custom(#error_messages)
+                                                            <<A as serde_query::__priv::serde::de::SeqAccess<'de>>::Error as serde_query::__priv::serde::de::Error>::custom(#error_messages)
                                                         )
                                                     }
                                                 },
@@ -572,10 +572,10 @@ impl Node {
             .collect();
         let construction = construction(quote::quote!(value));
         quote::quote! {
-            impl<'de> serde::de::Deserialize<'de> for #implementor_ty {
+            impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for #implementor_ty {
                 fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
                 where
-                    D: serde::de::Deserializer<'de>
+                    D: serde_query::__priv::serde::de::Deserializer<'de>
                 {
                     #(
                         let mut #query_names = None;
@@ -585,13 +585,13 @@ impl Node {
                             #query_names: &mut #query_names,
                         )*
                     };
-                    <#deserialize_seed_ty as serde::de::DeserializeSeed<'de>>::deserialize(root, deserializer)?;
+                    <#deserialize_seed_ty as serde_query::__priv::serde::de::DeserializeSeed<'de>>::deserialize(root, deserializer)?;
                     let value = #struct_ty {
                         #(
                             #query_names: match #query_names {
                                 core::option::Option::Some(v) => v,
                                 core::option::Option::None => {
-                                    return core::result::Result::Err(<D::Error as serde::de::Error>::custom(#error_messages))
+                                    return core::result::Result::Err(<D::Error as serde_query::__priv::serde::de::Error>::custom(#error_messages))
                                 }
                             },
                         )*

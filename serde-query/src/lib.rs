@@ -144,6 +144,8 @@ where
 // This module can only be used inside the generated code.
 #[doc(hidden)]
 pub mod __priv {
+    pub use serde;
+
     pub trait Container {
         type Element;
 
