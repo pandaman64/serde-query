@@ -52,7 +52,7 @@ fn from_quoted(quoted: &str) -> String {
     ret
 }
 
-pub fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
+pub(crate) fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
     let mut tokens = Token::lexer(input);
     let mut queries = vec![];
     let mut errors = vec![];
@@ -154,7 +154,7 @@ pub fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
         queries
             .into_iter()
             .rev()
-            .fold(QueryFragment::Accept, |rest, query| match query {
+            .fold(QueryFragment::accept(), |rest, query| match query {
                 Query::Field(name) => QueryFragment::field(name, rest),
                 Query::Index(index) => QueryFragment::index_array(index, rest),
                 Query::CollectArray => QueryFragment::collect_array(rest),

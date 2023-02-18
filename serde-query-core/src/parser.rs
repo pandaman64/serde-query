@@ -4,12 +4,12 @@ use syn::{DeriveInput, LitStr};
 
 use crate::{parse_query, Query, QueryId};
 
-pub struct ParseResult {
-    pub queries: Vec<Query>,
-    pub diagnostics: Vec<Diagnostic>,
+pub(crate) struct ParseResult {
+    pub(crate) queries: Vec<Query>,
+    pub(crate) diagnostics: Vec<Diagnostic>,
 }
 
-pub fn parse_input(input: &mut DeriveInput) -> ParseResult {
+pub(crate) fn parse_input(input: &mut DeriveInput) -> ParseResult {
     let mut diagnostics = vec![];
     let queries = match &mut input.data {
         syn::Data::Struct(data) => data

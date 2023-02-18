@@ -1,9 +1,12 @@
 use std::collections::BTreeMap;
 
-use proc_macro2::{Literal, TokenStream};
+use parser::parse_input;
+use proc_macro2::{Literal, Span, TokenStream};
+use proc_macro_error::Diagnostic;
+use syn::DeriveInput;
 
 mod parse_query;
-pub mod parser;
+mod parser;
 
 #[cfg(test)]
 mod tests;
@@ -15,7 +18,7 @@ pub enum DeriveTarget {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-pub enum QueryFragment {
+enum QueryFragment {
     Accept,
     /// '.' <name> [.<rest>]
     Field {
@@ -34,34 +37,34 @@ pub enum QueryFragment {
 }
 
 impl QueryFragment {
-    pub fn accept() -> Self {
+    fn accept() -> Self {
         Self::Accept
     }
 
-    pub fn field(name: String, rest: Self) -> Self {
+    fn field(name: String, rest: Self) -> Self {
         Self::Field {
             name,
             rest: rest.into(),
         }
     }
 
-    pub fn index_array(index: usize, rest: Self) -> Self {
+    fn index_array(index: usize, rest: Self) -> Self {
         Self::IndexArray {
             index,
             rest: rest.into(),
         }
     }
 
-    pub fn collect_array(rest: Self) -> Self {
+    fn collect_array(rest: Self) -> Self {
         Self::CollectArray { rest: rest.into() }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct QueryId(syn::Ident);
+struct QueryId(syn::Ident);
 
 impl QueryId {
-    pub fn new(identifier: syn::Ident) -> Self {
+    fn new(identifier: syn::Ident) -> Self {
         Self(identifier)
     }
 
@@ -71,25 +74,25 @@ impl QueryId {
 }
 
 #[derive(Debug)]
-pub struct Query {
+struct Query {
     id: QueryId,
     fragment: QueryFragment,
     ty: TokenStream,
 }
 
 impl Query {
-    pub fn new(id: QueryId, fragment: QueryFragment, ty: TokenStream) -> Self {
+    fn new(id: QueryId, fragment: QueryFragment, ty: TokenStream) -> Self {
         Self { id, fragment, ty }
     }
 }
 
 #[derive(Debug, Default)]
-pub struct Env {
+struct Env {
     node_count: usize,
 }
 
 impl Env {
-    pub fn new() -> Self {
+    fn new() -> Self {
         Self::default()
     }
 
@@ -152,7 +155,7 @@ impl NodeKind {
 }
 
 #[derive(Debug)]
-pub struct Node {
+struct Node {
     name: String,
     // map of (id, ty)
     queries: BTreeMap<QueryId, TokenStream>,
@@ -160,12 +163,7 @@ pub struct Node {
 }
 
 impl Node {
-    pub fn from_query(
-        env: &mut Env,
-        id: QueryId,
-        fragment: QueryFragment,
-        ty: TokenStream,
-    ) -> Self {
+    fn from_query(env: &mut Env, id: QueryId, fragment: QueryFragment, ty: TokenStream) -> Self {
         let name = env.new_node_name();
         match fragment {
             QueryFragment::Accept => Self {
@@ -245,7 +243,7 @@ impl Node {
         self.queries.values().collect()
     }
 
-    pub fn generate(&self) -> TokenStream {
+    fn generate(&self) -> TokenStream {
         match &self.kind {
             NodeKind::Accept => {
                 // TODO: what if we have multiple queries?
@@ -624,7 +622,7 @@ impl Node {
         }
     }
 
-    pub fn generate_deserialize<F: FnOnce(TokenStream) -> TokenStream>(
+    fn generate_deserialize<F: FnOnce(TokenStream) -> TokenStream>(
         &self,
         struct_ty: &syn::Ident,
         implementor_ty: &syn::Ident,
@@ -669,7 +667,7 @@ impl Node {
     }
 }
 
-pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
+fn build_node<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
     let mut node = Node {
         name: env.new_node_name(),
         queries: BTreeMap::new(),
@@ -679,4 +677,80 @@ pub fn compile<I: Iterator<Item = Query>>(env: &mut Env, queries: I) -> Node {
         node.merge(Node::from_query(env, query.id, query.fragment, query.ty));
     }
     node
+}
+
+pub fn generate_derive(
+    mut input: DeriveInput,
+    target: DeriveTarget,
+) -> Result<TokenStream, Vec<Diagnostic>> {
+    let parse_input_result = parse_input(&mut input);
+    if !parse_input_result.diagnostics.is_empty() {
+        return Err(parse_input_result.diagnostics);
+    }
+
+    let name = &input.ident;
+    let node = build_node(&mut Env::new(), parse_input_result.queries.into_iter());
+    let mut stream = node.generate();
+
+    // generate the root code
+    match target {
+        // generate DeserializeQuery and conversion traits
+        DeriveTarget::DeserializeQuery => {
+            let wrapper_ty = syn::Ident::new("__QueryWrapper", Span::call_site());
+
+            // Inherit visibility of the wrapped struct to avoid error E0446
+            // See: https://github.com/pandaman64/serde-query/issues/7
+            let vis = input.vis;
+
+            let deserialize_impl = node.generate_deserialize(
+                name,
+                &wrapper_ty,
+                |value| quote::quote!(#wrapper_ty(#value)),
+            );
+
+            stream.extend(quote::quote! {
+                #[repr(transparent)]
+                #vis struct #wrapper_ty (#name);
+
+                #deserialize_impl
+
+                impl core::convert::From<#wrapper_ty> for #name {
+                    fn from(val: #wrapper_ty) -> Self {
+                        val.0
+                    }
+                }
+
+                impl core::ops::Deref for #wrapper_ty {
+                    type Target = #name;
+
+                    fn deref(&self) -> &Self::Target {
+                        &self.0
+                    }
+                }
+
+                impl core::ops::DerefMut for #wrapper_ty {
+                    fn deref_mut(&mut self) -> &mut Self::Target {
+                        &mut self.0
+                    }
+                }
+            });
+
+            stream.extend(quote::quote! {
+                impl<'de> serde_query::DeserializeQuery<'de> for #name {
+                    type Query = #wrapper_ty;
+                }
+            });
+        }
+        DeriveTarget::Deserialize => {
+            let deserialize_impl = node.generate_deserialize(name, name, |value| value);
+            stream.extend(deserialize_impl);
+        }
+    }
+
+    // Cargo-culting serde. Possibly for scoping?
+    Ok(quote::quote! {
+        const _: () = {
+            #stream
+        };
+    })
 }
