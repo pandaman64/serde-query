@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use proc_macro2::{Literal, Span, TokenStream};
+use proc_macro2::{Literal, TokenStream};
 use proc_macro_error::{diagnostic, Diagnostic, Level};
 
 use crate::query::{Query, QueryFragment, QueryId};
@@ -50,7 +50,13 @@ impl NodeKind {
         Ok(tree)
     }
 
-    fn merge(&mut self, other: Self, prefix: &str) -> Result<(), Diagnostic> {
+    fn merge(
+        &mut self,
+        other: Self,
+        prefix: &str,
+        self_query: Option<&QueryId>,
+        other_query: &QueryId,
+    ) -> Result<(), Diagnostic> {
         let this = std::mem::replace(self, Self::None);
         *self = match (this, other) {
             (NodeKind::None, other) => other,
@@ -68,14 +74,18 @@ impl NodeKind {
                 NodeKind::CollectArray { child }
             }
             (this, other) => {
+                let self_ident = self_query.expect("This node must have at least one query because the kind is not NodeKind::None").ident();
+                let other_ident = other_query.ident();
                 return Err(diagnostic!(
-                    Span::call_site(),
+                    self_ident,
                     Level::Error,
-                    "Conflicting query at '{}'. One query expects {} while another {}.",
+                    "Conflicting query at '{}'. The query for field '{}' expects {} while the query for field '{}' expects {}.",
                     prefix,
+                    self_ident,
                     this.descripion(),
-                    other.descripion(),
-                ))
+                    other_ident,
+                    other.descripion()
+                ));
             }
         };
         Ok(())
@@ -209,7 +219,11 @@ impl Node {
     }
 
     fn merge(&mut self, other: Self) -> Result<(), Diagnostic> {
-        self.kind.merge(other.kind, &self.prefix)?;
+        let self_query = self.queries.first_key_value().map(|(id, _)| id);
+        let other_query = other.queries.first_key_value().unwrap().0;
+
+        self.kind
+            .merge(other.kind, &self.prefix, self_query, other_query)?;
         self.queries.extend(other.queries.into_iter());
         Ok(())
     }

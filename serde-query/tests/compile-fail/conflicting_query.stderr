@@ -1,15 +1,11 @@
-error: Conflicting query at '.foo'. One query expects a struct while another a sequence.
- --> tests/compile-fail/conflicting_query.rs:1:10
+error: Conflicting query at '.foo'. The query for field 'field_access' expects a struct while the query for field 'index_access' expects a sequence.
+ --> tests/compile-fail/conflicting_query.rs:4:5
   |
-1 | #[derive(serde_query::Deserialize)]
-  |          ^^^^^^^^^^^^^^^^^^^^^^^^
-  |
-  = note: this error originates in the derive macro `serde_query::Deserialize` (in Nightly builds, run with -Z macro-backtrace for more info)
+4 |     field_access: String,
+  |     ^^^^^^^^^^^^
 
-error: Conflicting query at '.foo'. One query expects a value here while another a struct.
- --> tests/compile-fail/conflicting_query.rs:9:10
-  |
-9 | #[derive(serde_query::Deserialize)]
-  |          ^^^^^^^^^^^^^^^^^^^^^^^^
-  |
-  = note: this error originates in the derive macro `serde_query::Deserialize` (in Nightly builds, run with -Z macro-backtrace for more info)
+error: Conflicting query at '.foo'. The query for field 'expect_value' expects a value here while the query for field 'expect_struct' expects a struct.
+  --> tests/compile-fail/conflicting_query.rs:12:5
+   |
+12 |     expect_value: String,
+   |     ^^^^^^^^^^^^
