@@ -613,7 +613,25 @@ impl Node {
                     #child_code
                 }
             }
-            NodeKind::None => unreachable!(),
+            NodeKind::None => {
+                // No queries. Generate an empty DeserializeSeed for the root node.
+                let deserialize_seed_ty = self.deserialize_seed_ty();
+
+                quote::quote! {
+                    struct #deserialize_seed_ty {}
+
+                    impl<'de> serde_query::__priv::serde::de::DeserializeSeed<'de> for #deserialize_seed_ty {
+                        type Value = ();
+
+                        fn deserialize<D>(self, deserializer: D) -> core::result::Result<Self::Value, D::Error>
+                        where
+                            D: serde_query::__priv::serde::Deserializer<'de>,
+                        {
+                            Ok(())
+                        }
+                    }
+                }
+            }
         }
     }
 

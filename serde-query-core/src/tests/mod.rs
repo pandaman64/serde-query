@@ -2,6 +2,7 @@ use syn::DeriveInput;
 
 use crate::{generate_derive, DeriveTarget};
 
+mod empty;
 mod generate_basic;
 
 fn snapshot_derive(input: DeriveInput, target: DeriveTarget) -> String {
