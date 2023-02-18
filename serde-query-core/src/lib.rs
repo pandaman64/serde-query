@@ -2,6 +2,9 @@ use std::collections::BTreeMap;
 
 use proc_macro2::{Literal, TokenStream};
 
+#[cfg(test)]
+mod tests;
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum QueryFragment {
     Accept,
