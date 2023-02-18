@@ -1,16 +1,23 @@
-#[derive(serde_query::Deserialize, serde_query::DeserializeQuery)]
+#[derive(serde_query::Deserialize)]
 struct A {
-    #[query(r#".x"#)]
+    #[query(r#".foo.x"#)]
     field_access: String,
-    #[query(r#".[0]"#)]
+    #[query(r#".foo.[0]"#)]
     index_access: String,
 }
 
+#[derive(serde_query::Deserialize)]
+struct B {
+    #[query(r#".foo"#)]
+    expect_value: String,
+    #[query(r#".foo.bar"#)]
+    expect_struct: String,
+}
+
 fn assert_deserialize<'de, D: serde::Deserialize<'de>>() {}
-fn assert_deserialize_query<'de, D: serde_query::DeserializeQuery<'de>>() {}
 
 fn main() {
     // ensure that fallback implemenations work
     assert_deserialize::<A>();
-    assert_deserialize_query::<A>();
+    assert_deserialize::<B>();
 }

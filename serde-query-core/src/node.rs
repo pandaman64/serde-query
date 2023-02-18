@@ -50,7 +50,7 @@ impl NodeKind {
         Ok(tree)
     }
 
-    fn merge(&mut self, other: Self) -> Result<(), Diagnostic> {
+    fn merge(&mut self, other: Self, prefix: &str) -> Result<(), Diagnostic> {
         let this = std::mem::replace(self, Self::None);
         *self = match (this, other) {
             (NodeKind::None, other) => other,
@@ -67,15 +67,27 @@ impl NodeKind {
                 child.merge(*other)?;
                 NodeKind::CollectArray { child }
             }
-            _ => {
+            (this, other) => {
                 return Err(diagnostic!(
                     Span::call_site(),
                     Level::Error,
-                    "Conflicting query"
+                    "Conflicting query at '{}'. One query expects {} while another {}.",
+                    prefix,
+                    this.descripion(),
+                    other.descripion(),
                 ))
             }
         };
         Ok(())
+    }
+
+    fn descripion(&self) -> &str {
+        match self {
+            NodeKind::None => "none",
+            NodeKind::Accept => "a value here",
+            NodeKind::Field { .. } => "a struct",
+            NodeKind::IndexArray { .. } | NodeKind::CollectArray { .. } => "a sequence",
+        }
     }
 }
 
@@ -85,6 +97,10 @@ pub(crate) struct Node {
     // map of (id, ty)
     queries: BTreeMap<QueryId, TokenStream>,
     kind: NodeKind,
+
+    // fields for diagnostics
+    /// The prefix of the queries to reach this node.
+    prefix: String,
 }
 
 impl Node {
@@ -97,6 +113,7 @@ impl Node {
             name: env.new_node_name(),
             queries: BTreeMap::new(),
             kind: NodeKind::None,
+            prefix: String::from("."),
         };
         for query in queries {
             if let Err(diagnostic) = node.merge(Node::from_query(
@@ -104,6 +121,7 @@ impl Node {
                 query.id,
                 query.fragment,
                 query.ty,
+                String::new(),
             )) {
                 diagnostics.push(diagnostic);
             }
@@ -116,59 +134,82 @@ impl Node {
         }
     }
 
-    fn from_query(env: &mut Env, id: QueryId, fragment: QueryFragment, ty: TokenStream) -> Self {
+    fn from_query(
+        env: &mut Env,
+        id: QueryId,
+        fragment: QueryFragment,
+        ty: TokenStream,
+        prefix: String,
+    ) -> Self {
         let name = env.new_node_name();
         match fragment {
             QueryFragment::Accept => Self {
                 name,
                 queries: BTreeMap::from_iter([(id, ty)]),
                 kind: NodeKind::Accept,
+                prefix,
             },
             QueryFragment::Field {
                 name: field_name,
                 rest,
             } => {
+                let child = Self::from_query(
+                    env,
+                    id.clone(),
+                    *rest,
+                    ty.clone(),
+                    format!("{}.{}", prefix, field_name),
+                );
                 let kind = NodeKind::Field {
-                    fields: BTreeMap::from_iter([(
-                        field_name,
-                        Self::from_query(env, id.clone(), *rest, ty.clone()),
-                    )]),
+                    fields: BTreeMap::from_iter([(field_name, child)]),
                 };
                 Self {
                     name,
                     queries: BTreeMap::from_iter([(id, ty)]),
                     kind,
+                    prefix,
                 }
             }
             QueryFragment::IndexArray { index, rest } => {
+                let child = Self::from_query(
+                    env,
+                    id.clone(),
+                    *rest,
+                    ty.clone(),
+                    format!("{}.[{}]", prefix, index),
+                );
                 let kind = NodeKind::IndexArray {
-                    indices: BTreeMap::from_iter([(
-                        index,
-                        Self::from_query(env, id.clone(), *rest, ty.clone()),
-                    )]),
+                    indices: BTreeMap::from_iter([(index, child)]),
                 };
                 Self {
                     name,
                     queries: BTreeMap::from_iter([(id, ty)]),
                     kind,
+                    prefix,
                 }
             }
             QueryFragment::CollectArray { rest } => {
                 let element_ty = quote::quote!(<#ty as serde_query::__priv::Container>::Element);
-                let kind = NodeKind::CollectArray {
-                    child: Box::new(Self::from_query(env, id.clone(), *rest, element_ty)),
-                };
+                let child = Box::new(Self::from_query(
+                    env,
+                    id.clone(),
+                    *rest,
+                    element_ty,
+                    format!("{}.[]", prefix),
+                ));
+                let kind = NodeKind::CollectArray { child };
                 Self {
                     name,
                     queries: BTreeMap::from_iter([(id, ty)]),
                     kind,
+                    prefix,
                 }
             }
         }
     }
 
     fn merge(&mut self, other: Self) -> Result<(), Diagnostic> {
-        self.kind.merge(other.kind)?;
+        self.kind.merge(other.kind, &self.prefix)?;
         self.queries.extend(other.queries.into_iter());
         Ok(())
     }
