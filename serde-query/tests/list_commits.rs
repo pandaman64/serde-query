@@ -7,9 +7,9 @@ struct Commits {
     #[query(".[].sha")]
     _shas: Vec<String>,
     #[query(".[].committer.id")]
-    _commiter_ids: HashSet<i64>,
+    _committer_ids: HashSet<i64>,
     #[query(".[].committer.login")]
-    _commiters: HashSet<String>,
+    _committers: HashSet<String>,
     #[query(".[].commit.author.date")]
     _dates: BTreeSet<String>,
 }

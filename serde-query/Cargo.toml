@@ -29,3 +29,4 @@ optional = true
 serde_json = "1.0.57"
 ureq = "1.4.0"
 trybuild = "1.0.41"
+k9 = "0.11.6"
