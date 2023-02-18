@@ -3,113 +3,61 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 use proc_macro2::Span;
 use proc_macro_error::{emit_error, proc_macro_error};
-use quote::{quote, ToTokens};
-use serde_query_core::{compile, Env, Query, QueryId};
-use syn::{parse_macro_input, DeriveInput, Ident, LitStr};
+use quote::quote;
+use serde_query_core::{compile, parser::parse_input, DeriveTarget, Env};
+use syn::{parse_macro_input, DeriveInput, Ident};
 
-mod parse_query;
+/// Generate a minimal, non-functioning Deserialize(Query) implementation on errors
+fn set_dummy(input: &DeriveInput, target: DeriveTarget) {
+    let name = &input.ident;
+    let generics = &input.generics;
 
-#[derive(Debug, PartialEq, Eq)]
-enum DeriveTarget {
-    Deserialize,
-    DeserializeQuery,
+    match target {
+        DeriveTarget::Deserialize => {
+            proc_macro_error::set_dummy(quote! {
+                const _: () = {
+                    impl<'de> serde::de::Deserialize<'de> for #name #generics {
+                        fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
+                        where
+                            D: serde::de::Deserializer<'de>
+                        {
+                            unimplemented!()
+                        }
+                    }
+                };
+            });
+        }
+        DeriveTarget::DeserializeQuery => {
+            proc_macro_error::set_dummy(quote! {
+                const _: () = {
+                    struct __QueryWrapper;
+
+                    impl<'de> serde_query::DeserializeQuery<'de> for #name {
+                        type Query = __QueryWrapper;
+                    }
+                };
+            });
+        }
+    }
 }
 
 fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
-    let mut interrupt = false;
     let mut input = parse_macro_input!(input as DeriveInput);
 
-    let name = &input.ident;
-
-    if target == DeriveTarget::Deserialize {
-        let generics = &input.generics;
-        // generate Deserialize implementation on error
-        proc_macro_error::set_dummy(quote! {
-            const _: () = {
-                impl<'de> serde::de::Deserialize<'de> for #name #generics {
-                    fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
-                    where
-                        D: serde::de::Deserializer<'de>
-                    {
-                        unimplemented!()
-                    }
-                }
-            };
-        });
-    }
+    set_dummy(&input, target);
 
     if !input.generics.params.is_empty() {
         emit_error!(input.generics, "generic arguments are not supported");
-        interrupt = true;
-    }
-
-    let fields: Vec<_> = match &mut input.data {
-        syn::Data::Struct(data) => data
-            .fields
-            .iter_mut()
-            .flat_map(|field| {
-                let mut attr_pos = None;
-                for (pos, attr) in field.attrs.iter().enumerate() {
-                    if attr.path.is_ident("query") {
-                        if attr_pos.is_some() {
-                            emit_error!(attr, "duplicated #[query(...)]");
-                            interrupt = true;
-                        }
-                        attr_pos = Some(pos);
-                    }
-                }
-
-                match attr_pos {
-                    None => {
-                        emit_error!(field, "no #[query(...)]");
-                        interrupt = true;
-                        None
-                    }
-                    Some(pos) => {
-                        let attr = field.attrs.remove(pos);
-                        let argument = match attr.parse_args::<LitStr>() {
-                            Err(_) => {
-                                emit_error!(field, "#[query(...)] takes a string literal");
-                                interrupt = true;
-                                return None;
-                            }
-                            Ok(lit) => lit.value(),
-                        };
-                        let ident = match &field.ident {
-                            None => {
-                                emit_error!(field.ident, "#[query(...)] field must be named");
-                                interrupt = true;
-                                return None;
-                            }
-                            Some(ident) => ident.clone(),
-                        };
-
-                        let (fragment, errors) = parse_query::parse(&argument);
-                        for error in errors {
-                            emit_error!(attr, error.message);
-                            interrupt = true;
-                        }
-                        Some(Query::new(
-                            QueryId::new(ident),
-                            fragment,
-                            field.ty.to_token_stream(),
-                        ))
-                    }
-                }
-            })
-            .collect(),
-        _ => {
-            emit_error!(input, "serde-query supports only structs");
-            interrupt = true;
-            vec![]
-        }
-    };
-
-    if interrupt {
         return TokenStream::new();
     }
 
-    let node = compile(&mut Env::new(), fields.into_iter());
+    let parse_input_result = parse_input(&mut input);
+    if parse_input_result.has_error {
+        return TokenStream::new();
+    }
+
+    let name = &input.ident;
+    let node = compile(&mut Env::new(), parse_input_result.queries.into_iter());
     let mut stream = node.generate();
 
     // generate the root code

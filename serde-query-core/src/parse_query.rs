@@ -1,5 +1,5 @@
+use crate::QueryFragment;
 use logos::Logos;
-use serde_query_core::QueryFragment;
 
 #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
 pub enum Query {

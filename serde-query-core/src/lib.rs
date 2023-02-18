@@ -2,8 +2,17 @@ use std::collections::BTreeMap;
 
 use proc_macro2::{Literal, TokenStream};
 
+mod parse_query;
+pub mod parser;
+
 #[cfg(test)]
 mod tests;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DeriveTarget {
+    Deserialize,
+    DeserializeQuery,
+}
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum QueryFragment {
