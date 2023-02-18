@@ -52,7 +52,10 @@ fn generate_derive(input: TokenStream, target: DeriveTarget) -> TokenStream {
     }
 
     let parse_input_result = parse_input(&mut input);
-    if parse_input_result.has_error {
+    if !parse_input_result.diagnostics.is_empty() {
+        for diagnostic in parse_input_result.diagnostics.into_iter() {
+            diagnostic.emit();
+        }
         return TokenStream::new();
     }
 
