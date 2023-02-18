@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 
-use proc_macro2::{Literal, TokenStream};
+use proc_macro2::{Literal, Span, TokenStream};
+use proc_macro_error::{diagnostic, Diagnostic, Level};
 
 use crate::query::{Query, QueryFragment, QueryId};
 
@@ -34,7 +35,7 @@ impl NodeKind {
     fn merge_trees<K: Ord>(
         mut tree: BTreeMap<K, Node>,
         other: BTreeMap<K, Node>,
-    ) -> BTreeMap<K, Node> {
+    ) -> Result<BTreeMap<K, Node>, Diagnostic> {
         for (key, node) in other.into_iter() {
             use std::collections::btree_map::Entry;
             match tree.entry(key) {
@@ -42,33 +43,39 @@ impl NodeKind {
                     v.insert(node);
                 }
                 Entry::Occupied(mut o) => {
-                    o.get_mut().merge(node);
+                    o.get_mut().merge(node)?;
                 }
             }
         }
-        tree
+        Ok(tree)
     }
 
-    fn merge(&mut self, other: Self) {
+    fn merge(&mut self, other: Self) -> Result<(), Diagnostic> {
         let this = std::mem::replace(self, Self::None);
         *self = match (this, other) {
             (NodeKind::None, other) => other,
             (NodeKind::Accept, NodeKind::Accept) => NodeKind::Accept,
             (NodeKind::Field { fields }, NodeKind::Field { fields: other }) => NodeKind::Field {
-                fields: Self::merge_trees(fields, other),
+                fields: Self::merge_trees(fields, other)?,
             },
             (NodeKind::IndexArray { indices }, NodeKind::IndexArray { indices: other }) => {
                 NodeKind::IndexArray {
-                    indices: Self::merge_trees(indices, other),
+                    indices: Self::merge_trees(indices, other)?,
                 }
             }
             (NodeKind::CollectArray { mut child }, NodeKind::CollectArray { child: other }) => {
-                child.merge(*other);
+                child.merge(*other)?;
                 NodeKind::CollectArray { child }
             }
-            // TODO: better handling
-            _ => panic!("Conflicting queries"),
-        }
+            _ => {
+                return Err(diagnostic!(
+                    Span::call_site(),
+                    Level::Error,
+                    "Conflicting query"
+                ))
+            }
+        };
+        Ok(())
     }
 }
 
@@ -81,7 +88,10 @@ pub(crate) struct Node {
 }
 
 impl Node {
-    pub(crate) fn from_queries<I: Iterator<Item = Query>>(queries: I) -> Node {
+    pub(crate) fn from_queries<I: Iterator<Item = Query>>(
+        queries: I,
+    ) -> Result<Node, Vec<Diagnostic>> {
+        let mut diagnostics = vec![];
         let mut env = Env::new();
         let mut node = Node {
             name: env.new_node_name(),
@@ -89,14 +99,21 @@ impl Node {
             kind: NodeKind::None,
         };
         for query in queries {
-            node.merge(Node::from_query(
+            if let Err(diagnostic) = node.merge(Node::from_query(
                 &mut env,
                 query.id,
                 query.fragment,
                 query.ty,
-            ));
+            )) {
+                diagnostics.push(diagnostic);
+            }
         }
-        node
+
+        if diagnostics.is_empty() {
+            Ok(node)
+        } else {
+            Err(diagnostics)
+        }
     }
 
     fn from_query(env: &mut Env, id: QueryId, fragment: QueryFragment, ty: TokenStream) -> Self {
@@ -150,9 +167,10 @@ impl Node {
         }
     }
 
-    fn merge(&mut self, other: Self) {
-        self.kind.merge(other.kind);
+    fn merge(&mut self, other: Self) -> Result<(), Diagnostic> {
+        self.kind.merge(other.kind)?;
         self.queries.extend(other.queries.into_iter());
+        Ok(())
     }
 
     fn deserialize_seed_ty(&self) -> syn::Ident {

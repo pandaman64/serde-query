@@ -1,11 +1,9 @@
 #[derive(serde_query::Deserialize, serde_query::DeserializeQuery)]
 struct A {
-    #[query(r#"."#)]
-    missing_field: String,
-    #[query(r#".[kubernetes_clusters]"#)]
-    field_in_bracket: String,
-    #[query(r#".😎"#)]
-    unsupported_char: String,
+    #[query(r#".x"#)]
+    field_access: String,
+    #[query(r#".[0]"#)]
+    index_access: String,
 }
 
 fn assert_deserialize<'de, D: serde::Deserialize<'de>>() {}

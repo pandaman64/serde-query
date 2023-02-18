@@ -28,7 +28,7 @@ pub fn generate_derive(
     }
 
     let name = &input.ident;
-    let node = Node::from_queries(parse_input_result.queries.into_iter());
+    let node = Node::from_queries(parse_input_result.queries.into_iter())?;
     let mut stream = node.generate();
 
     // generate the root code

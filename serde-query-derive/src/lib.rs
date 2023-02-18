@@ -31,7 +31,36 @@ fn set_dummy(input: &DeriveInput, target: DeriveTarget) {
                 const _: () = {
                     struct __QueryWrapper;
 
-                    impl<'de> serde_query::DeserializeQuery<'de> for #name {
+                    impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for __QueryWrapper {
+                        fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
+                        where
+                            D: serde_query::__priv::serde::de::Deserializer<'de>
+                        {
+                            todo!()
+                        }
+                    }
+
+                    impl core::convert::From<__QueryWrapper> for #name #generics {
+                        fn from(val: __QueryWrapper) -> Self {
+                            todo!()
+                        }
+                    }
+
+                    impl core::ops::Deref for __QueryWrapper {
+                        type Target = #name;
+
+                        fn deref(&self) -> &Self::Target {
+                            todo!()
+                        }
+                    }
+
+                    impl core::ops::DerefMut for __QueryWrapper {
+                        fn deref_mut(&mut self) -> &mut Self::Target {
+                            todo!()
+                        }
+                    }
+
+                    impl<'de> serde_query::DeserializeQuery<'de> for #name #generics {
                         type Query = __QueryWrapper;
                     }
                 };
