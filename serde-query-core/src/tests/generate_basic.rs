@@ -1,4 +1,7 @@
-use crate::{build_node, Env, Query, QueryFragment, QueryId};
+use crate::{
+    node::Node,
+    query::{Query, QueryFragment, QueryId},
+};
 
 #[test]
 fn test_basic() {
@@ -26,7 +29,7 @@ fn test_basic() {
             quote::quote!(Vec<f32>),
         ),
     ];
-    let node = build_node(&mut Env::new(), queries.into_iter());
+    let node = Node::from_queries(queries.into_iter());
 
     let code = node.generate();
     let pretty = prettyplease::unparse(&syn::parse2(code).unwrap());

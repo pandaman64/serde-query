@@ -2,7 +2,10 @@ use proc_macro_error::{diagnostic, Diagnostic, Level};
 use quote::ToTokens;
 use syn::{DeriveInput, LitStr};
 
-use crate::{parse_query, Query, QueryId};
+use crate::{
+    parse_query,
+    query::{Query, QueryId},
+};
 
 pub(crate) struct ParseResult {
     pub(crate) queries: Vec<Query>,
