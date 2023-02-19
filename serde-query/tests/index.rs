@@ -8,14 +8,14 @@ fn test_index() {
         second_elem: i64,
     }
 
-    let document = serde_json::to_string(&serde_json::json!([
+    let document = serde_json::json!([
         "abc",
         42,
         {
             "key": "value",
         }
-    ]))
-    .unwrap();
+    ])
+    .to_string();
 
     let data: Data = serde_json::from_str::<Query<Data>>(&document)
         .unwrap()

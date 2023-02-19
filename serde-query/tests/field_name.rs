@@ -8,10 +8,10 @@ fn test_field_name() {
         with_space: i64,
     }
 
-    let document = serde_json::to_string(&serde_json::json!({
+    let document = serde_json::json!({
         "field name with spaces": 42,
-    }))
-    .unwrap();
+    })
+    .to_string();
 
     let data: Data = serde_json::from_str::<Query<Data>>(&document)
         .unwrap()
