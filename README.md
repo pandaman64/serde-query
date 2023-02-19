@@ -1,39 +1,87 @@
-# Serde Query: An efficient query language for Serde
+# serde-query
 
-`serde-query` provides a query language for [Serde](https://serde.rs/) [data model](https://serde.rs/data-model.html).
+Welcome to serde-query, a Rust library that lets you write jq-like queries for your data.
 
-`serde-query` is:
+## Why serde-query?
 
-* Efficient. You can extract only the target parts from a potentially large document with a jq-like syntax. It works like a streaming parser and touches only a minimal amount of elements.
-* Flexible. `serde-query` can work with any serde-compatible formats.
-* Zero-cost. The traversal structure is encoded as types in compile time.
+1. **Efficiency**: With serde-query, you can efficiently extract exactly what you need without wasting the memory.
+2. **Helpful error messages**: When queries fail, you'll get clear, concise error messages that tell you where and why the failure happens.
+3. **Flexibility**: serde-query supports any serde-compatible data formats.
+
+## Getting started
+
+To get started with serde-query, add it to your Rust project using Cargo:
+
+```bash
+cargo add serde-query
+```
+
+Or, add it to your `Cargo.toml`:
+
+```toml
+[dependencies]
+serde-query = "0.2.0"
+```
 
 ## Example
+
+### Array queries
 ```rust
 use serde_query::{DeserializeQuery, Query};
 
 #[derive(DeserializeQuery)]
 struct Data {
-    #[query(".commit.authors.[0]")]
-    first_author: String,
-    #[query(".hash")]
-    hash_value: u64,
+    #[query(".commits.[].author")]
+    authors: Vec<String>,
+    #[query(".count")]
+    count: usize,
 }
 
-let document = serde_json::to_string(&serde_json::json!({
-    "commit": {
-        "authors": ["Kou", "Kasumi", "Masaru"],
-        "date": "2020-09-10",
-    },
-    "hash": 0xabcd,
-}))?;
+let document = serde_json::json!({
+    "commits": [
+        { "author":    "Kou", "hash": 0x0202 },
+        { "author": "Kasumi", "hash": 0x1013 },
+        { "author": "Masaru", "hash": 0x0809 },
+    ],
+    "count": 3,
+}).to_string();
 
 // You can use `Query<T>` as a `Deserialize` type for any `Deserializer`
 // and convert the result to the desired type using `From`/`Into`.
 let data: Data = serde_json::from_str::<Query<Data>>(&document)?.into();
 
-assert_eq!(data.first_author, "Kou");
-assert_eq!(data.hash_value, 0xabcd);
+assert_eq!(data.authors, vec!["Kou", "Kasumi", "Masaru"]);
+assert_eq!(data.count, 3);
+```
+
+### Errors
+```rust
+use serde_query::Deserialize;
+
+#[derive(Debug, Deserialize)]
+struct Data {
+    // missing field
+    #[query(".author.name")]
+    author_name: String,
+    // typo
+    #[query(".commit.commiter.name")]
+    committer_name: String,
+    // type error
+    #[query(".author.id")]
+    id: String,
+}
+
+let error = serde_json::from_str::<Data>(INPUT).unwrap_err();
+assert_eq!(
+    error.to_string(),
+    r#"
+Queries failed for fields: 'author_name', 'committer_name', 'id'
+  1. Query for field 'author_name' failed at '.author': missing field 'name'
+  2. Query for field 'committer_name' failed at '.commit': missing field 'commiter'
+  3. Query for field 'id' failed at '.author.id': invalid type: integer `5635139`, expected a string at line 34 column 17
+"#
+    .trim_start()
+);
 ```
 
 ## Note

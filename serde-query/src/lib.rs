@@ -1,41 +1,52 @@
 //! A query language for Serde data model.
 //!
-//! This crate provides [`serde_query::Deserialize`] derive macro that generates
-//! [`serde::Deserialize`] implementation with queries.
+//! This crate provides [`serde_query::Deserialize`] and [`serde_query::DeserializeQuery`] derive
+//! macros that generate [`serde::Deserialize`] implementations with queries.
 //!
 //! # Example
 //!
 //! ```rust
 //! # use std::error::Error;
 //! # fn main() -> Result<(), Box<dyn Error + 'static>> {
-//! #[derive(serde_query::Deserialize)]
+//! use serde_query::Deserialize;
+//!
+//! #[derive(Deserialize)]
 //! struct Data {
-//!     #[query(".commit.authors.[0]")]
-//!     first_author: String,
-//!     #[query(".hash")]
-//!     hash_value: u64,
+//!     #[query(".commits.[].author")]
+//!     authors: Vec<String>,
+//!     #[query(".count")]
+//!     count: usize,
 //! }
 //!
-//! let document = serde_json::to_string(&serde_json::json!({
-//!     "commit": {
-//!         "authors": ["Kou", "Kasumi", "Masaru"],
-//!         "date": "2020-09-10",
-//!     },
-//!     "hash": 0xabcd,
-//! }))?;
+//! let document = serde_json::json!({
+//!     "commits": [
+//!         {
+//!             "author": "Kou",
+//!             "hash": 0x0202,
+//!         },
+//!         {
+//!             "author": "Kasumi",
+//!             "hash": 0x1013,
+//!         },
+//!         {
+//!             "author": "Masaru",
+//!             "hash": 0x0809,
+//!         },
+//!     ],
+//!     "count": 3,
+//! }).to_string();
 //!
-//! // The query is compatible with arbitrary data formats with serde support.
 //! let data: Data = serde_json::from_str(&document)?;
 //!
-//! assert_eq!(data.first_author, "Kou");
-//! assert_eq!(data.hash_value, 0xabcd);
+//! assert_eq!(data.authors, vec!["Kou", "Kasumi", "Masaru"]);
+//! assert_eq!(data.count, 3);
 //! # Ok(())
 //! # }
 //! ```
 //!
 //! # Derive macros
 //!
-//! This crate provides the following two derive macros for declaring a query:
+//! This crate provides the following derive macros for declaring queries:
 //! * [`serde_query::Deserialize`] generates an implementation of [`serde::Deserialize`] for the struct.
 //!   We recommend using a full-path form (`serde_query::Deserialize`) when deriving to disambiguate
 //!   between serde and this crate.
@@ -43,37 +54,38 @@
 //!   This derive macro is useful if you want two `Deserialize` implementation.
 //!   For example, you may want `DeserializeQuery` for querying an API and `Deserialize` for loading from file.
 //!
-//! Each field must have a `#[query(...)]` attribute for specifying
-//! which part of the document should be retrieved, starting from the root.
+//! # Using the `#[query("...")]` annotation
 //!
-//! # `#[query(...)]` syntax
-//! `serde-query` currently supports the following syntax for stepping one level inside the document.
-//! You can combine them to go further.
+//! serde-query let you write a jq-like query inside the `#[query("...")]` annotation.
+//! Note that every field must have a query annotation.
 //!
-//! * `.field` for accessing a field with a name `field` of an object.
-//!   The field name must be an alphabet followed by zero or more alphanumeric characters.
-//! * `.["field"]` if the field name contains special characters.
-//!   We recommend using a raw string literal for the query parameter (`#[query(r#"..."#)]`).
-//! * `.[index]` for accessing an array element at position `index`.
+//! The supported syntaxes are as follows:
 //!
-//! Note that mixing field access and index access at the same position of a document
-//! is a compile error.
+//! * **`.field` syntax:** You can use the `.field` syntax to extract a field from a struct.
+//!   For example, `.name` extracts the `name` field. If the field name contains special characters, you can use the `.["field"]` syntax to quote the field name.
+//!   For example, `.["first-name"]` extracts the `first-name` field.
+//!   When quoting a field name, try using a raw string literal (i.e., `#[query(r#"..."#)]`).
+//! * **`.[]` syntax:** You can use the `.[]` syntax to run the rest of the query for each element in an array and collect the results.
+//!   For example, `.friends.[].name` extracts the `name` field from each element in the `friends` array.
+//! * **`.[n]` syntax:** You can use the `.[n]` syntax to extract the nth element from an array.
+//!   For example, `.friends.[0]` extracts the first element of the `friends` array.
 //!
 //! [`serde::Deserialize`]: https://docs.serde.rs/serde/trait.Deserialize.html
-//! [`serde_query::Deserialize`]: trait.Deserialize.html
+//! [`serde_query::Deserialize`]: derive.Deserialize.html
 //! [`serde_query::DeserializeQuery`]: trait.DeserializeQuery.html
 //! [`Query<T>`]: trait.DeserializeQuery.html#associatedtype.Query
-//! [its derive macro]: derive.DeserializeQuery.html
 
 /// Derive macro that generates [`serde::Deserialize`] directly.
 ///
-/// Please refer to the [module-level document] for the usage.
+/// Please refer to the [module-level documentation] for the usage.
 ///
 /// [`serde::Deserialize`]: https://docs.serde.rs/serde/trait.Deserialize.html
-/// [module-level document]: index.html
+/// [module-level documentation]: index.html
 pub use serde_query_derive::Deserialize;
 
 /// Derive macro for [`DeserializeQuery`] trait.
+///
+/// Please refer to the [module-level documentation] for the usage.
 ///
 /// # Example
 ///
@@ -84,32 +96,42 @@ pub use serde_query_derive::Deserialize;
 ///
 /// #[derive(DeserializeQuery)]
 /// struct Data {
-///     #[query(".commit.authors.[0]")]
-///     first_author: String,
-///     #[query(".hash")]
-///     hash_value: u64,
+///     #[query(".commits.[].author")]
+///     authors: Vec<String>,
+///     #[query(".count")]
+///     count: usize,
 /// }
 ///
-/// let document = serde_json::to_string(&serde_json::json!({
-///     "commit": {
-///         "authors": ["Kou", "Kasumi", "Masaru"],
-///         "date": "2020-09-10",
-///     },
-///     "hash": 0xabcd,
-/// }))?;
+/// let document = serde_json::json!({
+///     "commits": [
+///         {
+///             "author": "Kou",
+///             "hash": 0x0202,
+///         },
+///         {
+///             "author": "Kasumi",
+///             "hash": 0x1013,
+///         },
+///         {
+///             "author": "Masaru",
+///             "hash": 0x0809,
+///         },
+///     ],
+///     "count": 3,
+/// }).to_string();
 ///
 /// // You can use `Query<T>` as a `Deserialize` type for any `Deserializer`
 /// // and convert the result to the desired type using `From`/`Into`.
 /// let data: Data = serde_json::from_str::<Query<Data>>(&document)?.into();
 ///
-/// assert_eq!(data.first_author, "Kou");
-/// assert_eq!(data.hash_value, 0xabcd);
+/// assert_eq!(data.authors, vec!["Kou", "Kasumi", "Masaru"]);
+/// assert_eq!(data.count, 3);
 /// # Ok(())
 /// # }
 /// ```
 ///
 /// [`DeserializeQuery`]: trait.DeserializeQuery.html
-/// [module-level document]: index.html
+/// [module-level documentation]: index.html
 pub use serde_query_derive::DeserializeQuery;
 
 use core::ops::{Deref, DerefMut};
@@ -117,18 +139,16 @@ use serde::de::Deserialize;
 
 /// Convenient type alias for the query type.
 ///
-/// Please refer to [`DeserializeQuery`] trait for details.
+/// Please refer to the [`DeserializeQuery`] trait for details.
 ///
 /// [`DeserializeQuery`]: trait.DeserializeQuery.html
-/// [module-level document]: index.html
 pub type Query<'de, T> = <T as DeserializeQuery<'de>>::Query;
 
 /// A **data structure** that can be deserialized with a query.
 ///
 /// The [`Query`] type is a `#[repr(transparent)]` wrapper automatically generated by
-/// [the proc macro], and can be converted to the implementor
-/// (the type with `#[derive(DeserializeQuery)`]) after deserializing from the document
-///  using `Deserialize` implementation of the query type.
+/// [the proc macro]. You can deserialize `Query<YourType>` first and then call `.into()`
+/// to get `YourType`.
 ///
 /// [`Query`]: trait.DeserializeQuery.html#associatedtype.Query
 /// [the proc macro]: derive.DeserializeQuery.html
