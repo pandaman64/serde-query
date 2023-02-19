@@ -24,7 +24,7 @@ const _: () = {
         where
             D: serde_query::__priv::serde::Deserializer<'de>,
         {
-            Ok(())
+            core::result::Result::Ok(())
         }
     }
     impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for EmptyInput {
@@ -36,8 +36,18 @@ const _: () = {
             <DeserializeSeedNode0 as serde_query::__priv::serde::de::DeserializeSeed<
                 'de,
             >>::deserialize(root, deserializer)?;
-            let value = EmptyInput {};
-            Ok(value)
+            let has_error = false;
+            if !has_error {
+                let value = EmptyInput {};
+                core::result::Result::Ok(value)
+            } else {
+                let errors = [];
+                core::result::Result::Err(
+                    <D::Error as serde_query::__priv::serde::de::Error>::custom(
+                        serde_query::__priv::Errors::new(&errors),
+                    ),
+                )
+            }
         }
     }
 };

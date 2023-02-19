@@ -18,8 +18,12 @@ fn test_basic() {
         r#"
 const _: () = {
     struct DeserializeSeedNode0<'query> {
-        x: &'query mut core::option::Option<Vec<f32>>,
-        y: &'query mut core::option::Option<Vec<f32>>,
+        x: &'query mut core::option::Option<
+            core::result::Result<Vec<f32>, serde_query::__priv::Error>,
+        >,
+        y: &'query mut core::option::Option<
+            core::result::Result<Vec<f32>, serde_query::__priv::Error>,
+        >,
     }
     impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
     for DeserializeSeedNode0<'query> {
@@ -32,12 +36,41 @@ const _: () = {
                 x: self.x,
                 y: self.y,
             };
-            deserializer.deserialize_map(visitor)
+            deserializer.deserialize_map(visitor)?;
+            if self.x.is_none() {
+                *self
+                    .x = core::option::Option::Some(
+                    core::result::Result::Err(
+                        serde_query::__priv::Error::new(
+                            "x",
+                            ".",
+                            String::from("missing field 'locs'"),
+                        ),
+                    ),
+                );
+            }
+            if self.y.is_none() {
+                *self
+                    .y = core::option::Option::Some(
+                    core::result::Result::Err(
+                        serde_query::__priv::Error::new(
+                            "y",
+                            ".",
+                            String::from("missing field 'locs'"),
+                        ),
+                    ),
+                );
+            }
+            core::result::Result::Ok(())
         }
     }
     struct VisitorNode0<'query> {
-        x: &'query mut core::option::Option<Vec<f32>>,
-        y: &'query mut core::option::Option<Vec<f32>>,
+        x: &'query mut core::option::Option<
+            core::result::Result<Vec<f32>, serde_query::__priv::Error>,
+        >,
+        y: &'query mut core::option::Option<
+            core::result::Result<Vec<f32>, serde_query::__priv::Error>,
+        >,
     }
     impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de>
     for VisitorNode0<'query> {
@@ -52,7 +85,7 @@ const _: () = {
         where
             A: serde_query::__priv::serde::de::MapAccess<'de>,
         {
-            while let Some(key) = map.next_key::<FieldNode0>()? {
+            while let core::option::Option::Some(key) = map.next_key::<FieldNode0>()? {
                 match key {
                     FieldNode0::Field0 => {
                         map.next_value_seed(DeserializeSeedNode2 {
@@ -65,7 +98,7 @@ const _: () = {
                     }
                 }
             }
-            Ok(())
+            core::result::Result::Ok(())
         }
     }
     enum FieldNode0 {
@@ -106,8 +139,12 @@ const _: () = {
         }
     }
     struct DeserializeSeedNode2<'query> {
-        x: &'query mut core::option::Option<Vec<f32>>,
-        y: &'query mut core::option::Option<Vec<f32>>,
+        x: &'query mut core::option::Option<
+            core::result::Result<Vec<f32>, serde_query::__priv::Error>,
+        >,
+        y: &'query mut core::option::Option<
+            core::result::Result<Vec<f32>, serde_query::__priv::Error>,
+        >,
     }
     impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
     for DeserializeSeedNode2<'query> {
@@ -116,21 +153,25 @@ const _: () = {
         where
             D: serde_query::__priv::serde::Deserializer<'de>,
         {
-            let mut x = <Vec<f32> as serde_query::__priv::Container>::empty();
-            let mut y = <Vec<f32> as serde_query::__priv::Container>::empty();
+            let mut x = core::result::Result::Ok(
+                <Vec<f32> as serde_query::__priv::Container>::empty(),
+            );
+            let mut y = core::result::Result::Ok(
+                <Vec<f32> as serde_query::__priv::Container>::empty(),
+            );
             let visitor = VisitorNode2 {
                 x: &mut x,
                 y: &mut y,
             };
             deserializer.deserialize_seq(visitor)?;
-            *self.x = Some(x);
-            *self.y = Some(y);
-            Ok(())
+            *self.x = core::option::Option::Some(x);
+            *self.y = core::option::Option::Some(y);
+            core::result::Result::Ok(())
         }
     }
     struct VisitorNode2<'query> {
-        x: &'query mut Vec<f32>,
-        y: &'query mut Vec<f32>,
+        x: &'query mut core::result::Result<Vec<f32>, serde_query::__priv::Error>,
+        y: &'query mut core::result::Result<Vec<f32>, serde_query::__priv::Error>,
     }
     impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de>
     for VisitorNode2<'query> {
@@ -142,73 +183,91 @@ const _: () = {
         where
             A: serde_query::__priv::serde::de::SeqAccess<'de>,
         {
-            if let Some(additional) = seq.size_hint() {
+            if let core::option::Option::Some(additional) = seq.size_hint() {
                 <Vec<
                     f32,
-                > as serde_query::__priv::Container>::reserve(&mut self.x, additional);
+                > as serde_query::__priv::Container>::reserve(
+                    self.x.as_mut().unwrap(),
+                    additional,
+                );
                 <Vec<
                     f32,
-                > as serde_query::__priv::Container>::reserve(&mut self.y, additional);
+                > as serde_query::__priv::Container>::reserve(
+                    self.y.as_mut().unwrap(),
+                    additional,
+                );
             }
             loop {
-                let mut x = None;
-                let mut y = None;
+                let mut x = core::option::Option::None;
+                let mut y = core::option::Option::None;
                 match seq
                     .next_element_seed(DeserializeSeedNode3 {
                         x: &mut x,
                         y: &mut y,
                     })?
                 {
-                    Some(()) => {
-                        <Vec<
-                            f32,
-                        > as serde_query::__priv::Container>::extend_one(
-                            &mut self.x,
-                            match x {
-                                core::option::Option::Some(v) => v,
-                                core::option::Option::None => {
-                                    return core::result::Result::Err(
-                                        <<A as serde_query::__priv::serde::de::SeqAccess<
-                                            'de,
-                                        >>::Error as serde_query::__priv::serde::de::Error>::custom(
-                                            "Query for 'x' failed to run",
-                                        ),
-                                    );
+                    core::option::Option::None => break,
+                    core::option::Option::Some(()) => {
+                        match &mut self.x {
+                            core::result::Result::Ok(ref mut container) => {
+                                match x {
+                                    core::option::Option::Some(core::result::Result::Ok(v)) => {
+                                        <Vec<
+                                            f32,
+                                        > as serde_query::__priv::Container>::extend_one(
+                                            container,
+                                            v,
+                                        )
+                                    }
+                                    core::option::Option::Some(
+                                        core::result::Result::Err(e),
+                                    ) => {
+                                        *self.x = core::result::Result::Err(e);
+                                    }
+                                    core::option::Option::None => unreachable!(),
                                 }
-                            },
-                        );
-                        <Vec<
-                            f32,
-                        > as serde_query::__priv::Container>::extend_one(
-                            &mut self.y,
-                            match y {
-                                core::option::Option::Some(v) => v,
-                                core::option::Option::None => {
-                                    return core::result::Result::Err(
-                                        <<A as serde_query::__priv::serde::de::SeqAccess<
-                                            'de,
-                                        >>::Error as serde_query::__priv::serde::de::Error>::custom(
-                                            "Query for 'y' failed to run",
-                                        ),
-                                    );
+                            }
+                            core::result::Result::Err(_) => {}
+                        }
+                        match &mut self.y {
+                            core::result::Result::Ok(ref mut container) => {
+                                match y {
+                                    core::option::Option::Some(core::result::Result::Ok(v)) => {
+                                        <Vec<
+                                            f32,
+                                        > as serde_query::__priv::Container>::extend_one(
+                                            container,
+                                            v,
+                                        )
+                                    }
+                                    core::option::Option::Some(
+                                        core::result::Result::Err(e),
+                                    ) => {
+                                        *self.y = core::result::Result::Err(e);
+                                    }
+                                    core::option::Option::None => unreachable!(),
                                 }
-                            },
-                        );
-                    }
-                    None => {
-                        break;
+                            }
+                            core::result::Result::Err(_) => {}
+                        }
                     }
                 };
             }
-            Ok(())
+            core::result::Result::Ok(())
         }
     }
     struct DeserializeSeedNode3<'query> {
         x: &'query mut core::option::Option<
-            <Vec<f32> as serde_query::__priv::Container>::Element,
+            core::result::Result<
+                <Vec<f32> as serde_query::__priv::Container>::Element,
+                serde_query::__priv::Error,
+            >,
         >,
         y: &'query mut core::option::Option<
-            <Vec<f32> as serde_query::__priv::Container>::Element,
+            core::result::Result<
+                <Vec<f32> as serde_query::__priv::Container>::Element,
+                serde_query::__priv::Error,
+            >,
         >,
     }
     impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
@@ -222,15 +281,46 @@ const _: () = {
                 x: self.x,
                 y: self.y,
             };
-            deserializer.deserialize_map(visitor)
+            deserializer.deserialize_map(visitor)?;
+            if self.x.is_none() {
+                *self
+                    .x = core::option::Option::Some(
+                    core::result::Result::Err(
+                        serde_query::__priv::Error::new(
+                            "x",
+                            ".locs.[]",
+                            String::from("missing field 'x'"),
+                        ),
+                    ),
+                );
+            }
+            if self.y.is_none() {
+                *self
+                    .y = core::option::Option::Some(
+                    core::result::Result::Err(
+                        serde_query::__priv::Error::new(
+                            "y",
+                            ".locs.[]",
+                            String::from("missing field 'y'"),
+                        ),
+                    ),
+                );
+            }
+            core::result::Result::Ok(())
         }
     }
     struct VisitorNode3<'query> {
         x: &'query mut core::option::Option<
-            <Vec<f32> as serde_query::__priv::Container>::Element,
+            core::result::Result<
+                <Vec<f32> as serde_query::__priv::Container>::Element,
+                serde_query::__priv::Error,
+            >,
         >,
         y: &'query mut core::option::Option<
-            <Vec<f32> as serde_query::__priv::Container>::Element,
+            core::result::Result<
+                <Vec<f32> as serde_query::__priv::Container>::Element,
+                serde_query::__priv::Error,
+            >,
         >,
     }
     impl<'query, 'de> serde_query::__priv::serde::de::Visitor<'de>
@@ -246,7 +336,7 @@ const _: () = {
         where
             A: serde_query::__priv::serde::de::MapAccess<'de>,
         {
-            while let Some(key) = map.next_key::<FieldNode3>()? {
+            while let core::option::Option::Some(key) = map.next_key::<FieldNode3>()? {
                 match key {
                     FieldNode3::Field0 => {
                         map.next_value_seed(DeserializeSeedNode4 { x: self.x })?;
@@ -259,7 +349,7 @@ const _: () = {
                     }
                 }
             }
-            Ok(())
+            core::result::Result::Ok(())
         }
     }
     enum FieldNode3 {
@@ -307,7 +397,10 @@ const _: () = {
     }
     struct DeserializeSeedNode4<'query> {
         x: &'query mut core::option::Option<
-            <Vec<f32> as serde_query::__priv::Container>::Element,
+            core::result::Result<
+                <Vec<f32> as serde_query::__priv::Container>::Element,
+                serde_query::__priv::Error,
+            >,
         >,
     }
     impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
@@ -320,20 +413,28 @@ const _: () = {
         where
             D: serde_query::__priv::serde::Deserializer<'de>,
         {
-            *self
-                .x = core::option::Option::Some(
-                <<Vec<
-                    f32,
-                > as serde_query::__priv::Container>::Element as serde_query::__priv::serde::Deserialize<
-                    'de,
-                >>::deserialize(deserializer)?,
-            );
-            Ok(())
+            let result = match <<Vec<
+                f32,
+            > as serde_query::__priv::Container>::Element as serde_query::__priv::serde::Deserialize<
+                'de,
+            >>::deserialize(deserializer) {
+                core::result::Result::Ok(v) => core::result::Result::Ok(v),
+                core::result::Result::Err(e) => {
+                    core::result::Result::Err(
+                        serde_query::__priv::Error::new("x", ".locs.[].x", e.to_string()),
+                    )
+                }
+            };
+            *self.x = core::option::Option::Some(result);
+            core::result::Result::Ok(())
         }
     }
     struct DeserializeSeedNode8<'query> {
         y: &'query mut core::option::Option<
-            <Vec<f32> as serde_query::__priv::Container>::Element,
+            core::result::Result<
+                <Vec<f32> as serde_query::__priv::Container>::Element,
+                serde_query::__priv::Error,
+            >,
         >,
     }
     impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de>
@@ -346,15 +447,20 @@ const _: () = {
         where
             D: serde_query::__priv::serde::Deserializer<'de>,
         {
-            *self
-                .y = core::option::Option::Some(
-                <<Vec<
-                    f32,
-                > as serde_query::__priv::Container>::Element as serde_query::__priv::serde::Deserialize<
-                    'de,
-                >>::deserialize(deserializer)?,
-            );
-            Ok(())
+            let result = match <<Vec<
+                f32,
+            > as serde_query::__priv::Container>::Element as serde_query::__priv::serde::Deserialize<
+                'de,
+            >>::deserialize(deserializer) {
+                core::result::Result::Ok(v) => core::result::Result::Ok(v),
+                core::result::Result::Err(e) => {
+                    core::result::Result::Err(
+                        serde_query::__priv::Error::new("y", ".locs.[].y", e.to_string()),
+                    )
+                }
+            };
+            *self.y = core::option::Option::Some(result);
+            core::result::Result::Ok(())
         }
     }
     impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for Locations {
@@ -362,8 +468,8 @@ const _: () = {
         where
             D: serde_query::__priv::serde::de::Deserializer<'de>,
         {
-            let mut x = None;
-            let mut y = None;
+            let mut x = core::option::Option::None;
+            let mut y = core::option::Option::None;
             let root = DeserializeSeedNode0 {
                 x: &mut x,
                 y: &mut y,
@@ -371,29 +477,23 @@ const _: () = {
             <DeserializeSeedNode0 as serde_query::__priv::serde::de::DeserializeSeed<
                 'de,
             >>::deserialize(root, deserializer)?;
-            let value = Locations {
-                x: match x {
-                    core::option::Option::Some(v) => v,
-                    core::option::Option::None => {
-                        return core::result::Result::Err(
-                            <D::Error as serde_query::__priv::serde::de::Error>::custom(
-                                "Query for 'x' failed to run",
-                            ),
-                        );
-                    }
-                },
-                y: match y {
-                    core::option::Option::Some(v) => v,
-                    core::option::Option::None => {
-                        return core::result::Result::Err(
-                            <D::Error as serde_query::__priv::serde::de::Error>::custom(
-                                "Query for 'y' failed to run",
-                            ),
-                        );
-                    }
-                },
-            };
-            Ok(value)
+            let x = x.unwrap();
+            let y = y.unwrap();
+            let has_error = false || x.is_err() || y.is_err();
+            if !has_error {
+                let value = Locations {
+                    x: x.unwrap(),
+                    y: y.unwrap(),
+                };
+                core::result::Result::Ok(value)
+            } else {
+                let errors = [x.err(), y.err()];
+                core::result::Result::Err(
+                    <D::Error as serde_query::__priv::serde::de::Error>::custom(
+                        serde_query::__priv::Errors::new(&errors),
+                    ),
+                )
+            }
         }
     }
 };

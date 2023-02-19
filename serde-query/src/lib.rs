@@ -146,6 +146,87 @@ where
 pub mod __priv {
     pub use serde;
 
+    #[derive(Debug)]
+    pub struct Error {
+        field: &'static str,
+        prefix: &'static str,
+        message: String,
+    }
+
+    impl core::fmt::Display for Error {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            write!(
+                f,
+                "Query for field '{}' failed at '{}': {}",
+                self.field, self.prefix, self.message
+            )
+        }
+    }
+
+    impl Error {
+        pub fn new(field: &'static str, prefix: &'static str, message: String) -> Self {
+            Error {
+                field,
+                prefix,
+                message,
+            }
+        }
+    }
+
+    #[derive(Debug)]
+    pub struct Errors<'a> {
+        errors: &'a [Option<Error>],
+    }
+
+    impl<'a> core::fmt::Display for Errors<'a> {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            match self.error_count() {
+                0 => Ok(()),
+                1 => {
+                    let error = self.errors().next().unwrap();
+                    error.fmt(f)
+                }
+                _ => {
+                    write!(f, "Queries failed for fields: ")?;
+                    let mut following = false;
+                    for error in self.errors() {
+                        if following {
+                            f.write_str(", ")?;
+                        }
+                        write!(f, "'{}'", error.field)?;
+                        following = true;
+                    }
+                    f.write_str("\n")?;
+
+                    let mut index = 1;
+                    for error in self.errors() {
+                        writeln!(f, "  {}. {}", index, error)?;
+                        index += 1;
+                    }
+
+                    Ok(())
+                }
+            }
+        }
+    }
+
+    impl<'a> Errors<'a> {
+        pub fn new(errors: &'a [Option<Error>]) -> Self {
+            Self { errors }
+        }
+
+        fn error_count(&self) -> usize {
+            self.errors
+                .iter()
+                .map(|opt| if opt.is_some() { 1 } else { 0 })
+                .sum()
+        }
+
+        fn errors(&self) -> impl Iterator<Item = &Error> {
+            self.errors.iter().flatten()
+        }
+    }
+
     pub trait Container {
         type Element;
 

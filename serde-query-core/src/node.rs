@@ -252,6 +252,24 @@ impl Node {
         self.queries.values().collect()
     }
 
+    fn missing_fields_error_triple<K: Clone + Ord>(
+        children: &BTreeMap<K, Node>,
+    ) -> (Vec<K>, Vec<syn::Ident>, Vec<String>) {
+        let mut keys = vec![];
+        let mut idents = vec![];
+        let mut ident_strings = vec![];
+
+        for (field, node) in children.iter() {
+            for id in node.queries.keys() {
+                keys.push(field.clone());
+                idents.push(id.ident().clone());
+                ident_strings.push(id.ident().to_string());
+            }
+        }
+
+        (keys, idents, ident_strings)
+    }
+
     pub(crate) fn generate(&self) -> TokenStream {
         match &self.kind {
             NodeKind::Accept => {
@@ -261,9 +279,17 @@ impl Node {
 
                 let deserialize_seed_ty = self.deserialize_seed_ty();
 
+                let field = query_name.to_string();
+                let prefix = &self.prefix;
+
                 quote::quote! {
                     struct #deserialize_seed_ty<'query> {
-                        #query_name: &'query mut core::option::Option<#query_type>,
+                        #query_name: &'query mut core::option::Option<
+                            core::result::Result<
+                                #query_type,
+                                serde_query::__priv::Error,
+                            >
+                        >,
                     }
 
                     impl<'query, 'de> serde_query::__priv::serde::de::DeserializeSeed<'de> for #deserialize_seed_ty<'query> {
@@ -273,8 +299,14 @@ impl Node {
                         where
                             D: serde_query::__priv::serde::Deserializer<'de>,
                         {
-                            *self.#query_name = core::option::Option::Some(<#query_type as serde_query::__priv::serde::Deserialize<'de>>::deserialize(deserializer)?);
-                            Ok(())
+                            let result = match <#query_type as serde_query::__priv::serde::Deserialize<'de>>::deserialize(deserializer) {
+                                core::result::Result::Ok(v) => core::result::Result::Ok(v),
+                                core::result::Result::Err(e) => core::result::Result::Err(
+                                    serde_query::__priv::Error::new(#field, #prefix, e.to_string())
+                                ),
+                            };
+                            *self.#query_name = core::option::Option::Some(result);
+                            core::result::Result::Ok(())
                         }
                     }
                 }
@@ -296,6 +328,13 @@ impl Node {
                     .keys()
                     .map(|name| Literal::byte_string(name.as_bytes()))
                     .collect();
+
+                let (missing_field_names, missing_query_names, missing_query_name_strings) =
+                    Self::missing_fields_error_triple(fields);
+                let missing_field_error_messages = missing_field_names
+                    .into_iter()
+                    .map(|field_name| format!("missing field '{}'", field_name));
+                let prefix = &self.prefix;
 
                 let match_arms =
                     fields
@@ -327,7 +366,12 @@ impl Node {
                 quote::quote! {
                     struct #deserialize_seed_ty<'query> {
                         #(
-                            #query_names: &'query mut core::option::Option<#query_types>,
+                            #query_names: &'query mut core::option::Option<
+                                core::result::Result<
+                                    #query_types,
+                                    serde_query::__priv::Error,
+                                >
+                            >,
                         )*
                     }
 
@@ -343,13 +387,33 @@ impl Node {
                                     #query_names: self.#query_names,
                                 )*
                             };
-                            deserializer.deserialize_map(visitor)
+                            deserializer.deserialize_map(visitor)?;
+                            #(
+                                if self.#missing_query_names.is_none() {
+                                    *self.#missing_query_names = core::option::Option::Some(
+                                        core::result::Result::Err(
+                                            serde_query::__priv::Error::new(
+                                                #missing_query_name_strings,
+                                                #prefix,
+                                                String::from(#missing_field_error_messages),
+                                            )
+                                        )
+                                    );
+                                }
+                            )*
+
+                            core::result::Result::Ok(())
                         }
                     }
 
                     struct #visitor_ty<'query> {
                         #(
-                            #query_names: &'query mut core::option::Option<#query_types>,
+                            #query_names: &'query mut core::option::Option<
+                                core::result::Result<
+                                    #query_types,
+                                    serde_query::__priv::Error,
+                                >
+                            >,
                         )*
                     }
 
@@ -364,7 +428,7 @@ impl Node {
                         where
                             A: serde_query::__priv::serde::de::MapAccess<'de>,
                         {
-                            while let Some(key) = map.next_key::<#field_deserialize_enum_ty>()? {
+                            while let core::option::Option::Some(key) = map.next_key::<#field_deserialize_enum_ty>()? {
                                 match key {
                                     #(#match_arms)*
                                     #field_deserialize_enum_ty :: Ignore => {
@@ -372,7 +436,7 @@ impl Node {
                                     }
                                 }
                             }
-                            Ok(())
+                            core::result::Result::Ok(())
                         }
                     }
 
@@ -454,6 +518,13 @@ impl Node {
                     }
                 });
 
+                let (missing_field_names, missing_query_names, missing_query_name_strings) =
+                    Self::missing_fields_error_triple(indices);
+                let missing_field_error_messages = missing_field_names
+                    .into_iter()
+                    .map(|index| format!("the sequence must have at least {} elements", index + 1));
+                let prefix = &self.prefix;
+
                 let (max_index, _) = indices
                     .last_key_value()
                     .expect("IndexArray node must have at least one element");
@@ -464,7 +535,12 @@ impl Node {
                 quote::quote! {
                     struct #deserialize_seed_ty<'query> {
                         #(
-                            #query_names: &'query mut core::option::Option<#query_types>,
+                            #query_names: &'query mut core::option::Option<
+                                core::result::Result<
+                                    #query_types,
+                                    serde_query::__priv::Error,
+                                >
+                            >,
                         )*
                     }
 
@@ -480,13 +556,32 @@ impl Node {
                                     #query_names: self.#query_names,
                                 )*
                             };
-                            deserializer.deserialize_seq(visitor)
+                            deserializer.deserialize_seq(visitor)?;
+                            #(
+                                if self.#missing_query_names.is_none() {
+                                    *self.#missing_query_names = core::option::Option::Some(
+                                        core::result::Result::Err(
+                                            serde_query::__priv::Error::new(
+                                                #missing_query_name_strings,
+                                                #prefix,
+                                                String::from(#missing_field_error_messages),
+                                            )
+                                        )
+                                    );
+                                }
+                            )*
+                            core::result::Result::Ok(())
                         }
                     }
 
                     struct #visitor_ty<'query> {
                         #(
-                            #query_names: &'query mut core::option::Option<#query_types>,
+                            #query_names: &'query mut core::option::Option<
+                                core::result::Result<
+                                    #query_types,
+                                    serde_query::__priv::Error,
+                                >
+                            >,
                         )*
                     }
 
@@ -514,7 +609,7 @@ impl Node {
                                 }
                                 current_index += 1;
                             }
-                            Ok(())
+                            core::result::Result::Ok(())
                         }
                     }
 
@@ -527,10 +622,6 @@ impl Node {
 
                 let query_names = self.query_names();
                 let query_types = self.query_types();
-                let error_messages: Vec<_> = query_names
-                    .iter()
-                    .map(|name| format!("Query for '{}' failed to run", name))
-                    .collect();
 
                 let child_code = child.generate();
                 let child_deserialize_seed_ty = child.deserialize_seed_ty();
@@ -539,7 +630,12 @@ impl Node {
                 quote::quote! {
                     struct #deserialize_seed_ty<'query> {
                         #(
-                            #query_names: &'query mut core::option::Option<#query_types>,
+                            #query_names: &'query mut core::option::Option<
+                                core::result::Result<
+                                    #query_types,
+                                    serde_query::__priv::Error,
+                                >
+                            >,
                         )*
                     }
 
@@ -551,7 +647,9 @@ impl Node {
                             D: serde_query::__priv::serde::Deserializer<'de>,
                         {
                             #(
-                                let mut #query_names = <#query_types as serde_query::__priv::Container>::empty();
+                                let mut #query_names = core::result::Result::Ok(
+                                    <#query_types as serde_query::__priv::Container>::empty()
+                                );
                             )*
                             let visitor = #visitor_ty {
                                 #(
@@ -560,15 +658,15 @@ impl Node {
                             };
                             deserializer.deserialize_seq(visitor)?;
                             #(
-                                *self.#query_names = Some(#query_names);
+                                *self.#query_names = core::option::Option::Some(#query_names);
                             )*
-                            Ok(())
+                            core::result::Result::Ok(())
                         }
                     }
 
                     struct #visitor_ty<'query> {
                         #(
-                            #query_names: &'query mut #query_types,
+                            #query_names: &'query mut core::result::Result<#query_types, serde_query::__priv::Error>,
                         )*
                     }
 
@@ -583,44 +681,46 @@ impl Node {
                         where
                             A: serde_query::__priv::serde::de::SeqAccess<'de>,
                         {
-                            if let Some(additional) = seq.size_hint() {
+                            if let core::option::Option::Some(additional) = seq.size_hint() {
                                 #(
                                     <#query_types as serde_query::__priv::Container>::reserve(
-                                        &mut self.#query_names,
+                                        self.#query_names.as_mut().unwrap(),
                                         additional,
                                     );
                                 )*
                             }
                             loop {
                                 #(
-                                    let mut #query_names = None;
+                                    let mut #query_names = core::option::Option::None;
                                 )*
                                 match seq.next_element_seed(#child_deserialize_seed_ty {
                                     #(
                                         #query_names: &mut #query_names,
                                     )*
                                 })? {
-                                    Some(()) => {
+                                    core::option::Option::None => break,
+                                    core::option::Option::Some(()) => {
                                         #(
-                                            <#query_types as serde_query::__priv::Container>::extend_one(
-                                                &mut self.#query_names,
-                                                match #query_names {
-                                                    core::option::Option::Some(v) => v,
-                                                    core::option::Option::None => {
-                                                        return core::result::Result::Err(
-                                                            <<A as serde_query::__priv::serde::de::SeqAccess<'de>>::Error as serde_query::__priv::serde::de::Error>::custom(#error_messages)
+                                            match &mut self.#query_names {
+                                                core::result::Result::Ok(ref mut container) => match #query_names {
+                                                    core::option::Option::Some(core::result::Result::Ok(v)) => {
+                                                        <#query_types as serde_query::__priv::Container>::extend_one(
+                                                            container,
+                                                            v,
                                                         )
-                                                    }
+                                                    },
+                                                    core::option::Option::Some(core::result::Result::Err(e)) => {
+                                                        *self.#query_names = core::result::Result::Err(e);
+                                                    },
+                                                    core::option::Option::None => unreachable!(),
                                                 },
-                                            );
+                                                core::result::Result::Err(_) => {},
+                                            }
                                         )*
-                                    }
-                                    None => {
-                                        break;
                                     }
                                 };
                             }
-                            Ok(())
+                            core::result::Result::Ok(())
                         }
                     }
 
@@ -641,7 +741,7 @@ impl Node {
                         where
                             D: serde_query::__priv::serde::Deserializer<'de>,
                         {
-                            Ok(())
+                            core::result::Result::Ok(())
                         }
                     }
                 }
@@ -657,10 +757,6 @@ impl Node {
     ) -> TokenStream {
         let deserialize_seed_ty = self.deserialize_seed_ty();
         let query_names = self.query_names();
-        let error_messages: Vec<_> = query_names
-            .iter()
-            .map(|name| format!("Query for '{}' failed to run", name))
-            .collect();
         let construction = construction(quote::quote!(value));
         quote::quote! {
             impl<'de> serde_query::__priv::serde::de::Deserialize<'de> for #implementor_ty {
@@ -669,7 +765,7 @@ impl Node {
                     D: serde_query::__priv::serde::de::Deserializer<'de>
                 {
                     #(
-                        let mut #query_names = None;
+                        let mut #query_names = core::option::Option::None;
                     )*
                     let root = #deserialize_seed_ty {
                         #(
@@ -677,17 +773,31 @@ impl Node {
                         )*
                     };
                     <#deserialize_seed_ty as serde_query::__priv::serde::de::DeserializeSeed<'de>>::deserialize(root, deserializer)?;
-                    let value = #struct_ty {
-                        #(
-                            #query_names: match #query_names {
-                                core::option::Option::Some(v) => v,
-                                core::option::Option::None => {
-                                    return core::result::Result::Err(<D::Error as serde_query::__priv::serde::de::Error>::custom(#error_messages))
-                                }
-                            },
-                        )*
-                    };
-                    Ok(#construction)
+
+                    #(
+                        let #query_names = #query_names.unwrap();
+                    )*
+                    let has_error = false #(
+                        || #query_names.is_err()
+                    )*;
+
+                    if !has_error {
+                        let value = #struct_ty {
+                            #(
+                                #query_names: #query_names.unwrap(),
+                            )*
+                        };
+                        core::result::Result::Ok(#construction)
+                    } else {
+                        let errors = [
+                            #(
+                                #query_names.err(),
+                            )*
+                        ];
+                        core::result::Result::Err(
+                            <D::Error as serde_query::__priv::serde::de::Error>::custom(serde_query::__priv::Errors::new(&errors))
+                        )
+                    }
                 }
             }
         }
