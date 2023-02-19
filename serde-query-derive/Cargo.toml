@@ -1,6 +1,6 @@
 [package]
 name = "serde-query-derive"
-version = "0.2.0-alpha0"
+version = "0.2.0"
 authors = ["pandaman64 <kointosudesuyo@infoseek.jp>"]
 edition = "2018"
 description = "Serde-compatible streaming data-query language with a jq-like syntax"
@@ -20,5 +20,5 @@ quote = { workspace = true }
 proc-macro-error = { workspace = true }
 
 [dependencies.serde-query-core]
-version = "0.2.0-alpha0"
+version = "0.2.0"
 path = "../serde-query-core"
