@@ -81,17 +81,54 @@ const _: () = {
                 "one of the following fields: 'locs'",
             )
         }
-        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+        fn visit_map<A>(mut self, mut map: A) -> Result<Self::Value, A::Error>
         where
             A: serde_query::__priv::serde::de::MapAccess<'de>,
         {
             while let core::option::Option::Some(key) = map.next_key::<FieldNode0>()? {
                 match key {
                     FieldNode0::Field0 => {
-                        map.next_value_seed(DeserializeSeedNode2 {
-                            x: self.x,
-                            y: self.y,
-                        })?;
+                        let mut x = core::option::Option::None;
+                        let mut y = core::option::Option::None;
+                        let x = match &mut self.x {
+                            core::option::Option::Some(core::result::Result::Ok(_)) => {
+                                *self
+                                    .x = core::option::Option::Some(
+                                    core::result::Result::Err(
+                                        serde_query::__priv::Error::borrowed(
+                                            "x",
+                                            ".",
+                                            "duplicated field 'locs'",
+                                        ),
+                                    ),
+                                );
+                                &mut x
+                            }
+                            core::option::Option::Some(core::result::Result::Err(_)) => {
+                                &mut x
+                            }
+                            core::option::Option::None => &mut self.x,
+                        };
+                        let y = match &mut self.y {
+                            core::option::Option::Some(core::result::Result::Ok(_)) => {
+                                *self
+                                    .y = core::option::Option::Some(
+                                    core::result::Result::Err(
+                                        serde_query::__priv::Error::borrowed(
+                                            "y",
+                                            ".",
+                                            "duplicated field 'locs'",
+                                        ),
+                                    ),
+                                );
+                                &mut y
+                            }
+                            core::option::Option::Some(core::result::Result::Err(_)) => {
+                                &mut y
+                            }
+                            core::option::Option::None => &mut self.y,
+                        };
+                        map.next_value_seed(DeserializeSeedNode2 { x, y })?;
                     }
                     FieldNode0::Ignore => {
                         map.next_value::<serde_query::__priv::serde::de::IgnoredAny>()?;
@@ -332,17 +369,57 @@ const _: () = {
                 "one of the following fields: 'x', or 'y'",
             )
         }
-        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+        fn visit_map<A>(mut self, mut map: A) -> Result<Self::Value, A::Error>
         where
             A: serde_query::__priv::serde::de::MapAccess<'de>,
         {
             while let core::option::Option::Some(key) = map.next_key::<FieldNode3>()? {
                 match key {
                     FieldNode3::Field0 => {
-                        map.next_value_seed(DeserializeSeedNode4 { x: self.x })?;
+                        let mut x = core::option::Option::None;
+                        let x = match &mut self.x {
+                            core::option::Option::Some(core::result::Result::Ok(_)) => {
+                                *self
+                                    .x = core::option::Option::Some(
+                                    core::result::Result::Err(
+                                        serde_query::__priv::Error::borrowed(
+                                            "x",
+                                            ".locs.[]",
+                                            "duplicated field 'x'",
+                                        ),
+                                    ),
+                                );
+                                &mut x
+                            }
+                            core::option::Option::Some(core::result::Result::Err(_)) => {
+                                &mut x
+                            }
+                            core::option::Option::None => &mut self.x,
+                        };
+                        map.next_value_seed(DeserializeSeedNode4 { x })?;
                     }
                     FieldNode3::Field1 => {
-                        map.next_value_seed(DeserializeSeedNode8 { y: self.y })?;
+                        let mut y = core::option::Option::None;
+                        let y = match &mut self.y {
+                            core::option::Option::Some(core::result::Result::Ok(_)) => {
+                                *self
+                                    .y = core::option::Option::Some(
+                                    core::result::Result::Err(
+                                        serde_query::__priv::Error::borrowed(
+                                            "y",
+                                            ".locs.[]",
+                                            "duplicated field 'y'",
+                                        ),
+                                    ),
+                                );
+                                &mut y
+                            }
+                            core::option::Option::Some(core::result::Result::Err(_)) => {
+                                &mut y
+                            }
+                            core::option::Option::None => &mut self.y,
+                        };
+                        map.next_value_seed(DeserializeSeedNode8 { y })?;
                     }
                     FieldNode3::Ignore => {
                         map.next_value::<serde_query::__priv::serde::de::IgnoredAny>()?;

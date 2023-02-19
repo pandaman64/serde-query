@@ -340,15 +340,41 @@ impl Node {
                     fields
                         .iter()
                         .zip(field_ids.iter())
-                        .map(|((_, node), field_id)| {
+                        .map(|((field, node), field_id)| {
                             let deserialize_seed_ty = node.deserialize_seed_ty();
                             let query_names = node.query_names();
+                            let query_name_strings = query_names.iter().map(|ident| ident.to_string());
+                            let duplicated_field_message = format!("duplicated field '{}'", field);
 
                             quote::quote! {
                                 #field_deserialize_enum_ty :: #field_id => {
+                                    // Prepare slots for throwing away child queries for completed queries.
+                                    #(
+                                        let mut #query_names = core::option::Option::None;
+                                    )*
+                                    #(
+                                        let #query_names = match &mut self.#query_names {
+                                            // This query has already fulfilled. Set a duplicated field error.
+                                            core::option::Option::Some(core::result::Result::Ok(_)) => {
+                                                *self.#query_names = core::option::Option::Some(
+                                                    core::result::Result::Err(
+                                                        serde_query::__priv::Error::borrowed(
+                                                            #query_name_strings,
+                                                            #prefix,
+                                                            #duplicated_field_message,
+                                                        )
+                                                    )
+                                                );
+                                                &mut #query_names
+                                            }
+                                            // This query has already failed. Keep the current error.
+                                            core::option::Option::Some(core::result::Result::Err(_)) => &mut #query_names,
+                                            core::option::Option::None => &mut self.#query_names,
+                                        };
+                                    )*
                                     map.next_value_seed(#deserialize_seed_ty {
                                         #(
-                                            #query_names: self.#query_names,
+                                            #query_names,
                                         )*
                                     })?;
                                 }
@@ -424,7 +450,7 @@ impl Node {
                             core::fmt::Formatter::write_str(formatter, #expecting)
                         }
 
-                        fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+                        fn visit_map<A>(mut self, mut map: A) -> Result<Self::Value, A::Error>
                         where
                             A: serde_query::__priv::serde::de::MapAccess<'de>,
                         {

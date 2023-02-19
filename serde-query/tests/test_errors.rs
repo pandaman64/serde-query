@@ -81,3 +81,49 @@ fn test_quoted_field() {
         r#"Err(Error("Query for field '_field' failed at '.[\\"field with spaces\\"]': invalid type: string \\"\\", expected i64", line: 1, column: 23))"#
     );
 }
+
+#[test]
+fn test_duplicate_non_dupilicate_error() {
+    #[derive(Debug, Deserialize)]
+    struct Data {
+        #[query(".foo.bar")]
+        _bar: String,
+    }
+
+    let input = r#"
+{
+    "foo": {
+        "bar": 100,
+        "bar": "baz"
+    }
+}
+"#;
+    let snapshot = format!("{:?}", serde_json::from_str::<Data>(input));
+    k9::snapshot!(
+        snapshot,
+        r#"Err(Error("Query for field '_bar' failed at '.foo.bar': invalid type: integer `100`, expected a string", line: 4, column: 18))"#
+    );
+}
+
+#[test]
+fn test_duplicate_duplicate_error() {
+    #[derive(Debug, Deserialize)]
+    struct Data {
+        #[query(".foo.bar")]
+        _bar: String,
+    }
+
+    let input = r#"
+{
+    "foo": {
+        "bar": "baz1",
+        "bar": "baz2"
+    }
+}
+"#;
+    let snapshot = format!("{:?}", serde_json::from_str::<Data>(input));
+    k9::snapshot!(
+        snapshot,
+        r#"Err(Error("Query for field '_bar' failed at '.foo': duplicated field 'bar'", line: 0, column: 0))"#
+    );
+}
