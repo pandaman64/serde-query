@@ -302,7 +302,7 @@ impl Node {
                             let result = match <#query_type as serde_query::__priv::serde::Deserialize<'de>>::deserialize(deserializer) {
                                 core::result::Result::Ok(v) => core::result::Result::Ok(v),
                                 core::result::Result::Err(e) => core::result::Result::Err(
-                                    serde_query::__priv::Error::new(#field, #prefix, e.to_string())
+                                    serde_query::__priv::Error::owned(#field, #prefix, e.to_string())
                                 ),
                             };
                             *self.#query_name = core::option::Option::Some(result);
@@ -392,10 +392,10 @@ impl Node {
                                 if self.#missing_query_names.is_none() {
                                     *self.#missing_query_names = core::option::Option::Some(
                                         core::result::Result::Err(
-                                            serde_query::__priv::Error::new(
+                                            serde_query::__priv::Error::borrowed(
                                                 #missing_query_name_strings,
                                                 #prefix,
-                                                String::from(#missing_field_error_messages),
+                                                #missing_field_error_messages,
                                             )
                                         )
                                     );
@@ -561,10 +561,10 @@ impl Node {
                                 if self.#missing_query_names.is_none() {
                                     *self.#missing_query_names = core::option::Option::Some(
                                         core::result::Result::Err(
-                                            serde_query::__priv::Error::new(
+                                            serde_query::__priv::Error::borrowed(
                                                 #missing_query_name_strings,
                                                 #prefix,
-                                                String::from(#missing_field_error_messages),
+                                                #missing_field_error_messages,
                                             )
                                         )
                                     );

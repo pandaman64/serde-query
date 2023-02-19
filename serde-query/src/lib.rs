@@ -146,11 +146,13 @@ where
 pub mod __priv {
     pub use serde;
 
+    extern crate alloc;
+
     #[derive(Debug)]
     pub struct Error {
         field: &'static str,
         prefix: &'static str,
-        message: String,
+        message: alloc::borrow::Cow<'static, str>,
     }
 
     impl core::fmt::Display for Error {
@@ -164,11 +166,19 @@ pub mod __priv {
     }
 
     impl Error {
-        pub fn new(field: &'static str, prefix: &'static str, message: String) -> Self {
+        pub fn owned(field: &'static str, prefix: &'static str, message: String) -> Self {
             Error {
                 field,
                 prefix,
-                message,
+                message: alloc::borrow::Cow::Owned(message),
+            }
+        }
+
+        pub fn borrowed(field: &'static str, prefix: &'static str, message: &'static str) -> Self {
+            Error {
+                field,
+                prefix,
+                message: alloc::borrow::Cow::Borrowed(message),
             }
         }
     }
@@ -236,8 +246,6 @@ pub mod __priv {
 
         fn extend_one(&mut self, element: Self::Element);
     }
-
-    extern crate alloc;
 
     impl<T> Container for alloc::vec::Vec<T> {
         type Element = T;

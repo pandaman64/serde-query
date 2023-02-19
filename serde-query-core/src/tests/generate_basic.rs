@@ -41,10 +41,10 @@ const _: () = {
                 *self
                     .x = core::option::Option::Some(
                     core::result::Result::Err(
-                        serde_query::__priv::Error::new(
+                        serde_query::__priv::Error::borrowed(
                             "x",
                             ".",
-                            String::from("missing field 'locs'"),
+                            "missing field 'locs'",
                         ),
                     ),
                 );
@@ -53,10 +53,10 @@ const _: () = {
                 *self
                     .y = core::option::Option::Some(
                     core::result::Result::Err(
-                        serde_query::__priv::Error::new(
+                        serde_query::__priv::Error::borrowed(
                             "y",
                             ".",
-                            String::from("missing field 'locs'"),
+                            "missing field 'locs'",
                         ),
                     ),
                 );
@@ -286,10 +286,10 @@ const _: () = {
                 *self
                     .x = core::option::Option::Some(
                     core::result::Result::Err(
-                        serde_query::__priv::Error::new(
+                        serde_query::__priv::Error::borrowed(
                             "x",
                             ".locs.[]",
-                            String::from("missing field 'x'"),
+                            "missing field 'x'",
                         ),
                     ),
                 );
@@ -298,10 +298,10 @@ const _: () = {
                 *self
                     .y = core::option::Option::Some(
                     core::result::Result::Err(
-                        serde_query::__priv::Error::new(
+                        serde_query::__priv::Error::borrowed(
                             "y",
                             ".locs.[]",
-                            String::from("missing field 'y'"),
+                            "missing field 'y'",
                         ),
                     ),
                 );
@@ -421,7 +421,11 @@ const _: () = {
                 core::result::Result::Ok(v) => core::result::Result::Ok(v),
                 core::result::Result::Err(e) => {
                     core::result::Result::Err(
-                        serde_query::__priv::Error::new("x", ".locs.[].x", e.to_string()),
+                        serde_query::__priv::Error::owned(
+                            "x",
+                            ".locs.[].x",
+                            e.to_string(),
+                        ),
                     )
                 }
             };
@@ -455,7 +459,11 @@ const _: () = {
                 core::result::Result::Ok(v) => core::result::Result::Ok(v),
                 core::result::Result::Err(e) => {
                     core::result::Result::Err(
-                        serde_query::__priv::Error::new("y", ".locs.[].y", e.to_string()),
+                        serde_query::__priv::Error::owned(
+                            "y",
+                            ".locs.[].y",
+                            e.to_string(),
+                        ),
                     )
                 }
             };
