@@ -1,0 +1,5 @@
+error: Cannot use the same query for two or more fields: 'bar1', 'bar2'
+ --> tests/compile-fail/conflicting_accept.rs:6:5
+  |
+6 |     bar1: String,
+  |     ^^^^

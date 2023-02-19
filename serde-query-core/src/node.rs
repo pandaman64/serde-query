@@ -270,10 +270,24 @@ impl Node {
         (keys, idents, ident_strings)
     }
 
-    pub(crate) fn generate(&self) -> TokenStream {
-        match &self.kind {
+    pub(crate) fn generate(&self) -> Result<TokenStream, Diagnostic> {
+        Ok(match &self.kind {
             NodeKind::Accept => {
-                // TODO: what if we have multiple queries?
+                if self.queries.len() > 1 {
+                    let (first_ident, second_ident) = {
+                        let mut keys = self.queries.keys();
+                        let first = keys.next().unwrap();
+                        let second = keys.next().unwrap();
+                        (first.ident(), second.ident())
+                    };
+                    return Err(diagnostic!(
+                        first_ident,
+                        Level::Error,
+                        "Cannot use the same query for two or more fields: '{}', '{}'",
+                        first_ident,
+                        second_ident,
+                    ));
+                }
                 let (query_id, query_type) = self.queries.first_key_value().unwrap();
                 let query_name = query_id.ident();
 
@@ -387,7 +401,10 @@ impl Node {
                     format!("one of the following fields: {}", field_names.join(", or "))
                 };
 
-                let child_code = fields.values().map(|node| node.generate());
+                let child_code = fields
+                    .values()
+                    .map(|node| node.generate())
+                    .collect::<Result<Vec<_>, _>>()?;
 
                 quote::quote! {
                     struct #deserialize_seed_ty<'query> {
@@ -556,7 +573,10 @@ impl Node {
                     .expect("IndexArray node must have at least one element");
                 let expecting = format!("a sequence with at least {} elements", max_index + 1);
 
-                let child_code = indices.values().map(|node| node.generate());
+                let child_code = indices
+                    .values()
+                    .map(|node| node.generate())
+                    .collect::<Result<Vec<_>, _>>()?;
 
                 quote::quote! {
                     struct #deserialize_seed_ty<'query> {
@@ -649,7 +669,7 @@ impl Node {
                 let query_names = self.query_names();
                 let query_types = self.query_types();
 
-                let child_code = child.generate();
+                let child_code = child.generate()?;
                 let child_deserialize_seed_ty = child.deserialize_seed_ty();
                 // child_query_names should be equal to those of self
 
@@ -772,7 +792,7 @@ impl Node {
                     }
                 }
             }
-        }
+        })
     }
 
     pub(crate) fn generate_deserialize<F: FnOnce(TokenStream) -> TokenStream>(

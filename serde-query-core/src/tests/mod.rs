@@ -2,6 +2,7 @@ use syn::DeriveInput;
 
 use crate::{generate_derive, DeriveTarget};
 
+mod conflicting_accept;
 mod empty;
 mod generate_basic;
 

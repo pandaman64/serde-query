@@ -29,7 +29,7 @@ pub fn generate_derive(
 
     let name = &input.ident;
     let node = Node::from_queries(parse_input_result.queries.into_iter())?;
-    let mut stream = node.generate();
+    let mut stream = node.generate().map_err(|diagnostic| vec![diagnostic])?;
 
     // generate the root code
     match target {
