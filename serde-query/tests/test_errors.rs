@@ -63,3 +63,21 @@ fn test_type_error() {
         r#"Err(Error("Query for field '_expect_integer' failed at '.foo.bar': invalid type: string \\"str\\", expected i64", line: 1, column: 19))"#
     );
 }
+
+#[test]
+fn test_quoted_field() {
+    #[derive(Debug, Deserialize)]
+    struct Data {
+        #[query(r#".["field with spaces"]"#)]
+        _field: i64,
+    }
+
+    let input = serde_json::json!({
+        "field with spaces": "",
+    });
+    let snapshot = format!("{:?}", serde_json::from_str::<Data>(&input.to_string()));
+    k9::snapshot!(
+        snapshot,
+        r#"Err(Error("Query for field '_field' failed at '.[\\"field with spaces\\"]': invalid type: string \\"\\", expected i64", line: 1, column: 23))"#
+    );
+}

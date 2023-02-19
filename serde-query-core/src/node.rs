@@ -161,15 +161,15 @@ impl Node {
             },
             QueryFragment::Field {
                 name: field_name,
+                quoted,
                 rest,
             } => {
-                let child = Self::from_query(
-                    env,
-                    id.clone(),
-                    *rest,
-                    ty.clone(),
-                    format!("{}.{}", prefix, field_name),
-                );
+                let rest_prefix = if quoted {
+                    format!("{}.[\"{}\"]", prefix, field_name)
+                } else {
+                    format!("{}.{}", prefix, field_name)
+                };
+                let child = Self::from_query(env, id.clone(), *rest, ty.clone(), rest_prefix);
                 let kind = NodeKind::Field {
                     fields: BTreeMap::from_iter([(field_name, child)]),
                 };

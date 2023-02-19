@@ -6,6 +6,7 @@ pub(crate) enum QueryFragment {
     /// '.' <name> [.<rest>]
     Field {
         name: String,
+        quoted: bool,
         rest: Box<QueryFragment>,
     },
     /// '.' '[' <n> ']' [.<rest>]
@@ -24,9 +25,10 @@ impl QueryFragment {
         Self::Accept
     }
 
-    pub(crate) fn field(name: String, rest: Self) -> Self {
+    pub(crate) fn field(name: String, quoted: bool, rest: Self) -> Self {
         Self::Field {
             name,
+            quoted,
             rest: rest.into(),
         }
     }

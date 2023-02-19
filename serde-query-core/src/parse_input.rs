@@ -137,7 +137,7 @@ struct Foo {
             to_snapshot_string(&result.queries),
             r#"
 Query { id: QueryId(Ident { sym: with_query, span: bytes(36..46) }), fragment: Accept, ty: TokenStream [Ident { sym: i64, span: bytes(48..51) }] }
-Query { id: QueryId(Ident { sym: with_multiple_queries, span: bytes(95..116) }), fragment: Field { name: "y", rest: Accept }, ty: TokenStream [Ident { sym: i32, span: bytes(118..121) }] }
+Query { id: QueryId(Ident { sym: with_multiple_queries, span: bytes(95..116) }), fragment: Field { name: "y", quoted: false, rest: Accept }, ty: TokenStream [Ident { sym: i32, span: bytes(118..121) }] }
 "#
         );
         snapshot!(

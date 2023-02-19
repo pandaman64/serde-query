@@ -4,7 +4,7 @@ use crate::query::QueryFragment;
 
 #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
 pub enum Query {
-    Field(String),
+    Field { name: String, quoted: bool },
     Index(usize),
     CollectArray,
 }
@@ -110,7 +110,10 @@ pub(crate) fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
                         let len = slice.len();
                         assert_eq!(&slice[0..1], "\"");
                         assert_eq!(&slice[len - 1..], "\"");
-                        queries.push(Query::Field(from_quoted(&slice[1..len - 1])))
+                        queries.push(Query::Field {
+                            name: from_quoted(&slice[1..len - 1]),
+                            quoted: true,
+                        })
                     }
                     [] => queries.push(Query::CollectArray),
                     [(token, _), ..] => {
@@ -126,7 +129,10 @@ pub(crate) fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
                     }
                 }
             }
-            Some(Token::Field) => queries.push(Query::Field(tokens.slice().into())),
+            Some(Token::Field) => queries.push(Query::Field {
+                name: tokens.slice().into(),
+                quoted: false,
+            }),
             None => {
                 errors.push(ParseError {
                     message: format!(
@@ -156,7 +162,7 @@ pub(crate) fn parse(input: &str) -> (QueryFragment, Vec<ParseError>) {
             .into_iter()
             .rev()
             .fold(QueryFragment::accept(), |rest, query| match query {
-                Query::Field(name) => QueryFragment::field(name, rest),
+                Query::Field { name, quoted } => QueryFragment::field(name, quoted, rest),
                 Query::Index(index) => QueryFragment::index_array(index, rest),
                 Query::CollectArray => QueryFragment::collect_array(rest),
             });
@@ -195,7 +201,11 @@ mod test {
         let (query, errors) = parse(r#".["field name with spaces"]"#);
         assert_eq!(
             query,
-            QueryFragment::field("field name with spaces".into(), QueryFragment::accept())
+            QueryFragment::field(
+                "field name with spaces".into(),
+                true,
+                QueryFragment::accept()
+            )
         );
         assert!(errors.is_empty());
 
